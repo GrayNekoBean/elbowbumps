@@ -39,7 +39,7 @@ def connect_to_endpoint(url, headers, params):
 
     return response.json()
 
-def getTweets():
+def getTweets(user, category):
     bearer_token = auth()
     url = create_url()
     headers = create_headers(bearer_token)
@@ -48,7 +48,7 @@ def getTweets():
     print(json.dumps(json_data, indent=4, sort_keys=True))
     #print(json_data)
     count = json_data["meta"]["result_count"]
-    categoryScore(json_data["data"])
+    return categoryScore(json_data["data"])
     #so far does it for the category sport
 
 
@@ -70,5 +70,4 @@ def categoryScore(data):
                     if vs["compound"] != 0:
                         total = total + vs["compound"]
                         total_sen +=1
-    avg = total / total_sen
-    print("The average score for sport is: " + str(avg) + "with >0.5 as positive")
+    return total / total_sen

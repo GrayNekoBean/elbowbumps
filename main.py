@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import elbowbumps.auth
 db = SQLAlchemy(app)
 from elbowbumps.models import UserData, UserInterestData
+from elbowbumps.twitter_scraper import getTweets
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -110,6 +111,39 @@ def add_twitter_username():
             "Message": "Thank you!"
         })
 
+@app.route('/register', methods=['POST'])
+def registerUser():
+    fName = request.form.get('fName')
+    sName = request.form.get('sName')
+    phoneNum = request.form.get('phoneNum')
+    emailAdd = request.form.get('emailAdd')
+    pw = request.form.get('pw')
+    #User data columns: forename, surname, birthyear, email, phone, password, gender, twitter
+    newUser = UserData(fName, sName, '01/01/2000', emailAdd, phoneNum, pw, 'M', '')
+    db.session.add(newUser)
+    db.session.commit()
+        #POST Request
+        return jsonify({
+            'STATUS CODE':'200',
+            "fName": fName
+            "sName": sName
+            "phoneNum": sName
+            "emailAdd": emailAdd
+            "pw": pw
+        })
+
+@app.route('/get_tweets', methods=['POST'])
+def get_tweets():
+    user_id = request.args.get('user_id')
+    category = request.args.get('category')
+    user = UserData.query.filter_by(ud_id=user_id).first()
+    score = getTweets(user.ud_twitter, category)
+    data = TwitterData(user_id, user.ud_twitter, category, score)
+    db.session.add(data)
+    db.session.commit()
+    return jsonify({
+        'status_code': '200'
+    })
 
 # finds nearest neighbours for a given user
 @app.route('/find_matches', methods=['GET'])
@@ -149,7 +183,7 @@ def get_recs_for():
 @app.route('/test_user', methods=['POST'])
 def create_test_user():
     from random import randint
-    user = UserData('Faridz','Ibrahim',19,f'{randint(0, 6000)}','test','M','test3')
+    user = UserData('Faridz','Ibrahim',19,f'{randint(0, 6000)}','test','M','elbowbumps')
     db.session.add(user)
     db.session.commit()
     return jsonify({
@@ -163,7 +197,7 @@ def index():
     return "<h1>Welcome to our server !!</h1>"
 
 if __name__ == '__main__':
-    ENV = 'live'
+    ENV = 'dev'
     if ENV == 'dev':
         app.debug = True
         # Change the line below to your own local database for testing purposes
