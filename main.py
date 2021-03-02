@@ -2,6 +2,18 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 from flask_sqlalchemy import SQLAlchemy
 import elbowbumps.auth
+
+ENV = 'dev'
+if ENV == 'dev':
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123@localhost/elbow_bumps'
+    app.debug = True
+    # Change the line below to your own local database for testing purposes
+
+else:
+    import os
+    app.debug = False
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
+
 db = SQLAlchemy(app)
 from elbowbumps.models import UserData, UserInterestData
 from elbowbumps.twitter_scraper import getTweets
@@ -14,7 +26,6 @@ def respond():
     name = request.args.get("name", None)
 
     # For debugging
-    print(f"got name {name}")
 
     response = {}
 
@@ -123,14 +134,13 @@ def registerUser():
     db.session.add(newUser)
     db.session.commit()
         #POST Request
-        return jsonify({
-            'STATUS CODE':'200',
-            "fName": fName
-            "sName": sName
-            "phoneNum": sName
-            "emailAdd": emailAdd
+    return jsonify({
+            "fName": fName,
+            "sName": sName,
+            "phoneNum": sName,
+            "emailAdd": emailAdd,
             "pw": pw
-        })
+    })
 
 @app.route('/get_tweets', methods=['POST'])
 def get_tweets():
@@ -183,7 +193,7 @@ def get_recs_for():
 @app.route('/test_user', methods=['POST'])
 def create_test_user():
     from random import randint
-    user = UserData('Faridz','Ibrahim',19,f'{randint(0, 6000)}','test','M','elbowbumps')
+    user = UserData('Faridz','Ibrahim',19,2000,f'{randint(0, 6000)}','test','M','elbowbumps')
     db.session.add(user)
     db.session.commit()
     return jsonify({
@@ -197,14 +207,6 @@ def index():
     return "<h1>Welcome to our server !!</h1>"
 
 if __name__ == '__main__':
-    ENV = 'dev'
-    if ENV == 'dev':
-        app.debug = True
-        # Change the line below to your own local database for testing purposes
-        app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:123@localhost"
-    else:
-        app.debug = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://lrrucystcdokqx:8dcdf77fcf5031f6d6bf22e181e8e526fc69393bae3bbaed0065588c2963f6fb@ec2-54-198-73-79.compute-1.amazonaws.com:5432/da8ahn3kepucis'
     # Threaded option to enable multiple instances for multiple user access support
     db.create_all()
     app.run(threaded=True, port=5000)
