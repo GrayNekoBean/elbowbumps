@@ -193,7 +193,7 @@ def get_recs_for():
 @app.route('/test_user', methods=['POST'])
 def create_test_user():
     from random import randint
-    user = UserData('Faridz','Ibrahim',19,2000,f'{randint(0, 6000)}','test','M','elbowbumps')
+    user = UserData('Faridz','Ibrahim',19,f'{randint(0, 6000)}',f'{randint(0, 6000)}',f'{randint(0, 6000)}','M',f'{randint(0, 6000)}')
     db.session.add(user)
     db.session.commit()
     return jsonify({
