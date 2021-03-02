@@ -19,7 +19,7 @@ sudo apt-get -y install postgresql
 
 # Step 2: Set your password
 
-Once you've install Postgres, you need to set the password for the root user. In your shell,
+Once you've installed Postgres, you need to set the password for the root user. In your shell,
 
 ```
 $ psql -h localhost -U postgres
