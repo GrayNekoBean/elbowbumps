@@ -35,6 +35,8 @@ Still in the Postgress command line, enter the following to create your local el
 postgres=# CREATE DATABASE elbow_bumps;
 ```
 
+Now, exit Postgres by entering `postgres=# \q`
+
 # Step 4: Adjust the local database URI in main.py (Optional)
 
 This step is only if you've set your password differently or have created a database with a different name.
@@ -65,4 +67,5 @@ $ psql -h localhost -U postgres
 postgres=# \c elbow_bumps
 postgres=# SELECT * from user_data;
 [The table should be displayed here]
+postgres=# \q
 ```
