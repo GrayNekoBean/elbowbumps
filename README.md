@@ -26,13 +26,13 @@ to login to your heroku account.
 Use "source venv.sh" command or use following command under the root directory of this repo:
 
 <pre>
-pip install virtualenv
+pip3 install virtualenv
 
 virtualenv venv
 
 source ./venv/bin/activate
 
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 </pre>
 
 After virtual environment setting is done,   
