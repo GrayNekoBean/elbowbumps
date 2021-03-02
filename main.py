@@ -123,13 +123,13 @@ def registerUser():
     db.session.add(newUser)
     db.session.commit()
         #POST Request
-        return jsonify({
-            'STATUS CODE':'200',
-            "fName": fName
-            "sName": sName
-            "phoneNum": sName
-            "emailAdd": emailAdd
-            "pw": pw
+    return jsonify({
+        'STATUS CODE':'200',
+        "fName": fName,
+        "sName": sName,
+        "phoneNum": sName,
+        "emailAdd": emailAdd,
+        "pw": pw
         })
 
 @app.route('/get_tweets', methods=['POST'])
