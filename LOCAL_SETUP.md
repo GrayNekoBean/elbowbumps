@@ -1,6 +1,6 @@
 # Step 1: Install PostgreSQL
 
-The install instructions for Linux simply be a matter of following the instructions on the install page on the Postgres website
+The install instructions for Linux are simply a matter of following the instructions on the install page on the Postgres website
 
 ```
 # Create the file repository configuration:
