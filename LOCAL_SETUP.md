@@ -1,6 +1,6 @@
 # Step 1: Install PostgreSQL
 
-The install instructions for Linux are simply a matter of following the instructions on the install page on the Postgres website
+The install instructions for Linux are simply a matter of following the instructions on the install page on the Postgres website:
 
 ```
 # Create the file repository configuration:
@@ -35,14 +35,14 @@ Still in the Postgress command line, enter the following to create your local el
 postgres=# CREATE DATABASE elbow_bumps;
 ```
 
-Now, exit Postgres by entering `postgres=# \q`
+Now, exit Postgres by entering `postgres=# \q`.
 
 # Step 4: Adjust the local database URI in main.py (Optional)
 
 This step is only if you've set your password differently or have created a database with a different name.
 
 If this is the case, you need to adjust your local database URI in main.py. In the first few lines, look for the lines following `if ENV == 'dev':`,
-and changed the string after 
+and change the string after 
 `app.config['SQLALCHEMY_DATABASE_URI'] = ` to follow this format:
 
 ```
@@ -56,10 +56,11 @@ If you have followed the previous instructions exactly, the string should be `po
 First, run `git fetch` and `git pull` in the root directory of this repository to get the latest version.
 
 Once you have done this, you are ready to run the server. If you have not already installed the requirements, run `pip3 install 
-flask Flask-SQLAlchemy gunicorn psycopg2-binary vaderSentiment` first, then run `python3 main.py`.
+flask Flask-SQLAlchemy gunicorn psycopg2-binary vaderSentiment` first, then run `python3 main.py`. Note that on Linux, this may be needed to be run instead of 
+`pip3 install -r requirements.txt` which is recommended in the README.
 
 With main.py running, open another tab in your terminal, then enter `curl -X POST http://127.0.0.1:5000/test_user`. Now, to see if this has inserted a row in the 
-database, enter in your shell
+database, enter in your shell:
 
 ```
 $ psql -h localhost -U postgres
@@ -68,4 +69,4 @@ postgres=# \c elbow_bumps
 postgres=# SELECT * from user_data;
 [The table should be displayed here]
 postgres=# \q
-```
+```.
