@@ -10,11 +10,10 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 def auth():
     return os.environ.get("BEARER_TOKEN")
 
+def create_url_id(username):
+    return "https://api.twitter.com/2/users/by/username/{}".format(username)
 
-def create_url():
-    # Replace with user ID below
-    user_id = 1361663705000390665
-    #2244994945
+def create_url_tweets(user_id):
     return "https://api.twitter.com/2/users/{}/tweets".format(user_id)
 
 
@@ -27,7 +26,7 @@ def create_headers(bearer_token):
     return headers
 
 
-def connect_to_endpoint(url, headers, params):
+def connect_to_endpoint(url, headers, params={}):
     response = requests.request("GET", url, headers=headers, params=params)
     print(response.status_code)
     if response.status_code != 200:
@@ -41,24 +40,26 @@ def connect_to_endpoint(url, headers, params):
 
 def getTweets(user, category):
     bearer_token = auth()
-    url = create_url()
     headers = create_headers(bearer_token)
+
+    url_id = create_url_id(user)
+    id_lookup_data = connect_to_endpoint(url_id, headers)
+    user_id = id_lookup_data["data"]["id"]
+
     params = get_params()
-    json_data = connect_to_endpoint(url, headers, params)
-    print(json.dumps(json_data, indent=4, sort_keys=True))
-    #print(json_data)
-    count = json_data["meta"]["result_count"]
-    return categoryScore(json_data["data"])
-    #so far does it for the category sport
+    url_tweets = create_url_tweets(user_id)
+    tweets_data = connect_to_endpoint(url_tweets, headers, params)
+
+    return categoryScore(tweets_data["data"])
 
 
 
 def categoryScore(data):
+     #so far does it for the category sport
     analyzer = SentimentIntensityAnalyzer()
     total = 0
     total_sen = 0
     for i in range(len(data)):
-        #print(data[i])
         if "context_annotations" in data[i]:
             for value in data[i]["context_annotations"]:
                 print(value)
