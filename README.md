@@ -65,9 +65,7 @@ to see if it works properly.
 ---
 ## Setting up your local database
 
-In order to set up a local database which allows testing, you need to first install [Postgres](https://www.postgresql.org/download/), and set up your local database.  
-
-For it to work with the code that's already in the repo, you'd need to set your password to '123' for your local repo, otherwise you can change the local database URI in the main.py file towards the end of the file, replacing '123' with whatever you hav set the password to.  
+[Instructions are now here for Linux](https://github.com/bioBean/elbowbumps-backend/blob/main/LOCAL_SETUP.md).
 
 ---
 ## Linking to the remote database
