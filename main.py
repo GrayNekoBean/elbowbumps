@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 app = Flask(__name__)
 from flask_sqlalchemy import SQLAlchemy
-import elbowbumps.auth
 
 ENV = 'dev'
 if ENV == 'dev':
