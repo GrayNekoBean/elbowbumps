@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from elbowbumps.twitter_scraper import getTweets
+from elbowbumps.twitter_id_lookup import twitterID
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
@@ -18,7 +19,7 @@ else:
 
 
 db = SQLAlchemy(app)
-from elbowbumps.models import UserData, UserInterestData
+from elbowbumps.models import UserData, UserInterestData, TwitterData
 db.create_all()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -122,20 +123,43 @@ def add_questionnaire_scores():
 def add_twitter_username():
     twitter = request.form.get('twitterUsername')
     id = request.args.get('user_id')
-    user = UserData.query.filter_by(user_id = id).first()
-    # Add if-check for if twitter exists
-    user.ud_twitter = twitter
-    db.session.commit()
+    user = UserData.query.filter_by(ud_id = id).first()
+
+    if not user:
+        return jsonify({
+            "STATUS_CODE": "500",
+            "Message": "Please ensure the user exists!"
+        })
     if (twitter == ""):
         return jsonify({
             "STATUS_CODE": "500",
             "Message": "Please provide a twitter username"
         })
     else:
-        return jsonify({
-            "STATUS_CODE": "200",
-            "Message": "Thank you!"
-        })
+        query = f'SELECT * FROM user_data WHERE ud_twitter = \'{twitter}\';'
+        results = db.engine.execute(query)
+        if results.rowcount == 0:
+            twitter_id = twitterID(twitter)
+            if twitter_id == False:
+                return jsonify ({
+                    "STATUS_CODE": "500",
+                    "Message": "Please provide a real twitter username"
+                })
+            else:
+                user.ud_twitter = twitter
+                print(twitter_id)
+                # to-do save the twitter-id to database, make a new column
+                user.ud_id_twitter = twitter_id
+                db.session.commit()
+                return jsonify({
+                    "STATUS_CODE": "200",
+                    "Message": "Thank you!"
+                })
+        else:
+            return jsonify ({
+            "STATUS_CODE": "500",
+            "Message": "Please provide a unique twitter username"
+            })
 
 
 @app.route('/register', methods=['POST'])
@@ -182,8 +206,8 @@ def get_tweets():
     user_id = request.args.get('user_id')
     category = request.args.get('category')
     user = UserData.query.filter_by(ud_id=user_id).first()
-    score = getTweets(user.ud_twitter, category)
-    data = TwitterData(user_id, user.ud_twitter, category, score)
+    score = getTweets(user.ud_id_twitter, category)
+    data = TwitterData(user_id, category, score)
     db.session.add(data)
     db.session.commit()
     return jsonify({
@@ -194,6 +218,7 @@ def get_tweets():
 
 
 @app.route('/find_matches', methods=['GET'])
+@cross_origin
 def find_matches():
     param = request.args.get('user_id')
     limit = request.args.get('limit')

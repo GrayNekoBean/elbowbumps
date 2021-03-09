@@ -10,8 +10,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 def auth():
     return os.environ.get("BEARER_TOKEN")
 
-def create_url_id(username):
-    return "https://api.twitter.com/2/users/by/username/{}".format(username)
+
 
 def create_url_tweets(user_id):
     return "https://api.twitter.com/2/users/{}/tweets".format(user_id)
@@ -42,16 +41,11 @@ def getTweets(user, category):
     bearer_token = auth()
     headers = create_headers(bearer_token)
 
-    url_id = create_url_id(user)
-    id_lookup_data = connect_to_endpoint(url_id, headers)
-    user_id = id_lookup_data["data"]["id"]
-
     params = get_params()
-    url_tweets = create_url_tweets(user_id)
+    url_tweets = create_url_tweets(int(user))
     tweets_data = connect_to_endpoint(url_tweets, headers, params)
 
     return categoryScore(tweets_data["data"])
-
 
 
 def categoryScore(data):
