@@ -11,7 +11,7 @@ class UserData(db.Model):
     ud_phone = db.Column(db.String(13), unique=True)
     ud_password = db.Column(db.String(100))
     ud_gender = db.Column(db.Enum('M', 'F', 'NB', name='gender'))
-    ud_twitter = db.Column(db.String(50), unique=True)
+    ud_twitter = db.Column(db.String(50), unique=False)
 
     def __init__(self, forename, surname, birthyear, email, phone, password, gender, twitter=''):
         self.ud_forename = forename

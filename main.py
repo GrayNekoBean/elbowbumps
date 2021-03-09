@@ -1,10 +1,13 @@
 from flask import Flask, request, jsonify
-app = Flask(__name__)
+from elbowbumps.twitter_scraper import getTweets
+from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
+app = Flask(__name__)
+cors = CORS(app)
 
 ENV = 'dev'
 if ENV == 'dev':
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123@localhost/elbow_bumps'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123@localhost/'
     app.debug = True
     # Change the line below to your own local database for testing purposes
 
@@ -13,11 +16,12 @@ else:
     app.debug = False
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 
+
 db = SQLAlchemy(app)
 from elbowbumps.models import UserData, UserInterestData
-from elbowbumps.twitter_scraper import getTweets
-
+db.create_all()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 @app.route('/getmsg/', methods=['GET'])
 def respond():
@@ -41,6 +45,7 @@ def respond():
     # Return the response in json format
     return jsonify(response)
 
+
 @app.route('/post/', methods=['POST'])
 def post_something():
     param = request.form.get('name')
@@ -51,7 +56,7 @@ def post_something():
         return jsonify({
             "Message": f"Welcome {name} to our awesome platform!!",
             # Add this option to distinct the POST request
-            "METHOD" : "POST"
+            "METHOD": "POST"
         })
     else:
         return jsonify({
@@ -59,6 +64,8 @@ def post_something():
         })
 
 # Updates interests for a given user
+
+
 @app.route('/update_interests', methods=['POST'])
 def update_interests():
     param = request.args.get('user_id', None)
@@ -76,6 +83,8 @@ def update_interests():
     return jsonify(response)
 
 # Adds row for interest data
+
+
 @app.route('/add_interest_score', methods=['POST'])
 def add_interest_score():
     param = request.args.get('user_id')
@@ -91,11 +100,15 @@ def add_interest_score():
         'MESSAGE': 'row added successfully'
     })
 
+
 @app.route('/questionnaire', methods=['POST'])
+@cross_origin()
 def add_questionnaire_scores():
-    score = request.form.get('basketballScore')    # will end up being a list, probably, when we have multiple scores instrad of one
+    # will end up being a list, probably, when we have multiple scores instrad of one
+    score = request.args.get('basketballScore')
     id = request.args.get('user_id')
-    interest = UserInterestData(id, 'Basketball', int(score))   # may have to change up the numbers to fit with twitter scores
+    # may have to change up the numbers to fit with twitter scores
+    interest = UserInterestData(id, 'Basketball', int(score) / 5)
     db.session.add(interest)
     db.session.commit()
     return jsonify({
@@ -103,12 +116,15 @@ def add_questionnaire_scores():
         'MESSAGE': 'row added successfully'
     })
 
-@app.route('/social_media_info', methods=['POST'])      # updating record to fill in the questionnaire score in the database - Lily
+
+# updating record to fill in the questionnaire score in the database - Lily
+@app.route('/social_media_info', methods=['POST'])
 def add_twitter_username():
     twitter = request.form.get('twitterUsername')
     id = request.args.get('user_id')
-    db.session.filter_by(user_id = id)
-    db.session.update({'ud_twitter': twitter})
+    user = UserData.query.filter_by(user_id = id).first()
+    # Add if-check for if twitter exists
+    user.ud_twitter = twitter
     db.session.commit()
     if (twitter == ""):
         return jsonify({
@@ -121,31 +137,31 @@ def add_twitter_username():
             "Message": "Thank you!"
         })
 
+
 @app.route('/register', methods=['POST'])
+@cross_origin()
 def registerUser():
     fName = request.form.get('fName')
     sName = request.form.get('sName')
     phoneNum = request.form.get('phoneNum')
     emailAdd = request.form.get('emailAdd')
     pw = request.form.get('pw')
-    user = User.query.filter_by(ud_email=emailAdd).first()
+    user = UserData.query.filter_by(ud_email=emailAdd).first()
     if user:
         return jsonify({
-        "Message": "User already registered "
+            "STATUS_CODE": '500',
+            "Message": f"User with email {emailAdd} already registered"
         })
-    #User data columns: forename, surname, birthyear, email, phone, password, gender, twitter
-    newUser = UserData(fName, sName, '01/01/2000', emailAdd, phoneNum, pw, 'M', '')
+    # User data columns: forename, surname, birthyear, email, phone, password, gender, twitter
+    newUser = UserData(fName, sName, '2000', emailAdd, phoneNum, pw, 'M', '')
     db.session.add(newUser)
     db.session.commit()
-        #POST Request
+    # POST Request
     return jsonify({
-        'STATUS CODE':'200',
-        "fName": fName,
-        "sName": sName,
-        "phoneNum": sName,
-        "emailAdd": emailAdd,
-        "pw": pw
-        })
+        'STATUS_CODE': '200',
+        'id': newUser.ud_id
+    })
+
 
 @app.route('/login', methods=['POST'])
 def loginUser():
@@ -154,11 +170,12 @@ def loginUser():
     user = UserData.query.filter_by(ud_email=email).first()
     if not user or not check_password_hash(user.pw, pw):
         return jsonify({
-        "Message": "Please Check email or password"
+            "Message": "Please Check email or password"
         })
     return jsonify({
-    "Message": "Successfully logged in"
+        "Message": "Successfully logged in"
     })
+
 
 @app.route('/get_tweets', methods=['POST'])
 def get_tweets():
@@ -174,6 +191,8 @@ def get_tweets():
     })
 
 # finds nearest neighbours for a given user
+
+
 @app.route('/find_matches', methods=['GET'])
 def find_matches():
     param = request.args.get('user_id')
@@ -186,6 +205,8 @@ def find_matches():
     })
 
 # Gets recommendations for a given user
+
+
 @app.route('/get_recs_for', methods=['GET'])
 def get_recs_for():
     param = request.args.get('user_id')
@@ -208,10 +229,13 @@ def get_recs_for():
         })
 
 # Test endpoint - an example of how to make a transaction
+
+
 @app.route('/test_user', methods=['POST'])
 def create_test_user():
     from random import randint
-    user = UserData('Faridz','Ibrahim',19,f'{randint(0, 6000)}',f'{randint(0, 6000)}',f'{randint(0, 6000)}','M',f'{randint(0, 6000)}')
+    user = UserData('Faridz', 'Ibrahim', 19, f'{randint(0, 6000)}',
+                    f'{randint(0, 6000)}', f'{randint(0, 6000)}', 'M', f'{randint(0, 6000)}')
     db.session.add(user)
     db.session.commit()
     return jsonify({
@@ -220,11 +244,13 @@ def create_test_user():
     })
 
 # A welcome message to test our server
+
+
 @app.route('/')
 def index():
     return "<h1>Welcome to our server !!</h1>"
 
+
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
-    db.create_all()
     app.run(threaded=True, port=5000)
