@@ -122,16 +122,21 @@ def add_questionnaire_scores():
 def add_twitter_username():
     twitter = request.form.get('twitterUsername')
     id = request.args.get('user_id')
-    user = UserData.query.filter_by(user_id = id).first()
+    user = UserData.query.filter_by(ud_id = id).first()
     # Add if-check for if twitter exists
+    if not user:
+        return jsonify({
+            "STATUS_CODE": "500",
+            "Message": "Please ensure the user exists!"
+        })
     user.ud_twitter = twitter
-    db.session.commit()
     if (twitter == ""):
         return jsonify({
             "STATUS_CODE": "500",
             "Message": "Please provide a twitter username"
         })
     else:
+        db.session.commit()
         return jsonify({
             "STATUS_CODE": "200",
             "Message": "Thank you!"
@@ -191,9 +196,8 @@ def get_tweets():
     })
 
 # finds nearest neighbours for a given user
-
-
 @app.route('/find_matches', methods=['GET'])
+@cross_origin()
 def find_matches():
     param = request.args.get('user_id')
     limit = request.args.get('limit')
