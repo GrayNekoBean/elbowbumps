@@ -148,7 +148,7 @@ def add_twitter_username():
             else:
                 user.ud_twitter = twitter
                 print(twitter_id)
-                # to-do save the twitter-id to database, make a new column
+
                 user.ud_id_twitter = twitter_id
                 db.session.commit()
                 return jsonify({
@@ -206,6 +206,12 @@ def get_tweets():
     user_id = request.args.get('user_id')
     category = request.args.get('category')
     user = UserData.query.filter_by(ud_id=user_id).first()
+    user_interests = TwitterData.query.filter_by(td_ud_id=user_id).first()
+    if user_interests:
+        return jsonify({
+            "STATUS_CODE": '500',
+            "Message": f"User with userID {user_id} already registered"
+        })
     score = getTweets(user.ud_id_twitter, category)
     data = TwitterData(user_id, category, score)
     db.session.add(data)

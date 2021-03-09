@@ -38,13 +38,13 @@ def connect_to_endpoint(url, headers, params={}):
     return response.json()
 
 def getTweets(user, category):
-    bearer_token = auth()
+    bearer_token = 'AAAAAAAAAAAAAAAAAAAAAGdUMwEAAAAAoATpgUpvx1d9mrcHPuHkkYLDJTo%3DABfbwqrBlaWD6pwE1lMgBzWjiZHZZZQ3QUrW4yq2439j7Od0hE'
     headers = create_headers(bearer_token)
 
     params = get_params()
     url_tweets = create_url_tweets(int(user))
     tweets_data = connect_to_endpoint(url_tweets, headers, params)
-
+    print(json.dumps(tweets_data, indent=4, sort_keys=True))
     return categoryScore(tweets_data["data"])
 
 
@@ -56,13 +56,12 @@ def categoryScore(data):
     for i in range(len(data)):
         if "context_annotations" in data[i]:
             for value in data[i]["context_annotations"]:
-                print(value)
                 if value["domain"]["name"] == "Sport":
                     print("You've got a sport")
                     sentence = data[i]["text"]
                     vs = analyzer.polarity_scores(sentence)
                     print("{:-<65} {}".format(sentence, str(vs)))
-                    if vs["compound"] != 0:
-                        total = total + vs["compound"]
+                    if vs["pos"] >= 0.1:
+                        total = total + vs["compound"] 
                         total_sen +=1
     return total / total_sen
