@@ -3,6 +3,10 @@ from elbowbumps.twitter_scraper import getTweets
 from elbowbumps.twitter_id_lookup import twitterID
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
+import os
+load_dotenv('bearerToken.env')
+
 app = Flask(__name__)
 cors = CORS(app)
 

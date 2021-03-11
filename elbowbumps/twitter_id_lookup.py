@@ -8,7 +8,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 
 def auth():
-    return os.environ.get("BEARER_TOKEN")
+    return os.getenv("BEARER_TOKEN")
 
 def create_url_id(username):
     return "https://api.twitter.com/2/users/by/username/{}".format(username)
@@ -24,14 +24,15 @@ def create_headers(bearer_token):
 
 
 def twitterID(user):
-    bearer_token = 'AAAAAAAAAAAAAAAAAAAAAGdUMwEAAAAAoATpgUpvx1d9mrcHPuHkkYLDJTo%3DABfbwqrBlaWD6pwE1lMgBzWjiZHZZZQ3QUrW4yq2439j7Od0hE'
+    bearer_token = auth()
+    print(bearer_token)
     headers = create_headers(bearer_token)
     url_id = create_url_id(user)
     response = requests.request("GET", url_id, headers=headers, params={})
     print(response.status_code)
     data = response.json()
+    print("Request returned an error: {} {}".format(response.status_code, response.text))
     if "errors" in data:
-        #return "Request returned an error: {} {}".format(response.status_code, response.text)
         return False
     else:
         data = response.json()

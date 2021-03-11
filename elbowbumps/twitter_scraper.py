@@ -2,13 +2,14 @@ import requests
 import os
 import json
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+import os
 
 # To set your environment variables in your terminal run the following line:
 # export 'BEARER_TOKEN'='<your_bearer_token>'
 
 
 def auth():
-    return os.environ.get("BEARER_TOKEN")
+    return os.getenv("BEARER_TOKEN")
 
 
 
@@ -38,7 +39,7 @@ def connect_to_endpoint(url, headers, params={}):
     return response.json()
 
 def getTweets(user, category):
-    bearer_token = 'AAAAAAAAAAAAAAAAAAAAAGdUMwEAAAAAoATpgUpvx1d9mrcHPuHkkYLDJTo%3DABfbwqrBlaWD6pwE1lMgBzWjiZHZZZQ3QUrW4yq2439j7Od0hE'
+    bearer_token = auth()
     headers = create_headers(bearer_token)
 
     params = get_params()
