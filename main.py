@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 cors = CORS(app)
 
-ENV = 'dev'
+ENV = ''
 if ENV == 'dev':
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123@localhost/'
     app.debug = True
