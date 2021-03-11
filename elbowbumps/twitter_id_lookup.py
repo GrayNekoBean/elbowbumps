@@ -25,7 +25,6 @@ def create_headers(bearer_token):
 
 def twitterID(user):
     bearer_token = auth()
-    print(bearer_token)
     headers = create_headers(bearer_token)
     url_id = create_url_id(user)
     response = requests.request("GET", url_id, headers=headers, params={})
