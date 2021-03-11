@@ -7,6 +7,9 @@ from dotenv import load_dotenv
 import os
 load_dotenv('bearerToken.env')
 
+# If you want the bearer token for the twitterAPI, ask Zoya. You need to make a bearerToken.env file in this directory 
+# with the format BEARER_TOKEN="<thebearertoken>"
+
 app = Flask(__name__)
 cors = CORS(app)
 

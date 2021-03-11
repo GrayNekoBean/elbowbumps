@@ -3,9 +3,6 @@ import os
 import json
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-# To set your environment variables in your terminal run the following line:
-# export 'BEARER_TOKEN'='<your_bearer_token>'
-
 
 def auth():
     return os.getenv("BEARER_TOKEN")
