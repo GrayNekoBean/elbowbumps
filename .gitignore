@@ -2,7 +2,7 @@ venv
 venv_win
 *.pyc
 staticfiles
-.env
+*.env
 db.sqlite3
 getting-started/*
 .vscode
