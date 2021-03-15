@@ -18,7 +18,7 @@ else:
 
 
 db = SQLAlchemy(app)
-from elbowbumps.models import UserData, UserInterestData
+from elbowbumps.models import UserData, UserInterestData, TwitterData
 db.create_all()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
