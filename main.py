@@ -173,7 +173,7 @@ def loginUser():
     email = request.form.get('email')
     pw = request.form.get('pw')
     user = UserData.query.filter_by(ud_email=email).first()
-    if not user or not check_password_hash(user.pw, pw):
+    if not user or user.pw != pw:
         return jsonify({
             "STATUS_CODE": "500",
             "Message": "Please Check email or password"
