@@ -2,34 +2,11 @@ from flask import Flask, request, jsonify
 from elbowbumps.twitter_scraper import getTweets
 from elbowbumps.twitter_id_lookup import twitterID
 from flask_cors import CORS, cross_origin
-from flask_sqlalchemy import SQLAlchemy
-from dotenv import load_dotenv
-import os
-load_dotenv('bearerToken.env')
+from elbowbumps import create_app, db
 
-# If you want the bearer token for the twitterAPI, ask Zoya. You need to make a bearerToken.env file in this directory 
-# with the format BEARER_TOKEN="<thebearertoken>"
-
-app = Flask(__name__)
+app = create_app()
 cors = CORS(app)
-
-ENV = ''
-if ENV == 'dev':
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123@localhost/'
-    app.debug = True
-    # Change the line below to your own local database for testing purposes
-
-else:
-    import os
-    app.debug = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
-
-
-db = SQLAlchemy(app)
 from elbowbumps.models import UserData, UserInterestData, TwitterData
-db.create_all()
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 
 @app.route('/getmsg/', methods=['GET'])
 def respond():
@@ -292,5 +269,7 @@ def index():
 
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     # Threaded option to enable multiple instances for multiple user access support
     app.run(threaded=True, port=5000)
