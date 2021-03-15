@@ -13,7 +13,7 @@ load_dotenv('bearerToken.env')
 app = Flask(__name__)
 cors = CORS(app)
 
-ENV = 'dev'
+ENV = ''
 if ENV == 'dev':
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123@localhost/'
     app.debug = True
@@ -131,7 +131,6 @@ def add_twitter_username():
     twitter = request.form.get('twitterUsername')
     id = request.args.get('user_id')
     user = UserData.query.filter_by(ud_id = id).first()
-
     if not user:
         return jsonify({
             "STATUS_CODE": "500",
@@ -167,6 +166,11 @@ def add_twitter_username():
             "STATUS_CODE": "500",
             "Message": "Please provide a unique twitter username"
             })
+        db.session.commit()
+        return jsonify({
+            "STATUS_CODE": "200",
+            "Message": "Thank you!"
+        })
 
 
 @app.route('/register', methods=['POST'])
@@ -228,10 +232,8 @@ def get_tweets():
     })
 
 # finds nearest neighbours for a given user
-
-
 @app.route('/find_matches', methods=['GET'])
-@cross_origin
+@cross_origin()
 def find_matches():
     param = request.args.get('user_id')
     limit = request.args.get('limit')
