@@ -1,4 +1,4 @@
-// This will go under account when you match with them but I'll put it here for now
+// This will go under account when you match with them but I'll put it here for now 
 // There are three outputs of the report form, 'report' (a radio option)', 'how' (a radio option) and 'details' (text)
 
 <template>

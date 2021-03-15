@@ -8,7 +8,7 @@
 
 <script>
 export default {
-    methods: {
+    methods: { 
         logout: function(){
             sessionStorage.removeItem("current_user");
             localStorage.removeItem("current_user");

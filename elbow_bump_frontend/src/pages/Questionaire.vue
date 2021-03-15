@@ -1,15 +1,15 @@
 <template>
-
+    
 </template>
 
 <script>
 export default {
-    methods: {
+    methods: { 
 
         GenQuestionWithFile : function(path){
             return "";
         },
-
+        
         GenerateQuestion : function(question_text){
 
         }

@@ -26,7 +26,7 @@ export default {
 
 .question-div {
     position: absolute;
-    display: block;
+    display: block;    
 }
 
 .question-paragraph{

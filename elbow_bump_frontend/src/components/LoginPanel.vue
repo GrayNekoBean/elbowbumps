@@ -81,15 +81,15 @@ export default {
         },
         submitLoginInfo() {
 
-            // One hash operation in client side, and another hash operation in server side.
+            // One hash operation in client side, and another hash operation in server side. 
             // Not 100% safe, still easy to be hacked, but enough for demo XD
             let hashedPw = crypto.createHash('sha1').update(this.pw).digest('hex');
-
+            
             let authInfo = {
             email: this.email,
             password: hashedPw
             };
-
+            
             let url = "http://127.0.0.1:5000/login";
             axios.post(url, authInfo).then(
             (response) => {
@@ -146,8 +146,8 @@ $background-color: #fffaba;
   margin-left: 5rem;
   top: 20%;
   bottom: 10%;
-  width: 40rem;
-  height: 38rem;
+  width: 40rem; 
+  height: 38rem; 
   z-index: 2;
 }
 

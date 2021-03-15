@@ -1,10 +1,10 @@
-template>
+<template>
   <section>
     <Card class="main-frame">
       <template #header>
         <Card class="header-menu">
           <template #header>
-            <h1 style="text-align: left">Welcome to Elbow Bump</h1>
+            <!--<h1 style="text-align: left">Welcome to Elbow Bump</h1>-->
             <TabView v-model:activeIndex="header_active">
               <TabPanel header="Home"></TabPanel>
               <TabPanel header="About"></TabPanel>
@@ -80,17 +80,17 @@ export default {
       this.setLoginState();
     }
   },
-  methods: {
+  methods: { 
     setLoginState: function(){
-
+      
       this.login_profile = "Profile";
       this.register_settings = "Settings";
 
       this.id_routers[2] = "/profile";
       this.id_routers[3] = "/settings";
-
+      
       this.routers_id = this.swapKeyValue(this.id_routers);
-
+      
     },
     setLogoutState: function(){
       this.login_profile = "Login";
@@ -149,7 +149,7 @@ body{
         padding: 0 !important;
         height: 0%;
     }
-
+    
 
     .p-tabview-nav{
         li {

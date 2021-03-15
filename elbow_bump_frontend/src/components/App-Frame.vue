@@ -73,15 +73,15 @@ export default {
   },
   methods: {
     setLoginState: function(){
-
+      
       this.login_profile = "Profile";
       this.register_settings = "Settings";
 
       this.id_routers[2] = "/profile";
       this.id_routers[3] = "/settings";
-
+      
       this.routers_id = this.swapKeyValue(this.id_routers);
-
+      
     },
     swapKeyValue: function(obj){
       let res = {};
@@ -121,7 +121,7 @@ $background-color: #fffaba;
         padding: 0 !important;
         height: 0%;
     }
-
+    
 
     .p-tabview-nav{
         li {
