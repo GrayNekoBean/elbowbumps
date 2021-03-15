@@ -1,7 +1,15 @@
 from flask import Flask, request, jsonify
 from elbowbumps.twitter_scraper import getTweets
+from elbowbumps.twitter_id_lookup import twitterID
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
+import os
+load_dotenv('bearerToken.env')
+
+# If you want the bearer token for the twitterAPI, ask Zoya. You need to make a bearerToken.env file in this directory 
+# with the format BEARER_TOKEN="<thebearertoken>"
+
 app = Flask(__name__)
 cors = CORS(app)
 
@@ -123,19 +131,41 @@ def add_twitter_username():
     twitter = request.form.get('twitterUsername')
     id = request.args.get('user_id')
     user = UserData.query.filter_by(ud_id = id).first()
-    # Add if-check for if twitter exists
     if not user:
         return jsonify({
             "STATUS_CODE": "500",
             "Message": "Please ensure the user exists!"
         })
-    user.ud_twitter = twitter
     if (twitter == ""):
         return jsonify({
             "STATUS_CODE": "500",
             "Message": "Please provide a twitter username"
         })
     else:
+        query = f'SELECT * FROM user_data WHERE ud_twitter = \'{twitter}\';'
+        results = db.engine.execute(query)
+        if results.rowcount == 0:
+            twitter_id = twitterID(twitter)
+            if twitter_id == False:
+                return jsonify ({
+                    "STATUS_CODE": "500",
+                    "Message": "Please provide a real twitter username"
+                })
+            else:
+                user.ud_twitter = twitter
+                print(twitter_id)
+
+                user.ud_id_twitter = twitter_id
+                db.session.commit()
+                return jsonify({
+                    "STATUS_CODE": "200",
+                    "Message": "Thank you!"
+                })
+        else:
+            return jsonify ({
+            "STATUS_CODE": "500",
+            "Message": "Please provide a unique twitter username"
+            })
         db.session.commit()
         return jsonify({
             "STATUS_CODE": "200",
@@ -187,8 +217,14 @@ def get_tweets():
     user_id = request.args.get('user_id')
     category = request.args.get('category')
     user = UserData.query.filter_by(ud_id=user_id).first()
-    score = getTweets(user.ud_twitter, category)
-    data = TwitterData(user_id, user.ud_twitter, category, score)
+    user_interests = TwitterData.query.filter_by(td_ud_id=user_id).first()
+    if user_interests:
+        return jsonify({
+            "STATUS_CODE": '500',
+            "Message": f"User with userID {user_id} already registered"
+        })
+    score = getTweets(user.ud_id_twitter, category)
+    data = TwitterData(user_id, category, score)
     db.session.add(data)
     db.session.commit()
     return jsonify({

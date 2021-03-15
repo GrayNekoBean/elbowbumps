@@ -12,8 +12,9 @@ class UserData(db.Model):
     ud_password = db.Column(db.String(100))
     ud_gender = db.Column(db.Enum('M', 'F', 'NB', name='gender'))
     ud_twitter = db.Column(db.String(50), unique=False)
+    ud_id_twitter = db.Column(db.String(50), unique=False)
 
-    def __init__(self, forename, surname, birthyear, email, phone, password, gender, twitter=''):
+    def __init__(self, forename, surname, birthyear, email, phone, password, gender, twitter='', id_twitter=''):
         self.ud_forename = forename
         self.ud_surname = surname
         self.ud_birthyear = birthyear
@@ -22,6 +23,7 @@ class UserData(db.Model):
         self.ud_password = password
         self.ud_gender = gender
         self.ud_twitter = twitter
+        self.ud_id_twitter = id_twitter
     
     def serialise(self):
         return {
@@ -32,7 +34,8 @@ class UserData(db.Model):
             'email': self.ud_email,
             'phone': self.ud_phone,
             'gender': self.ud_gender,
-            'twitter': self.ud_twitter
+            'twitter': self.ud_twitter,
+            'id_twitter': self.ud_id_twitter
         }
 
 class UserInterestData(db.Model):
@@ -57,13 +60,11 @@ class TwitterData(db.Model):
     #columns: user_id, twitter_username, category, category score
     td_id = db.Column(db.Integer, primary_key=True)
     td_ud_id = db.Column(db.Integer)
-    td_twitter_name = db.Column(db.String(15))
     td_category = db.Column(db.String(20))
     td_category_score = db.Column(db.Float(10))
 
-    def __init__(self, ud_id, twitter_name, category, category_score):
+    def __init__(self, ud_id, category, category_score):
         self.td_ud_id = ud_id
-        self.td_twitter_name = twitter_name
         self.td_category = category
         self.td_category_score = category_score
 

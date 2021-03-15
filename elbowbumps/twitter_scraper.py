@@ -2,16 +2,12 @@ import requests
 import os
 import json
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-
-# To set your environment variables in your terminal run the following line:
-# export 'BEARER_TOKEN'='<your_bearer_token>'
-
+import os
 
 def auth():
-    return os.environ.get("BEARER_TOKEN")
+    return os.getenv("BEARER_TOKEN")
 
-def create_url_id(username):
-    return "https://api.twitter.com/2/users/by/username/{}".format(username)
+
 
 def create_url_tweets(user_id):
     return "https://api.twitter.com/2/users/{}/tweets".format(user_id)
@@ -42,16 +38,11 @@ def getTweets(user, category):
     bearer_token = auth()
     headers = create_headers(bearer_token)
 
-    url_id = create_url_id(user)
-    id_lookup_data = connect_to_endpoint(url_id, headers)
-    user_id = id_lookup_data["data"]["id"]
-
     params = get_params()
-    url_tweets = create_url_tweets(user_id)
+    url_tweets = create_url_tweets(int(user))
     tweets_data = connect_to_endpoint(url_tweets, headers, params)
-
+    print(json.dumps(tweets_data, indent=4, sort_keys=True))
     return categoryScore(tweets_data["data"])
-
 
 
 def categoryScore(data):
@@ -62,13 +53,12 @@ def categoryScore(data):
     for i in range(len(data)):
         if "context_annotations" in data[i]:
             for value in data[i]["context_annotations"]:
-                print(value)
                 if value["domain"]["name"] == "Sport":
                     print("You've got a sport")
                     sentence = data[i]["text"]
                     vs = analyzer.polarity_scores(sentence)
                     print("{:-<65} {}".format(sentence, str(vs)))
-                    if vs["compound"] != 0:
-                        total = total + vs["compound"]
+                    if vs["pos"] >= 0.1:
+                        total = total + vs["compound"] 
                         total_sen +=1
     return total / total_sen
