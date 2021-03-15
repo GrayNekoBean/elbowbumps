@@ -12,7 +12,8 @@
     "primeicons": "^4.1.0",
     "primevue": "^3.3.4",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.3"
+    "vue-router": "^4.0.3",
+    "vuex": "^4.0.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.11",
@@ -24,7 +25,7 @@
     "crypto": "^1.0.1",
     "eslint": "^7.21.0",
     "eslint-plugin-vue": "^7.7.0",
-    "node-sass": "4.14.1",
+    "node-sass": "^5.0.0",
     "sass-loader": "^10.1.1",
     "scss-loader": "0.0.1"
   },

@@ -11,6 +11,7 @@ import SocialMediaInfo from "./pages/SocialMediaInfo.vue";
 import About from "./pages/About.vue";
 import Report from "./pages/Report.vue";
 import Profile from "./pages/Profile.vue";
+import Matches from "./pages/Matches.vue";
 
 export default createRouter({
   history: createWebHistory(),
@@ -53,6 +54,11 @@ export default createRouter({
       component: About,
     },
     {
+      name: "matches",
+      path: "/matches",
+      component: Matches,
+    },
+    {
       name: "report",
       path: "/report",
       component: Report,
@@ -75,8 +81,8 @@ export default createRouter({
     {
       name: "profile",
       path: "/profile",
-      component: Profile
-    }
+      component: Profile,
+    },
   ],
   linkActiveClass: "active",
   scrollBehavior(_, __, savedPosition) {
