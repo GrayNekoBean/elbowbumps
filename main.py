@@ -43,7 +43,7 @@ def add_interest_score():
         'MESSAGE': 'row added successfully'
     })
 
-@app.route('/match_info', methods=['GET'])
+@app.route('/match_info', methods=['POST'])
 @cross_origin()
 def match_info():
     matches = request.form.get('matches')
