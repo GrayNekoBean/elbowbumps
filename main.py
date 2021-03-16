@@ -46,11 +46,10 @@ def add_interest_score():
 @app.route('/match_info', methods=['GET'])
 @cross_origin()
 def match_info():
-    user_id = request.form.get('user_id')
     matches = request.form.get('matches')
     match_info = []
     for match in matches:
-        user = UserData.query.filter_by(ud_id=user_id).first()
+        user = UserData.query.filter_by(ud_id=match.uid_ud_id).first()
         match_info.append(user.serialise)
     return jsonify({
         "STATUS_CODE": 200,
