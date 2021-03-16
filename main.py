@@ -46,8 +46,8 @@ def add_interest_score():
 @app.route('/match_info', methods=['GET'])
 @cross_origin()
 def match_info():
-    user_id = request.args.get('user_id')
-    matches = request.args.get('matches')
+    user_id = request.form.get('user_id')
+    matches = request.form.get('matches')
     match_info = []
     for match in matches:
         user = UserData.query.filter_by(ud_id=user_id).first()
