@@ -43,6 +43,18 @@ def add_interest_score():
         'MESSAGE': 'row added successfully'
     })
 
+@app.route('/match_info', methods=['GET'])
+@cross_origin()
+def match_info():
+    matches = request.form.get('matches')
+    match_info = []
+    for match in matches:
+        user = UserData.query.filter_by(ud_id=match.uid_ud_id).first()
+        match_info.append(user.serialise)
+    return jsonify({
+        "STATUS_CODE": 200,
+        'match_info': match_info
+    })
 
 @app.route('/questionnaire', methods=['POST'])
 @cross_origin()
@@ -156,11 +168,14 @@ def loginUser():
     email = request.form.get('email')
     pw = request.form.get('pw')
     user = UserData.query.filter_by(ud_email=email).first()
-    if not user or not check_password_hash(user.pw, pw):
+    if not user or user.ud_password != pw:
         return jsonify({
+            "STATUS_CODE": "500",
             "Message": "Please Check email or password"
         })
     return jsonify({
+        "STATUS_CODE": "200",
+        "id": user.ud_id,
         "Message": "Successfully logged in"
     })
 
