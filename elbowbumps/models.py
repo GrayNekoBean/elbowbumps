@@ -68,19 +68,5 @@ class UserInterestData(db.Model):
 
         self.uid_squared_weight = self.uid_interest_weight * self.uid_interest_weight
 
-class TwitterData(db.Model):
-    __tablename__ = 'twitter_data'
-
-    #columns: user_id, twitter_username, category, category score
-    td_id = db.Column(db.Integer, primary_key=True)
-    td_ud_id = db.Column(db.Integer)
-    td_category = db.Column(db.String(20))
-    td_category_score = db.Column(db.Float(10))
-
-    def __init__(self, ud_id, category, category_score):
-        self.td_ud_id = ud_id
-        self.td_category = category
-        self.td_category_score = category_score
-
 
 
