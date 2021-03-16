@@ -27,7 +27,7 @@ class UserData(db.Model):
     
     def serialise(self):
         return {
-            'id': self.user_id,
+            'id': self.ud_id,
             'forename': self.ud_forename,
             'surname': self.ud_surname,
             'birthyear': self.ud_birthyear,
@@ -78,8 +78,8 @@ class UserMatch(db.Model):
     um_2_matched = db.Column(db.Boolean)
     
     def __init__(self, id_1, id_2):
-        self.ud_id_1 = id_1
-        self.ud_id_2 = id_2
+        self.um_ud_id_1 = id_1
+        self.um_ud_id_2 = id_2
         self.um_1_matched = False
         self.um_2_matched = False
     

@@ -7,7 +7,7 @@ from json import loads
 
 app = create_app()
 cors = CORS(app)
-from elbowbumps.models import UserData, UserInterestData
+from elbowbumps.models import UserData, UserInterestData, UserMatch
 
 # Updates interests for a given user
 @app.route('/update_interests', methods=['POST'])
@@ -48,6 +48,7 @@ def add_interest_score():
 @cross_origin()
 def match_info():
     matches = loads(request.form.get('matches'))
+    print(matches)
     match_info = []
     for match in matches:
         user = UserData.query.filter_by(ud_id=match['uid_ud_id']).first()
@@ -57,15 +58,46 @@ def match_info():
         'match_info': match_info
     })
 
+@app.route('/bump', methods=['POST'])
+@cross_origin()
+def bump():
+    user_id = request.form.get('userId')
+    match_id = request.form.get('matchId')
+    m1 = UserMatch.query.filter(UserMatch.um_ud_id_1==user_id).filter(UserMatch.um_ud_id_2==match_id).first()
+    m2 = UserMatch.query.filter(UserMatch.um_ud_id_2==user_id).filter(UserMatch.um_ud_id_1==match_id).first()
+    if m1:
+        m1.um_1_matched = True
+        db.session.commit()
+        return jsonify({"STATUS_CODE": 200})
+    else:
+        m2.um_2_matched = True
+        db.session.commit()
+        return jsonify({"STATUS_CODE": 200})
+
+@app.route('/get_bumps', methods=['GET'])
+@cross_origin()
+def get_bumps():
+    user_id = request.args.get('user_id')
+    matches = UserMatch.query.filter((UserMatch.um_ud_id_1 == user_id) | (UserMatch.um_ud_id_2 == user_id)).filter(UserMatch.um_1_matched == True).filter(UserMatch.um_2_matched == True).all()
+    match_ids = []
+    for m in matches:
+        if (m.um_ud_id_1 == int(user_id)):
+            match_ids.append(m.um_ud_id_2)
+        else:
+            match_ids.append(m.um_ud_id_1)
+    return jsonify({
+        'matches': match_ids
+    })
+
 @app.route('/questionnaire', methods=['POST'])
 @cross_origin()
 def add_questionnaire_scores():
     # will end up being a list, probably, when we have multiple scores instrad of one
-    score = request.args.get('sportScore')
+    score = request.args.get('basketballScore')
     user_id = request.args.get('user_id')
     # may have to change up the numbers to fit with twitter scores
 
-    category = 'sport'
+    category = 'Basketball'
     user_interests = UserInterestData.query.filter_by(uid_id=user_id).first()
     if user_interests:
         user_interests.uid_questionnaire_score = int(score) / 5
@@ -89,8 +121,8 @@ def add_questionnaire_scores():
 # updating record to fill in the questionnaire score in the database - Lily
 @app.route('/social_media_info', methods=['POST'])
 def add_twitter_username():
-    twitter = request.form.get('twitterUsername')
-    id = request.args.get('user_id')
+    twitter = request.args.get('twitter')
+    id = request.args.get('id')
     user = UserData.query.filter_by(ud_id = id).first()
     if not user:
         return jsonify({
@@ -223,9 +255,18 @@ def find_matches():
     limit = request.args.get('limit')
     query = f'select uid1.uid_ud_id, uid2.uid_ud_id, sqrt(uid1.uid_squared_weight + uid2.uid_squared_weight - (2*uid1.uid_interest_weight*uid2.uid_interest_weight)) as distance from user_interest_data uid1 , user_interest_data uid2 where uid1.uid_interest_type = uid2.uid_interest_type and uid1.uid_id <> uid2.uid_id and uid1.uid_ud_id = {param} and uid1.uid_ud_id <> uid2.uid_ud_id group by uid2.uid_ud_id, uid1.uid_ud_id, uid1.uid_squared_weight,uid2.uid_squared_weight,uid1.uid_interest_weight,uid2.uid_interest_weight order by distance limit {limit};'
     results = db.engine.execute(query)
+    response = []
+    for res in results:
+        response.append(dict(res))
+        m1 = UserMatch.query.filter_by(um_ud_id_1=param,um_ud_id_2=res.uid_ud_id).first()
+        m2 = UserMatch.query.filter_by(um_ud_id_2=param,um_ud_id_1=res.uid_ud_id).first()
+        if not m1 and not m2:
+            newMatch = UserMatch(param, res.uid_ud_id)
+            db.session.add(newMatch)
+    db.session.commit()
     return jsonify({
         'STATUS_CODE': '200',
-        'result': [dict(row) for row in results]
+        'result': response
     })
 
 # Gets recommendations for a given user
