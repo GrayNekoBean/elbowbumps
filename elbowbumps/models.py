@@ -68,5 +68,19 @@ class UserInterestData(db.Model):
 
         self.uid_squared_weight = self.uid_interest_weight * self.uid_interest_weight
 
-
+class UserMatch(db.Model):
+    __tablename__ = 'user_match'
+    
+    um_id = db.Column(db.Integer, primary_key=True)
+    um_ud_id_1 = db.Column(db.Integer)
+    um_ud_id_2 = db.Column(db.Integer)
+    um_1_matched = db.Column(db.Boolean)
+    um_2_matched = db.Column(db.Boolean)
+    
+    def __init__(self, id_1, id_2):
+        self.ud_id_1 = id_1
+        self.ud_id_2 = id_2
+        self.um_1_matched = False
+        self.um_2_matched = False
+    
 
