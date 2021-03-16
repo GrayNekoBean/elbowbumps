@@ -51,7 +51,7 @@ def match_info():
     match_info = []
     for match in matches:
         user = UserData.query.filter_by(ud_id=match['uid_ud_id']).first()
-        match_info.append(user.serialise)
+        match_info.append(user.serialise())
     return jsonify({
         "STATUS_CODE": 200,
         'match_info': match_info
