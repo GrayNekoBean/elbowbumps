@@ -43,6 +43,19 @@ def add_interest_score():
         'MESSAGE': 'row added successfully'
     })
 
+@app.route('/match_info', methods=['GET'])
+@cross_origin()
+def match_info():
+    user_id = request.args.get('user_id')
+    matches = request.args.get('matches')
+    match_info = []
+    for match in matches:
+        user = UserData.query.filter_by(ud_id=user_id).first()
+        match_info.append(user.serialise)
+    return jsonify({
+        "STATUS_CODE": 200,
+        'match_info': match_info
+    })
 
 @app.route('/questionnaire', methods=['POST'])
 @cross_origin()
