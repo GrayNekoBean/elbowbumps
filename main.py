@@ -6,7 +6,7 @@ from elbowbumps import create_app, db
 
 app = create_app()
 cors = CORS(app)
-from elbowbumps.models import UserData, UserInterestData, TwitterData
+from elbowbumps.models import UserData, UserInterestData
 
 # Updates interests for a given user
 @app.route('/update_interests', methods=['POST'])
