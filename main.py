@@ -3,6 +3,7 @@ from elbowbumps.twitter_scraper import getTweets
 from elbowbumps.twitter_id_lookup import twitterID
 from flask_cors import CORS, cross_origin
 from elbowbumps import create_app, db
+from json import loads
 
 app = create_app()
 cors = CORS(app)
@@ -46,7 +47,7 @@ def add_interest_score():
 @app.route('/match_info', methods=['POST'])
 @cross_origin()
 def match_info():
-    matches = request.form.get('matches')
+    matches = loads(request.form.get('matches'))
     match_info = []
     for match in matches:
         user = UserData.query.filter_by(ud_id=match.uid_ud_id).first()
