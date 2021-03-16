@@ -8,18 +8,6 @@ This is the backend of the Elbowbump App, build with flask, Python 3.9.1 .
 
 ## Installation
 
-### ~~Heroku~~
-
-**This might not be necessary anymore since we use github to deploy**
-
-If you got a heroku account, please install heroku on your computer and use the
-
-<pre>
-heroku login
-</pre>
-
-to login to your heroku account.
-
 ### Virtual Environment Setup
 
 ## Linux
