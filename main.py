@@ -31,9 +31,9 @@ def update_interests():
 @app.route('/add_interest_score', methods=['POST'])
 def add_interest_score():
     param = request.args.get('user_id')
-    interest = UserInterestData(1, 'Basketball', 0.5)
-    interest2 = UserInterestData(3, 'Basketball', 0.3)
-    interest3 = UserInterestData(4, 'Basketball', 0.4)
+    interest = UserInterestData(1, 'Basketball', 0, 0.5)
+    interest2 = UserInterestData(3, 'Basketball', 0, 0.3)
+    interest3 = UserInterestData(4, 'Basketball', 0, 0.4)
     db.session.add(interest)
     db.session.add(interest2)
     db.session.add(interest3)
@@ -48,16 +48,29 @@ def add_interest_score():
 @cross_origin()
 def add_questionnaire_scores():
     # will end up being a list, probably, when we have multiple scores instrad of one
-    score = request.args.get('basketballScore')
-    id = request.args.get('user_id')
+    score = request.args.get('sportScore')
+    user_id = request.args.get('user_id')
     # may have to change up the numbers to fit with twitter scores
-    interest = UserInterestData(id, 'Basketball', int(score) / 5)
-    db.session.add(interest)
-    db.session.commit()
-    return jsonify({
-        'STATUS_CODE': 200,
-        'MESSAGE': 'row added successfully'
-    })
+
+    category = 'sport'
+    user_interests = UserInterestData.query.filter_by(uid_id=user_id).first()
+    if user_interests:
+        user_interests.uid_questionnaire_score = int(score) / 5
+        user_interests.updateScores()
+        db.session.commit()
+        return jsonify({
+            "STATUS_CODE": 200,
+            "Message": f"Updated userID {user_id} with new category score"
+        })
+    else:
+        data = UserInterestData(user_id, category, 0, int(score) / 5)
+        db.session.add(data)
+        db.session.commit()
+        return jsonify({
+            'STATUS_CODE': 200,
+            'MESSAGE': 'row added successfully'
+        })
+
 
 
 # updating record to fill in the questionnaire score in the database - Lily
@@ -88,8 +101,6 @@ def add_twitter_username():
                 })
             else:
                 user.ud_twitter = twitter
-                print(twitter_id)
-
                 user.ud_id_twitter = twitter_id
                 db.session.commit()
                 return jsonify({
@@ -101,11 +112,6 @@ def add_twitter_username():
             "STATUS_CODE": "500",
             "Message": "Please provide a unique twitter username"
             })
-        db.session.commit()
-        return jsonify({
-            "STATUS_CODE": "200",
-            "Message": "Thank you!"
-        })
 
 
 @app.route('/register', methods=['POST'])
@@ -116,12 +122,24 @@ def registerUser():
     phoneNum = request.form.get('phoneNum')
     emailAdd = request.form.get('emailAdd')
     pw = request.form.get('pw')
-    user = UserData.query.filter_by(ud_email=emailAdd).first()
-    if user:
+    user_email_check = UserData.query.filter_by(ud_email=emailAdd).first()
+    user_phone_check = UserData.query.filter_by(ud_phone=phoneNum).first()
+    if user_email_check:
         return jsonify({
             "STATUS_CODE": '500',
             "Message": f"User with email {emailAdd} already registered"
         })
+    elif user_phone_check:
+        return jsonify({
+            "STATUS_CODE": '500',
+            "Message": f"User with phone number {phoneNum} already registered"
+        })
+    elif fName == "" or sName == "" or phoneNum == "" or pw == "" or emailAdd == "":
+        return jsonify({
+            "STATUS_CODE": '500',
+            "Message": f"Fill in all fields"
+        })
+
     # User data columns: forename, surname, birthyear, email, phone, password, gender, twitter
     newUser = UserData(fName, sName, '2000', emailAdd, phoneNum, pw, 'M', '')
     db.session.add(newUser)
@@ -152,19 +170,34 @@ def get_tweets():
     user_id = request.args.get('user_id')
     category = request.args.get('category')
     user = UserData.query.filter_by(ud_id=user_id).first()
-    user_interests = TwitterData.query.filter_by(td_ud_id=user_id).first()
-    if user_interests:
+    user_interests = UserInterestData.query.filter_by(uid_id=user_id).first()
+    if not user:
         return jsonify({
-            "STATUS_CODE": '500',
-            "Message": f"User with userID {user_id} already registered"
+            "STATUS_CODE": "500",
+            "Message": "Please ensure the user exists!"
+            })
+    elif user.ud_twitter == "":
+          return jsonify({
+            "STATUS_CODE": "500",
+            "Message": "Please ensure the user has a social media account registered"
+            })
+    elif user_interests:
+        user_interests.uid_twitter_score = getTweets(user.ud_id_twitter, category)
+        user_interests.updateScores()
+        db.session.commit()
+        return jsonify({
+            "STATUS_CODE": '200',
+            "Message": f"Updated userID {user_id} with new category score"
         })
-    score = getTweets(user.ud_id_twitter, category)
-    data = TwitterData(user_id, category, score)
-    db.session.add(data)
-    db.session.commit()
-    return jsonify({
-        'status_code': '200'
-    })
+    else:
+        score = getTweets(user.ud_id_twitter, category)
+        data = UserInterestData(user_id, category, score, 0)
+        db.session.add(data)
+        db.session.commit()
+        return jsonify({
+            'status_code': '200',
+            "Message": f"Added new row for userID {user_id} with new category score"
+        })
 
 # finds nearest neighbours for a given user
 @app.route('/find_matches', methods=['GET'])
