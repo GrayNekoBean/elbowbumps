@@ -4,6 +4,7 @@ class UserData(db.Model):
     __tablename__ = 'user_data'
 
     ud_id = db.Column(db.Integer, primary_key=True)
+    ud_avatar = db.Column(db.String(50), unique=True)
     ud_forename = db.Column(db.String(50))
     ud_surname = db.Column(db.String(50))
     ud_birthyear = db.Column(db.Integer)

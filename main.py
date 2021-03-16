@@ -47,12 +47,15 @@ def add_interest_score():
 @app.route('/questionnaire', methods=['POST'])
 @cross_origin()
 def add_questionnaire_scores():
-    # will end up being a list, probably, when we have multiple scores instrad of one
-    score = request.args.get('basketballScore')
-    id = request.args.get('user_id')
-    # may have to change up the numbers to fit with twitter scores
-    interest = UserInterestData(id, 'Basketball', int(score) / 5)
-    db.session.add(interest)
+    jsonData = request.get_json()
+    catedScores = jsonData['scores']
+    id = jsonData.get('user_id')
+    for cat in catedScores:
+        # will end up being a list, probably, when we have multiple scores instrad of one
+        score = catedScores[cat]
+        # may have to change up the numbers to fit with twitter scores
+        interest = UserInterestData(id, cat, score)
+        db.session.add(interest)
     db.session.commit()
     return jsonify({
         'STATUS_CODE': 200,
