@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     submitScore() {
-      let localURL = `${this.$store.getters.localURL}/questionnaire?user_id=${this.$store.getters.userId}&basketballScore=${this.basketballScore}`;
+      let localURL = `${this.$store.getters.URL}/questionnaire?user_id=${this.$store.getters.userId}&basketballScore=${this.basketballScore}`;
       axios
         .post(localURL)
         .then((res) => {

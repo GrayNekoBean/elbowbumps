@@ -83,9 +83,8 @@ export default {
   },
   methods: {
     registerUser() {
-      let remote_url =
-        "http://ec2-54-198-73-79.compute-1.amazonaws.com/register";
-      let local_url = "http://localhost:5000/register";
+      let url = `${this.$store.getters.URL}/register`;
+      console.log(url)
 
       let hashedPw = crypto
         .createHash("sha1")
@@ -98,7 +97,7 @@ export default {
       formData.append("emailAdd", this.enteredemailAdd)
       formData.append("pw", hashedPw)
       axios
-        .post(local_url, formData) 
+        .post(url, formData) 
         .then((response) => {
           if (response.data.STATUS_CODE != 200) {
             this.errors.push(response.data.Message)

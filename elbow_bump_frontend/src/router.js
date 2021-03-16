@@ -12,6 +12,7 @@ import About from "./pages/About.vue";
 import Report from "./pages/Report.vue";
 import Profile from "./pages/Profile.vue";
 import Matches from "./pages/Matches.vue";
+import Bumps from "./pages/Bumps.vue";
 
 export default createRouter({
   history: createWebHistory(),
@@ -22,6 +23,11 @@ export default createRouter({
       components: {
         default: HomePage,
       },
+    },
+    {
+      name: "bumps",
+      path: "/bumps",
+      component: Bumps
     },
     {
       name: "forgot",

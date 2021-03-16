@@ -1,11 +1,16 @@
 import { createStore } from "vuex";
+import createPresistedState from 'vuex-persistedstate'
 
 export default createStore({
+  plugins: [createPresistedState({
+    storage: window.sessionStorage,
+  })],
   state: {
     isLoggedIn: false,
     userId: null,
-    remoteURL: "http://ec2-54-198-73-79.compute-1.amazonaws.com/",
+    remoteURL: "http://secret-crag-87848.herokuapp.com/",
     localURL: "http://localhost:5000/",
+    isUsingRemote: true,
     matchesRetrieved: false,
   },
   mutations: {
@@ -38,11 +43,8 @@ export default createStore({
     userId: (state) => {
       return state.userId;
     },
-    remoteURL: (state) => {
-      return state.remoteURL;
-    },
-    localURL: (state) => {
-      return state.localURL;
+    URL: (state) => {
+      return state.isUsingRemote ? state.remoteURL : state.localURL;
     },
     matchesRetrieved: (state) => {
       return state.matchesRetrieved;
