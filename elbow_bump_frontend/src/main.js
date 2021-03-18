@@ -14,6 +14,7 @@ import TabMenu from "primevue/tabmenu";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 import RadioButton from "primevue/radiobutton";
+import FileUpload from "primevue/fileupload";
 
 import "primevue/resources/themes/saga-blue/theme.css"; // theme
 import "primevue/resources/primevue.min.css"; // core css
@@ -36,5 +37,6 @@ app.component("TabView", TabView);
 app.component("TabPanel", TabPanel);
 app.component("TabMenu", TabMenu);
 app.component("RadioButton", RadioButton);
+app.component("FileUpload", FileUpload);
 
 app.mount("#app");

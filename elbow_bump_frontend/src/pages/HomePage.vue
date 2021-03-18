@@ -29,7 +29,7 @@
 export default {};
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $primitive-color: #a9edfe;
 $secondary-color: #ffaaaa;
 $background-color: #fffaba;

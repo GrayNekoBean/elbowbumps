@@ -2,7 +2,7 @@
   <div>
     <Card class="register-card">
       <template #header>
-        <div class="heading" style="margin-top: 15rem;">
+        <div class="heading" style="margin-top: 10%;">
           <h2>Create an account</h2>
         </div>
       </template>
@@ -119,16 +119,15 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.register-card {
-  display: block;
-  padding-left: 2rem;
-  margin-top: 5.5rem;
-  margin-left: 5rem;
-  top: 20%;
-  bottom: 10%;
-  width: 40rem;
-  height: 41rem;
-  z-index: 2;
+<style lang="scss" scoped>
+.register-card{
+    position: absolute;
+    display: block;
+    margin-top: 10%;
+    padding-left: 1rem;
+    margin-left: 5rem;
+    width: 40rem; 
+    height: 45rem; 
+    z-index: 2;
 }
 </style>

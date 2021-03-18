@@ -26,7 +26,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $primitive-color: #a9edfe;
 $secondary-color: #ffaaaa;
 $background-color: #fffaba;
@@ -35,7 +35,6 @@ $background-color: #fffaba;
   position: absolute;
   object-fit: contain;
   object-position: 0px, 0px;
-  top: -10%;
   filter: blur(10px);
 }
 
@@ -43,7 +42,6 @@ $background-color: #fffaba;
   position: absolute;
   height: 100%;
   width: 100%;
-  margin-top: 4%;
 }
 
 #login-right {
@@ -74,7 +72,7 @@ $background-color: #fffaba;
   height: 10rem;
   width: 10rem;
   margin-left: 36%;
-  margin-top: 32%;
+  margin-top: 20%;
   z-index: 1;
   border-radius: 50%;
   background: $background-color;

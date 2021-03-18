@@ -8,9 +8,18 @@
             <TabView v-model:activeIndex="header_active">
               <TabPanel header="Home"></TabPanel>
               <TabPanel header="About"></TabPanel>
+              <TabPanel></TabPanel>
+              <TabPanel></TabPanel>
+              <TabPanel></TabPanel>
+              <TabPanel></TabPanel>
+              <TabPanel></TabPanel>
+              <TabPanel></TabPanel>
               <TabPanel :header="login_profile"></TabPanel>
               <TabPanel :header="register_settings"></TabPanel>
             </TabView>
+            <div class="header-title">
+              <h3> Elbow Bumps </h3>
+            </div>
           </template>
         </Card>
       </template>
@@ -51,8 +60,8 @@ export default {
       id_routers: {
         0: "/",
         1: "/about",
-        2: "/login",
-        3: "/register"
+        8: "/login",
+        9: "/register"
       },
       routers_id: {},
       header_items: [
@@ -86,8 +95,8 @@ export default {
       this.login_profile = "Profile";
       this.register_settings = "Settings";
 
-      this.id_routers[2] = "/profile";
-      this.id_routers[3] = "/settings";
+      this.id_routers[9] = "/profile";
+      this.id_routers[10] = "/settings";
       
       this.routers_id = this.swapKeyValue(this.id_routers);
       
@@ -96,8 +105,8 @@ export default {
       this.login_profile = "Login";
       this.register_settings = "Register";
 
-      this.id_routers[2] = "/login";
-      this.id_routers[3] = "/register";
+      this.id_routers[9] = "/login";
+      this.id_routers[10] = "/register";
 
       this.routers_id = this.swapKeyValue(this.id_routers);
     },
@@ -124,14 +133,13 @@ $primitive-color: #a9edfe;
 $secondary-color: #ffaaaa;
 $background-color: #fffaba;
 
-
-body{
-  margin: 0px;
-}
-
 :root{
   --primary-color: #ffaaaa !important;
   --primary-color-text: #fffaba !important;
+}
+
+body{
+  margin: 0px;
 }
 
 .p-tabview-nav-link {
@@ -155,34 +163,41 @@ body{
         li {
           text-align: center;
           margin-right: 0;
-          width: 25%;
+          width: 10%;
+          background: #a9edfe;
         }
 
         li a.p-tabview-nav-link {
-          border-width: 0 2px 2px 0;
-          border-top-right-radius: 0;
-          border-top-left-radius: 0;
-          background: #ffaaaa;
-          border-color: #fffaba;
-          color: #fffaba;
+          border-color: #ffffff;
+          // border-width: 0 2px 2px 0;
+          // border-top-right-radius: 0;
+          // border-top-left-radius: 0;
+          // background: #ffaaaa;
+          // border-color: #fffaba;
+          color: #7da9b4;
+          background: rgba(169, 237, 254, 0.3);;
         }
 
         li.p-highlight a.p-tabview-nav-link{
-          border-width: 0 2px 2px 0;
-          border-top-right-radius: 0;
-          border-top-left-radius: 0;
-          background: #ff8080;
-          border-color: #fffaba;
-          color: #fffaba;
+          border-color: #7da9b4;
+          background: rgba(169, 237, 254, 0.3);;
+          // border-width: 0 2px 2px 0;
+          // border-top-right-radius: 0;
+          // border-top-left-radius: 0;
+          // background: #ff8080;
+          // border-color: #fffaba;
+          // color: #fffaba;
         }
 
         li:not(.p-highlight):not(.p-disabled):hover a.p-tabview-nav-link {
-          border-width: 0 2px 2px 0;
-          border-top-right-radius: 0;
-          border-top-left-radius: 0;
-          background: #ff9090;
-          border-color: #fffaba;
-          color: #fffaba;
+          border-color: #7da9b4;
+          background: rgba(169, 237, 254, 0.3);
+          // border-width: 0 2px 2px 0;
+          // border-top-right-radius: 0;
+          // border-top-left-radius: 0;
+          // background: #ff9090;
+          // border-color: #fffaba;
+          // color: #fffaba;
         }
     }
 }
@@ -202,6 +217,18 @@ body{
   width: 100%;
   height: 100%;
   z-index: 0;
+}
+
+.header-title{
+  position: fixed;
+  display: block;
+  top: 0;
+  margin-left: 20%;
+  height: 3.3rem;
+  text-align: center;
+  background: rgba(169, 237, 254, 1);
+  width: 60%;
+  z-index: 4;
 }
 
 .header-menu {

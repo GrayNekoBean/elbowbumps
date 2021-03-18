@@ -133,7 +133,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $primitive-color: #a9edfe;
 $secondary-color: #ffaaaa;
 $background-color: #fffaba;
@@ -145,7 +145,7 @@ $background-color: #fffaba;
   top: 20%;
   bottom: 10%;
   width: 40rem;
-  height: 38rem;
+  height: 40rem;
   z-index: 2;
 }
 
@@ -160,15 +160,17 @@ p {
   color: $primitive-color;
 }
 
-button.p-button {
-  font-weight: bold;
-  width: 10rem;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  background: $primitive-color;
-  border: none;
+::v-deep{
+  button.p-button {
+    font-weight: bold;
+    width: 10rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    background: $primitive-color;
+    border: none;
+  }
 }
 </style>
