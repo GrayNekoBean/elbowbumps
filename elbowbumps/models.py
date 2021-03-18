@@ -4,6 +4,7 @@ class UserData(db.Model):
     __tablename__ = 'user_data'
 
     ud_id = db.Column(db.Integer, primary_key=True)
+    ud_avatar = db.Column(db.String(50))
     ud_forename = db.Column(db.String(50))
     ud_surname = db.Column(db.String(50))
     ud_birthyear = db.Column(db.Integer)
@@ -14,7 +15,8 @@ class UserData(db.Model):
     ud_twitter = db.Column(db.String(50), unique=False)
     ud_id_twitter = db.Column(db.String(50), unique=False)
 
-    def __init__(self, forename, surname, birthyear, email, phone, password, gender, twitter='', id_twitter=''):
+    def __init__(self, forename, surname, birthyear, email, phone, password, gender, twitter='', id_twitter='', avatar = ''):
+        self.ud_avatar = avatar
         self.ud_forename = forename
         self.ud_surname = surname
         self.ud_birthyear = birthyear
@@ -27,7 +29,7 @@ class UserData(db.Model):
     
     def serialise(self):
         return {
-            'id': self.user_id,
+            'id': self.ud_id,
             'forename': self.ud_forename,
             'surname': self.ud_surname,
             'birthyear': self.ud_birthyear,
@@ -35,7 +37,8 @@ class UserData(db.Model):
             'phone': self.ud_phone,
             'gender': self.ud_gender,
             'twitter': self.ud_twitter,
-            'id_twitter': self.ud_id_twitter
+            'id_twitter': self.ud_id_twitter,
+            'avatar': self.ud_avatar
         }
 
 class UserInterestData(db.Model):
