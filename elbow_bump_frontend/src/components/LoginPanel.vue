@@ -11,7 +11,7 @@
         <div style="margin-left: 2rem">
           <Panel header="Login">
             <div id="creds">
-              <form method="POST" @submit.prevent="this.submitLoginInfo()">
+              <form method="POST" @submit.prevent="submitLoginInfo()">
                 <br />
                 <label>Email:</label><br />
                 <InputText id="Email" type="text" v-model="email" required />

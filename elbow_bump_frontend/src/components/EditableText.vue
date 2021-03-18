@@ -10,6 +10,14 @@
 
 <script>
 export default {
+    watch: {
+        text: function(val){
+            this.$emit('update:textVar', val);
+        },
+        textVar: function(val){
+            this.text = val;
+        }
+    },
     props: {
         textID: {
             type: String,
@@ -31,9 +39,9 @@ export default {
     },
     methods: {
         switchEditable: function(){
-            if (this.editable){
-                this.$emit('update:textVar', this.text);
-            }
+            // if (this.editable){
+            //     this.$emit('update:textVar', this.text);
+            // }
             this.editable = !this.editable;
         }
     }

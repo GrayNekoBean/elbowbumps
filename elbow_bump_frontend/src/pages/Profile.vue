@@ -156,28 +156,30 @@ export default {
         },
         getCurrentUserInfo: function(){
 
-            let getterInfo = {
-                userId: ''
-            };
+            if (this.$store.getters.userId){
 
-            axios.get(this.$store.url + '/users_info', getterInfo)
-            .then((response) => {
-            let data = response.data;
-            let reader = new FileReader();
-                reader.onload = (e) => {
-                    this.avatar = e.data['avatar'];
+                let getterInfo = {
+                    user_id: this.$store.getters.userId
                 };
-                if ('avatar' in data){
-                    reader.readAsDataURL(response);
-                }else{
-                    console.warn("no avatar data responsed");
-                }
 
-                for (let dat in data){
-                    this[dat] = data;
-                }
-            });
+                axios.get(this.$store.getters.URL + 'user_data', {params: getterInfo})
+                .then((response) => {
+                    let data = response.data[''];
+                    this.avatar = data['avatar'];
+                    this.firstName = data['fName'];
+                    this.lastName = data['sName'];
+                    this.email = data['email'];
+                    this.phoneNumber = data['phone'];
+                    this.twitter = data['twitter'];
+
+                });
+            }else{
+                console.warn("not loged in")
+            }
         }
+    },
+    mounted() {
+        this.getCurrentUserInfo();
     }
 }
 </script>
