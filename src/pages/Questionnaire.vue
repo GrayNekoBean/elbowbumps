@@ -30,7 +30,7 @@
       <Panel style="margin-top: 10rem;">
         <div style="display: flex; flex-direction: column;">
           <SingleQuestion v-for="i in questions.length"
-          :key="i" 
+          :key="i"
           @selected="(val) => updateScore(i - 1, val)"
           >
             {{ questions[i - 1].q }}
@@ -60,7 +60,7 @@ import axios from "axios";
 
 export default {
   components: { SingleQuestion, SplitedPage },
-  watch: { 
+  watch: {
     results(val) {
       console.log(val);
     }
@@ -70,7 +70,11 @@ export default {
       questions: [
         {q: "How much do you like Anime?", c: "acg"},
         {q: "How much do you like Basketball?", c: "sports"},
-        {q: "How much do you like Hitchcock?", c: "book"}
+        {q: "How much do you like Hitchcock?", c: "book"},
+        
+
+
+
       ],
       results: {},
       scores: []
@@ -80,6 +84,13 @@ export default {
     submitScore() {
       this.calcResults();
       console.log(this.results);
+<<<<<<< HEAD:elbow_bump_frontend/src/pages/Questionnaire.vue
+      axios.post(this.$store.getters.URL + "/questionnaire",
+      {
+        user_id: this.$store.getters.userId,
+        scores: this.results
+      }).then(
+=======
       let form = new FormData();
       
       if (this.$store.getters.userId){
@@ -94,6 +105,7 @@ export default {
       }
 
       axios.post(this.$store.getters.URL + "/questionnaire", form).then(
+>>>>>>> ffe95f22bf7abc221690061cc18587e153d4d801:src/pages/Questionnaire.vue
         (response) => {
           let jsonData = response.data;
           if (jsonData['STATUS_CODE'] == 200){
@@ -145,7 +157,7 @@ export default {
               q: qsText,
               c: cat
             });
-            
+
             if (!(cat in this.results)){
               this.results[cat] = Number(0);
             }
@@ -160,7 +172,7 @@ export default {
 <style lang="scss" scoped>
 
 h3.agree{
-  font-size: 15px; 
+  font-size: 15px;
 }
 
 ::v-deep{
