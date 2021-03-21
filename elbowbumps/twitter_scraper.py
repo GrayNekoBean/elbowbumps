@@ -31,7 +31,7 @@ def create_headers(bearer_token):
 
 def connect_to_endpoint(url, headers, params={}):
     response = requests.request("GET", url, headers=headers, params=params)
-    print(response.status_code)
+    #print(response.status_code)
     if response.status_code != 200:
         raise Exception(
             "Request returned an error: {} {}".format(
@@ -53,8 +53,8 @@ def getTweets(user, category):
         for x in new_data["data"]:
             tweets_data["data"].append(x)
             tweets_data["meta"]["result_count"] = tweets_data["meta"]["result_count"] + 1
-
-        while('next_token' in new_data["meta"]):
+        # change number in while loop to change max tweets you want
+        while('next_token' in new_data["meta"] and tweets_data["meta"]["result_count"] < 500):
             params = get_new_page_params(new_data)
             new_data = connect_to_endpoint(url_tweets, headers, params)
             if "data" in new_data:
@@ -74,22 +74,40 @@ def getTweets(user, category):
 def categoryScore(data):
      #so far does it for the category sport
     analyzer = SentimentIntensityAnalyzer()
-    total = 0
-    total_sen = 0
-    sports_ids = [11, 12, 26, 27, 28, 39, 40, 60, 68, 138, 137, 92]
+    
+    ids = {"sport": [11, 12, 26, 27, 28, 39, 40, 60, 68, 138, 137, 92],
+            "film": [4, 117, 86, 87, 55, 56],
+            "music": [54, 86, 89, 90, 114], 
+            "video_games": [71, 78, 79, 136, 137, 138, 115, 116]
+          }
+    scores = {"video_games": 0,
+              "sport": 0,
+              "film": 0,
+              "music": 0
+              
+             }
+    total_sen = {"sport": 0,
+                 "film": 0,
+                 "music": 0,
+                 "video_games": 0
+                }
+
     for i in range(len(data)):
         if "context_annotations" in data[i]:
             for value in data[i]["context_annotations"]:
-                if int(value["domain"]["id"]) in sports_ids:
-                    sentence = data[i]["text"]
-                    vs = analyzer.polarity_scores(sentence)
-                    print("{:-<65} {}".format(sentence, str(vs)))
-                    if vs["compound"] > 0.0: 
-                        total = total + vs["compound"] 
-                        total_sen +=1
-                    break
-    print("This is the number of tweets we thought had a sport" + str(total_sen))
-    if total_sen == 0:
-        return 0
-    else:
-        return total / total_sen
+
+                for name, id_list in ids.items():      
+                    if int(value["domain"]["id"]) in id_list:
+                        sentence = data[i]["text"]
+                        vs = analyzer.polarity_scores(sentence)
+                        #print("{:-<65} {}".format(sentence, str(vs)))
+                        scores[name] = scores[name] + vs["compound"] 
+                        total_sen[name] +=1
+                        break
+
+                
+    for name, total in total_sen.items():
+        if total != 0:
+            scores[name] = scores[name] / total
+            #print(name + " : " + str(total))
+    return scores

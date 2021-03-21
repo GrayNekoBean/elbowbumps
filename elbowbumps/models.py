@@ -54,7 +54,6 @@ class UserInterestData(db.Model):
 
     def __init__(self, ud_id, interest_type, twitter_score, questionnaire_score):
         self.uid_ud_id = ud_id
-        print("here")
         self.uid_twitter_score = twitter_score
         self.uid_questionnaire_score = questionnaire_score
         self.uid_interest_type = interest_type
@@ -66,7 +65,6 @@ class UserInterestData(db.Model):
         elif self.uid_twitter_score == 0:
             self.uid_interest_weight = self.uid_questionnaire_score
         else:
-            print("here")
             self.uid_interest_weight = (self.uid_twitter_score + self.uid_questionnaire_score)/2
 
         self.uid_squared_weight = self.uid_interest_weight * self.uid_interest_weight
