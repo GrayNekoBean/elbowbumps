@@ -13,6 +13,7 @@ import Report from "./pages/Report.vue";
 import Profile from "./pages/Profile.vue";
 import Matches from "./pages/Matches.vue";
 import Bumps from "./pages/Bumps.vue";
+import AccessDenied from "./pages/AccessDenied";
 
 export default createRouter({
   history: createWebHistory(),
@@ -89,6 +90,11 @@ export default createRouter({
       path: "/profile",
       component: Profile,
     },
+    {
+      name: "access_denied",
+      path: "/access-denied",
+      component: AccessDenied
+    }
   ],
   linkActiveClass: "active",
   scrollBehavior(_, __, savedPosition) {

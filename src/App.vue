@@ -14,10 +14,22 @@
               <TabPanel></TabPanel>
               <TabPanel></TabPanel>
               <TabPanel></TabPanel>
-              <TabPanel :header="login_profile"></TabPanel>
-              <TabPanel :header="register_settings"></TabPanel>
+              <TabPanel v-if="!logined()" header="Login"></TabPanel>
+              <TabPanel v-else header=""></TabPanel>
+              <TabPanel v-if="!logined()" header="Register"></TabPanel>
+              <TabPanel v-else header=""></TabPanel>
             </TabView>
-            <div class="header-title">
+            <div v-if="logined()" class="user-info-cover"></div>
+            <div v-if="logined()" class="user-info-area">
+              <div>
+                <Avatar image="https://i.imgur.com/VtIwKXj.jpg" class="p-mr-2" size="large" shape="circle" style="background-color:#2196F3; color: #ffffff" />
+              </div>
+              <Button class="user-info-text" @click="showMenu">
+                <p style="display:block; margin:0;"> Welcom, {{current_user}}! </p>
+                <Menu :model="user_menu_items" id="user_menu_overlay" ref="user_menu" :popup="true" />
+              </Button>
+            </div>
+            <div class="header-title" :class="logined() ? 'longer-title' : ''">
               <h3> Elbow Bumps </h3>
             </div>
           </template>
@@ -54,9 +66,9 @@ export default {
   data(){
     return {
       current_user: "",
+      avatar: "",
       header_active: 0,
-      login_profile: "Login",
-      register_settings: "Register",
+      show_menu: false,
       id_routers: {
         0: "/",
         1: "/about",
@@ -75,6 +87,23 @@ export default {
         { label: "Terms and Conditions", to: "/terms" },
         { label: "Contact us", to: "/contact" },
       ],
+      user_menu_items: [
+        {
+          label: `Welcome, ${this.current_user}! `,
+          items: [
+            {
+              label: "Profile",
+              icon: "pi pi-user",
+              to: "/profile"
+            },
+            {
+              label: "Settings",
+              icon: "pi pi-sliders-h",
+              to: "/settings"
+            }
+          ]
+        }
+      ]
     }
   },
   mounted: function(){
@@ -88,25 +117,39 @@ export default {
     if(this.current_user != ""){
       this.setLoginState();
     }
+
+    this.current_user = this.$store.getters.userId;
+    this.avatar = "assets/test.jpg";
   },
   methods: { 
+    logined: function(){
+      if (this.$store.getters.userId){
+        return true;
+      }else{
+        return false;
+      }
+    },
+    showMenu: function(event){
+      this.$refs.user_menu.toggle(event);
+    },
     setLoginState: function(){
       
-      this.login_profile = "Profile";
-      this.register_settings = "Settings";
+      // this.login_profile = "Profile";
+      // this.register_settings = "Settings";
 
-      this.id_routers[9] = "/profile";
-      this.id_routers[10] = "/settings";
-      
+      // this.id_routers[9] = "/profile";
+      // this.id_routers[10] = "/settings";
+      this.user_menu_items[0]['label'] = "You're now login as " + this.current_user;
       this.routers_id = this.swapKeyValue(this.id_routers);
+      this.$forceUpdate();
       
     },
     setLogoutState: function(){
-      this.login_profile = "Login";
-      this.register_settings = "Register";
+      // this.login_profile = "Login";
+      // this.register_settings = "Register";
 
-      this.id_routers[9] = "/login";
-      this.id_routers[10] = "/register";
+      // this.id_routers[9] = "/login";
+      // this.id_routers[10] = "/register";
 
       this.routers_id = this.swapKeyValue(this.id_routers);
     },
@@ -120,6 +163,7 @@ export default {
     route_to: function(path){
       console.log('route');
       this.header_active = Number(this.routers_id[path]);
+      this.$router.push(path);
     }
   }
 };
@@ -164,7 +208,7 @@ body{
           text-align: center;
           margin-right: 0;
           width: 10%;
-          background: #a9edfe;
+          background: #ffffff;
         }
 
         li a.p-tabview-nav-link {
@@ -175,12 +219,12 @@ body{
           // background: #ffaaaa;
           // border-color: #fffaba;
           color: #7da9b4;
-          background: rgba(169, 237, 254, 0.3);;
+          background: #ffffff; //rgba(169, 237, 254, 0.3);
         }
 
         li.p-highlight a.p-tabview-nav-link{
           border-color: #7da9b4;
-          background: rgba(169, 237, 254, 0.3);;
+          background: #ffffff; //rgba(169, 237, 254, 0.3);
           // border-width: 0 2px 2px 0;
           // border-top-right-radius: 0;
           // border-top-left-radius: 0;
@@ -191,7 +235,7 @@ body{
 
         li:not(.p-highlight):not(.p-disabled):hover a.p-tabview-nav-link {
           border-color: #7da9b4;
-          background: rgba(169, 237, 254, 0.3);
+          background: #ffffff //rgba(169, 237, 254, 0.3);
           // border-width: 0 2px 2px 0;
           // border-top-right-radius: 0;
           // border-top-left-radius: 0;
@@ -202,21 +246,61 @@ body{
     }
 }
 
+div.p-avatar{
+  margin-top: 5%;
+
+}
+
+.p-avatar img{
+  border-radius: 50%;
+}
+
 .p-card .p-card-body{
   padding: 0 !important;
   height: 0%;
 }
-
 
 .p-card .p-card-body .p-card-content{
   padding: 0 !important;
   height: 0%;
 }
 
+.user-info-area{
+  position: absolute;
+  display: flex;
+  flex-flow: row;
+  top: 0;
+  right: 0;
+  z-index: 6;
+  //margin-right: 2%;
+}
+
+button.user-info-text{
+  color: black;
+  background: transparent;
+  border: 0px;
+}
+
+div.p-menubar{
+  background: transparent;
+  border: 0px;
+}
+
 .main-frame {
   width: 100%;
   height: 100%;
   z-index: 0;
+}
+
+.user-info-cover{
+  position: absolute;
+  display: block;
+  background: white;
+  top: 0;
+  right: 0;
+  height: 96%;
+  width: 20%;
+  z-index: 5;
 }
 
 .header-title{
@@ -226,7 +310,7 @@ body{
   margin-left: 20%;
   height: 3.3rem;
   text-align: center;
-  background: rgba(169, 237, 254, 1);
+  background: #ffffff; //rgba(255, 255, 255, 0.3); //rgba(169, 237, 254, 1);
   width: 60%;
   z-index: 4;
 }

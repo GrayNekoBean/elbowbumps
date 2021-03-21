@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router.js";
 import store from "./store.js";
 import primevue from "primevue/config";
+import ToastService from 'primevue/toastservice';
 
 import Button from "primevue/button";
 import Checkbox from "primevue/checkbox";
@@ -15,6 +16,10 @@ import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 import RadioButton from "primevue/radiobutton";
 import FileUpload from "primevue/fileupload";
+import Toast from 'primevue/toast';
+import Menubar from 'primevue/menubar';
+import Menu from 'primevue/menu';
+import Avatar from 'primevue/avatar';
 
 import "primevue/resources/themes/saga-blue/theme.css"; // theme
 import "primevue/resources/primevue.min.css"; // core css
@@ -26,6 +31,8 @@ const app = createApp(App);
 app.use(router);
 app.use(primevue);
 app.use(store);
+app.use(ToastService);
+
 
 app.component("Button", Button);
 app.component("Checkbox", Checkbox);
@@ -38,5 +45,9 @@ app.component("TabPanel", TabPanel);
 app.component("TabMenu", TabMenu);
 app.component("RadioButton", RadioButton);
 app.component("FileUpload", FileUpload);
+app.component("Toast", Toast);
+app.component("Menubar", Menubar);
+app.component("Menu", Menu);
+app.component("Avatar", Avatar);
 
 app.mount("#app");

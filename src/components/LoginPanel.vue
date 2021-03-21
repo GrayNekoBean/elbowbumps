@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Toast position="top-right" />
     <Card class="login-card">
       <template #header>
         <div class="heading">
@@ -88,8 +89,9 @@ export default {
   },
   methods: {
     // eslint-disable-next-line no-unused-vars
-    showNotification(info) {
+    showNotification(info, detail = '') {
       console.log(info);
+      this.$toast.add({severity:'warn', summary: info, detail: detail, life: 3000});
     },
     submitLoginInfo() {
       // One hash operation in client side, and another hash operation in server side.
@@ -114,7 +116,7 @@ export default {
             //TODO: Show a notification with info like this: "Login Successful"
             this.errors = "";
             this.$store.dispatch("logIn", response.data.id);
-
+            this.$root.setLoginState();
             this.$router.push("/matches");
           } else if (responseStatus == "500") {
             this.errors = responseData.Message;
@@ -123,7 +125,7 @@ export default {
           }
         })
         .catch((e) => {
-          this.showNotification("Unexpected Error: " + e);
+          this.showNotification("Request Error", "Unexpected Error: " + e.message);
         });
     },
     removeErrors() {

@@ -20,6 +20,7 @@ export default createStore({
     },
     logOut(state) {
       state.isLoggedIn = false;
+      state.userId = null;
     },
     matchesRetrieved(state) {
       state.matchesRetrieved = true;

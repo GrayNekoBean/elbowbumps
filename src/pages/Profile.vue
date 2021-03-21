@@ -95,7 +95,7 @@ export default {
                 }
             };
 
-            profileData.post(this.$store.getters.URL + "/user_info", profileData).then(
+            axios.post(this.$store.getters.URL + "user_info", profileData).then(
                 (response) => {
                     if (response.data['STATUS_CODE'] == 200){
                         console.log('upload avatar successful!');
