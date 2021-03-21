@@ -54,7 +54,7 @@ def getTweets(user, category):
             tweets_data["data"].append(x)
             tweets_data["meta"]["result_count"] = tweets_data["meta"]["result_count"] + 1
 
-        while('next_token' in new_data["meta"] or ):
+        while('next_token' in new_data["meta"]):
             params = get_new_page_params(new_data)
             new_data = connect_to_endpoint(url_tweets, headers, params)
             if "data" in new_data:
@@ -111,3 +111,4 @@ def categoryScore(data):
             scores[name] = scores[name] / total
             #print(name + " : " + str(total))
     return scores
+    
