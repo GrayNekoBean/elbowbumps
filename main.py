@@ -218,7 +218,7 @@ def get_tweets():
     user_id = request.args.get('user_id')
     category = request.args.get('category')
     user = UserData.query.filter_by(ud_id=user_id).first()
-    user_interests = UserInterestData.query.filter_by(uid_id=user_id).first()
+
     if not user:
         return jsonify({
             "STATUS_CODE": "500",
@@ -229,22 +229,25 @@ def get_tweets():
             "STATUS_CODE": "500",
             "Message": "Please ensure the user has a social media account registered"
             })
-    elif user_interests:
-        user_interests.uid_twitter_score = getTweets(user.ud_id_twitter, category)
-        user_interests.updateScores()
-        db.session.commit()
-        return jsonify({
-            "STATUS_CODE": '200',
-            "Message": f"Updated userID {user_id} with new category score"
-        })
     else:
-        score = getTweets(user.ud_id_twitter, category)
-        data = UserInterestData(user_id, category, score, 0)
-        db.session.add(data)
-        db.session.commit()
+        scores = getTweets(user.ud_id_twitter, category)
+        for name, score in scores.items():
+            user_interests = UserInterestData.query.filter_by(uid_ud_id=user_id, uid_interest_type=name).first()
+            if user_interests: 
+                print("updating score for: " + name)
+                user_interests.uid_twitter_score = score
+                user_interests.updateScores()
+                db.session.commit()
+            else:
+                print("new score for: " + name)
+                data = UserInterestData(user_id, name, score, 0)
+                print(data)
+                db.session.add(data)
+                db.session.commit()
+                
         return jsonify({
             'status_code': '200',
-            "Message": f"Added new row for userID {user_id} with new category score"
+            "Message": f"Updated scores for userID {user_id}"
         })
 
 # finds nearest neighbours for a given user
