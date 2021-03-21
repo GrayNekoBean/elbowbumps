@@ -164,7 +164,7 @@ export default {
 
                 axios.get(this.$store.getters.URL + 'user_data', {params: getterInfo})
                 .then((response) => {
-                    let data = response.data[''];
+                    let data = response.data['data'];
                     this.avatar = data['avatar'];
                     this.firstName = data['fName'];
                     this.lastName = data['sName'];
