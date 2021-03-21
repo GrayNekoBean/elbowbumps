@@ -65,7 +65,10 @@ def getTweets(user, category):
                 break
 
     #print(json.dumps(tweets_data, indent=4, sort_keys=True))
-    return categoryScore(tweets_data["data"])
+    if 'data' in tweets_data:
+        return categoryScore(tweets_data["data"])
+    else: 
+        return 0
 
 
 def categoryScore(data):

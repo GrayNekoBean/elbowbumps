@@ -4,7 +4,7 @@ class UserData(db.Model):
     __tablename__ = 'user_data'
 
     ud_id = db.Column(db.Integer, primary_key=True)
-    ud_avatar = db.Column(db.String(50), unique=True)
+    ud_avatar = db.Column(db.String(50))
     ud_forename = db.Column(db.String(50))
     ud_surname = db.Column(db.String(50))
     ud_birthyear = db.Column(db.Integer)
@@ -15,7 +15,7 @@ class UserData(db.Model):
     ud_twitter = db.Column(db.String(50), unique=False)
     ud_id_twitter = db.Column(db.String(50), unique=False)
 
-    def __init__(self, forename, surname, birthyear, email, phone, password, gender, twitter='', id_twitter=''):
+    def __init__(self, forename, surname, birthyear, email, phone, password, gender, twitter='', id_twitter='', avatar = ''):
         self.ud_forename = forename
         self.ud_surname = surname
         self.ud_birthyear = birthyear
@@ -25,10 +25,11 @@ class UserData(db.Model):
         self.ud_gender = gender
         self.ud_twitter = twitter
         self.ud_id_twitter = id_twitter
+        self.ud_avatar = avatar
     
     def serialise(self):
         return {
-            'id': self.user_id,
+            'id': self.ud_id,
             'forename': self.ud_forename,
             'surname': self.ud_surname,
             'birthyear': self.ud_birthyear,
@@ -36,7 +37,8 @@ class UserData(db.Model):
             'phone': self.ud_phone,
             'gender': self.ud_gender,
             'twitter': self.ud_twitter,
-            'id_twitter': self.ud_id_twitter
+            'id_twitter': self.ud_id_twitter,
+            'avatar': self.ud_avatar
         }
 
 class UserInterestData(db.Model):
@@ -45,29 +47,43 @@ class UserInterestData(db.Model):
     uid_id = db.Column(db.Integer, primary_key=True)
     uid_ud_id = db.Column(db.Integer)
     uid_interest_type = db.Column(db.String(50))
+    uid_twitter_score = db.Column(db.Float(10))
+    uid_questionnaire_score =  db.Column(db.Float(10))
     uid_interest_weight = db.Column(db.Float(10))
     uid_squared_weight = db.Column(db.Float(10))
 
-    def __init__(self, ud_id, interest_type, interest_weight):
+    def __init__(self, ud_id, interest_type, twitter_score, questionnaire_score):
         self.uid_ud_id = ud_id
+        print("here")
+        self.uid_twitter_score = twitter_score
+        self.uid_questionnaire_score = questionnaire_score
         self.uid_interest_type = interest_type
-        self.uid_interest_weight = interest_weight
-        self.uid_squared_weight = interest_weight * interest_weight
+        self.updateScores()
+    
+    def updateScores(self):
+        if self.uid_questionnaire_score == 0:
+            self.uid_interest_weight = self.uid_twitter_score
+        elif self.uid_twitter_score == 0:
+            self.uid_interest_weight = self.uid_questionnaire_score
+        else:
+            print("here")
+            self.uid_interest_weight = (self.uid_twitter_score + self.uid_questionnaire_score)/2
 
+        self.uid_squared_weight = self.uid_interest_weight * self.uid_interest_weight
 
-class TwitterData(db.Model):
-    __tablename__ = 'twitter_data'
-
-    #columns: user_id, twitter_username, category, category score
-    td_id = db.Column(db.Integer, primary_key=True)
-    td_ud_id = db.Column(db.Integer)
-    td_category = db.Column(db.String(20))
-    td_category_score = db.Column(db.Float(10))
-
-    def __init__(self, ud_id, category, category_score):
-        self.td_ud_id = ud_id
-        self.td_category = category
-        self.td_category_score = category_score
-
-
+class UserMatch(db.Model):
+    __tablename__ = 'user_match'
+    
+    um_id = db.Column(db.Integer, primary_key=True)
+    um_ud_id_1 = db.Column(db.Integer)
+    um_ud_id_2 = db.Column(db.Integer)
+    um_1_matched = db.Column(db.Boolean)
+    um_2_matched = db.Column(db.Boolean)
+    
+    def __init__(self, id_1, id_2):
+        self.um_ud_id_1 = id_1
+        self.um_ud_id_2 = id_2
+        self.um_1_matched = False
+        self.um_2_matched = False
+    
 

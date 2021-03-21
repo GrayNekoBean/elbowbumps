@@ -25,9 +25,9 @@ def twitterID(user):
     headers = create_headers(bearer_token)
     url_id = create_url_id(user)
     response = requests.request("GET", url_id, headers=headers, params={})
-    print(response.status_code)
+    #print(response.status_code)
     data = response.json()
-    print("Request returned an error: {} {}".format(response.status_code, response.text))
+    #print("Request returned an error: {} {}".format(response.status_code, response.text))
     if "errors" in data:
         return False
     else:
