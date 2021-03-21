@@ -32,8 +32,8 @@ def SetSessionCookie(res: Response, userID):
     else:
         user_session_keys[userID] = [uuid_]
     
-    res.set_cookie("user_id", userID)
-    res.set_cookie('session_key', uuid_)
+    res.set_cookie("user_id", str(userID))
+    res.set_cookie('session_key', uuid_.bytes)
 
 
 def CheckSessionCookie(req: Request):
