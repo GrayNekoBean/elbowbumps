@@ -1,7 +1,0 @@
-flask
-Flask-SQLAlchemy
-flask-cors
-gunicorn
-psycopg2-binary
-vaderSentiment
-python-dotenv

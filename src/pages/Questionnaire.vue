@@ -84,11 +84,28 @@ export default {
     submitScore() {
       this.calcResults();
       console.log(this.results);
+<<<<<<< HEAD:elbow_bump_frontend/src/pages/Questionnaire.vue
       axios.post(this.$store.getters.URL + "/questionnaire",
       {
         user_id: this.$store.getters.userId,
         scores: this.results
       }).then(
+=======
+      let form = new FormData();
+      
+      if (this.$store.getters.userId){
+        form.append("user_id", this.$store.getters.userId);
+      }else{
+        console.error('Not logined.');
+        return;
+      }
+
+      for (let res in this.results){
+        form.append(res, this.results[res]);
+      }
+
+      axios.post(this.$store.getters.URL + "/questionnaire", form).then(
+>>>>>>> ffe95f22bf7abc221690061cc18587e153d4d801:src/pages/Questionnaire.vue
         (response) => {
           let jsonData = response.data;
           if (jsonData['STATUS_CODE'] == 200){
@@ -105,10 +122,11 @@ export default {
       let i = 0;
       for (let s in this.scores){
         let cat = this.questions[i].c;
+        let score = Number(this.scores[s]);
         if (cat in this.results){
-          this.results[cat] += s;
+          this.results[cat] += score;
         }else{
-          this.results[cat] = s;
+          this.results[cat] = score;
           console.warn("There are inconsistent category");
         }
         i++;
@@ -141,7 +159,7 @@ export default {
             });
 
             if (!(cat in this.results)){
-              this.results[cat] = 0;
+              this.results[cat] = Number(0);
             }
           }
       });
