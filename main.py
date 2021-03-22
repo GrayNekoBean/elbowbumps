@@ -107,7 +107,7 @@ def add_questionnaire_scores():
         # will end up being a list, probably, when we have multiple scores instrad of one
         score = scores[cat]
         # may have to change up the numbers to fit with twitter scores
-        user_interests = UserInterestData.query.filter_by(uid_id=user_id).first()
+        user_interests = UserInterestData.query.filter_by(uid_ud_id=user_id, uid_interest_type=cat).first()
         if user_interests:
             user_interests.uid_questionnaire_score = score
             user_interests.updateScores()
@@ -163,60 +163,6 @@ def add_twitter_username():
             })
 
 
-# @app.route('/register', methods=['POST'])
-# @cross_origin()
-# def registerUser():
-#     fName = request.form.get('fName')
-#     sName = request.form.get('sName')
-#     phoneNum = request.form.get('phoneNum')
-#     emailAdd = request.form.get('emailAdd')
-#     pw = request.form.get('pw')
-#     user_email_check = UserData.query.filter_by(ud_email=emailAdd).first()
-#     user_phone_check = UserData.query.filter_by(ud_phone=phoneNum).first()
-#     if user_email_check:
-#         return jsonify({
-#             "STATUS_CODE": '500',
-#             "Message": f"User with email {emailAdd} already registered"
-#         })
-#     elif user_phone_check:
-#         return jsonify({
-#             "STATUS_CODE": '500',
-#             "Message": f"User with phone number {phoneNum} already registered"
-#         })
-#     elif fName == "" or sName == "" or phoneNum == "" or pw == "" or emailAdd == "":
-#         return jsonify({
-#             "STATUS_CODE": '500',
-#             "Message": f"Fill in all fields"
-#         })
-
-#     # User data columns: forename, surname, birthyear, email, phone, password, gender, twitter
-#     newUser = UserData(fName, sName, '2000', emailAdd, phoneNum, pw, 'M', '')
-#     db.session.add(newUser)
-#     db.session.commit()
-#     # POST Request
-#     return jsonify({
-#         'STATUS_CODE': '200',
-#         'id': newUser.ud_id
-#     })
-
-
-# @app.route('/login', methods=['POST'])
-# def loginUser():
-#     email = request.form.get('email')
-#     pw = request.form.get('pw')
-#     user = UserData.query.filter_by(ud_email=email).first()
-#     res: Response = jsonify({})
-#     if not user or user.ud_password != pw:
-#         return jsonify({
-#             "STATUS_CODE": "500",
-#             "Message": "Please Check email or password"
-#         })
-#     return jsonify({
-#         "STATUS_CODE": "200",
-#         "id": user.ud_id,
-#         "Message": "Successfully logged in"
-#     })
-
 
 @app.route('/get_tweets', methods=['POST'])
 def get_tweets():
@@ -239,14 +185,11 @@ def get_tweets():
         for name, score in scores.items():
             user_interests = UserInterestData.query.filter_by(uid_ud_id=user_id, uid_interest_type=name).first()
             if user_interests: 
-                print("updating score for: " + name)
                 user_interests.uid_twitter_score = score
                 user_interests.updateScores()
                 db.session.commit()
             else:
-                print("new score for: " + name)
                 data = UserInterestData(user_id, name, score, 0)
-                print(data)
                 db.session.add(data)
                 db.session.commit()
                 
