@@ -36,6 +36,7 @@
             {{ questions[i - 1].q }}
           </SingleQuestion>
           <Button @click = "submitScore">Submit Score</Button>
+          <button @click = "LoadQuestion('music')">Music Questions:</button>
         </div>
         <br /><br />
       </Panel>
@@ -55,8 +56,9 @@
 <script>
 import SplitedPage from "../components/SplitedPage";
 import SingleQuestion from "../components/SingleQuestion";
-import fs from "fs";
 import axios from "axios";
+import question_bank from "raw-loader!../assets/questions.txt";
+//!!!! You may have to run npm i -D raw-loader before this page
 
 export default {
   components: { SingleQuestion, SplitedPage },
@@ -67,15 +69,12 @@ export default {
   },
   data() {
     return {
-      questions: [
-        {q: "How much do you like Anime?", c: "acg"},
-        {q: "How much do you like Basketball?", c: "sports"},
-        {q: "How much do you like Hitchcock?", c: "book"},
-        
-
-
-
-      ],
+      question_bank: "../assets/questions.txt",
+      questions: [],
+      sports_questions: [],
+      music_questions: [],
+      film_tv_questions: [],
+      vgames_questions: [],
       results: {},
       scores: []
     };
@@ -84,28 +83,11 @@ export default {
     submitScore() {
       this.calcResults();
       console.log(this.results);
-<<<<<<< HEAD:elbow_bump_frontend/src/pages/Questionnaire.vue
       axios.post(this.$store.getters.URL + "/questionnaire",
       {
         user_id: this.$store.getters.userId,
         scores: this.results
       }).then(
-=======
-      let form = new FormData();
-      
-      if (this.$store.getters.userId){
-        form.append("user_id", this.$store.getters.userId);
-      }else{
-        console.error('Not logined.');
-        return;
-      }
-
-      for (let res in this.results){
-        form.append(res, this.results[res]);
-      }
-
-      axios.post(this.$store.getters.URL + "/questionnaire", form).then(
->>>>>>> ffe95f22bf7abc221690061cc18587e153d4d801:src/pages/Questionnaire.vue
         (response) => {
           let jsonData = response.data;
           if (jsonData['STATUS_CODE'] == 200){
@@ -135,25 +117,22 @@ export default {
         this.results[res] /= 5;
       }
     },
-    LoadQuestion(url){
+    LoadQuestion(category){
       let text = "";
-      fs.readFile(url, 'utf8', (err, data) => {
-        if(err){
-          console.error(err);
-        }else{
-          text = data;
-        }
-      });
+
+      text = question_bank;
+
+      console.log(category);
 
       let lines = text.split("\n");
       lines.forEach(line => {
           line = line.trim();
-          if (':' in line) {
+          if (line.includes(":")) {
             let parts = line.split(':');
             let qsText = parts[0].trim();
             let cat = parts[1].trim();
 
-            this.question.push({
+            this.questions.push({
               q: qsText,
               c: cat
             });
@@ -163,6 +142,7 @@ export default {
             }
           }
       });
+
 
     }
   },
