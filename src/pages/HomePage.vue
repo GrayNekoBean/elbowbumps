@@ -9,14 +9,14 @@
       </div>
     </div>
     <div id="top-left">
-      <h1 style = "color: #fffaba">Welcome to</h1>
+      <h1 style = "color: #ffe38f">Welcome to</h1>
       <h1 style = "color: #a9edfe">Elbow</h1>
       <h1 style = "color: #ffaaaa">Bumps!</h1>
     </div>
     <div id="bottom-left">
       <p></p>
-      <p style =" color: #444444">Elbow Bump is a website that uses data provided by the user to recommend a match with someone with similar interests</p>
-      <p style =" color: #444444">We would like you to answer a few quick questions to get started</p>
+      <p style =" color: #444444">Elbow Bumps is a website that will recommend friends with similar interests to you!</p>
+      <p style =" color: #444444">Register above to get started</p>
       <div id="button2"><Button id="button" @click="this.$root.route_to('/login');">Get Started!</Button></div>
     </div>
     <div id="bottom-right">
