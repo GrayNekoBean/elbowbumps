@@ -67,7 +67,7 @@ class UserInterestData(db.Model):
         else:
             self.uid_interest_weight = (self.uid_twitter_score + self.uid_questionnaire_score)/2
 
-        self.uid_squared_weight = self.uid_interest_weight * self.uid_interest_weight
+        self.uid_squared_weight = float(self.uid_interest_weight) * float(self.uid_interest_weight)
 
 class UserMatch(db.Model):
     __tablename__ = 'user_match'

@@ -107,13 +107,14 @@ def add_questionnaire_scores():
         # will end up being a list, probably, when we have multiple scores instrad of one
         score = scores[cat]
         # may have to change up the numbers to fit with twitter scores
+        normalisedScore = (int(score) - 3) / 2
         user_interests = UserInterestData.query.filter_by(uid_ud_id=user_id, uid_interest_type=cat).first()
         if user_interests:
-            user_interests.uid_questionnaire_score = score
+            user_interests.uid_questionnaire_score = normalisedScore
             user_interests.updateScores()
             db.session.commit()
         else:
-            data = UserInterestData(user_id, cat, 0, score)
+            data = UserInterestData(user_id, cat, 0, normalisedScore)
             db.session.add(data)
             db.session.commit()
     return jsonify({
