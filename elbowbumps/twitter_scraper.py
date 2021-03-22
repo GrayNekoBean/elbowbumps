@@ -75,19 +75,19 @@ def categoryScore(data):
      #so far does it for the category sport
     analyzer = SentimentIntensityAnalyzer()
     
-    ids = {"sport": [11, 12, 26, 27, 28, 39, 40, 60, 68, 138, 137, 92],
-            "film": [4, 117, 86, 87, 55, 56],
+    ids = {"sports": [11, 12, 26, 27, 28, 39, 40, 60, 68, 138, 137, 92],
+            "films/tv": [4, 117, 86, 87, 55, 56],
             "music": [54, 86, 89, 90, 114], 
             "video_games": [71, 78, 79, 136, 137, 138, 115, 116]
           }
     scores = {"video_games": 0,
-              "sport": 0,
-              "film": 0,
+              "sports": 0,
+              "films/tv": 0,
               "music": 0
               
              }
-    total_sen = {"sport": 0,
-                 "film": 0,
+    total_sen = {"sports": 0,
+                 "film/tv": 0,
                  "music": 0,
                  "video_games": 0
                 }
