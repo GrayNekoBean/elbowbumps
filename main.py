@@ -106,14 +106,14 @@ def add_questionnaire_scores():
         
         # will end up being a list, probably, when we have multiple scores instrad of one
         score = scores[cat]
-        normalisedScore = ((float(score) - 3)) / 2 + 1
+        normalisedScore = ((int(score) - 3) / 2) + 1
         user_interests = UserInterestData.query.filter_by(uid_ud_id=user_id, uid_interest_type=cat).first()
         if user_interests:
             user_interests.uid_questionnaire_score = normalisedScore
             user_interests.updateScores()
             db.session.commit()
         else:
-            data = UserInterestData(user_id, cat, 0, normalisedScore)
+            data = UserInterestData(user_id, cat, 0, score)
             db.session.add(data)
             db.session.commit()
     return jsonify({
@@ -182,9 +182,10 @@ def get_tweets():
     else:
         scores = getTweets(user.ud_id_twitter)
         for name, score in scores.items():
+            score = score + 1
             user_interests = UserInterestData.query.filter_by(uid_ud_id=user_id, uid_interest_type=name).first()
             if user_interests: 
-                user_interests.uid_twitter_score = score + 1
+                user_interests.uid_twitter_score = score
                 user_interests.updateScores()
                 db.session.commit()
             else:
