@@ -106,8 +106,7 @@ def add_questionnaire_scores():
         
         # will end up being a list, probably, when we have multiple scores instrad of one
         score = scores[cat]
-        # may have to change up the numbers to fit with twitter scores
-        normalisedScore = (int(score) - 3) / 2
+        normalisedScore = ((float(score) - 3)) / 2 + 1
         user_interests = UserInterestData.query.filter_by(uid_ud_id=user_id, uid_interest_type=cat).first()
         if user_interests:
             user_interests.uid_questionnaire_score = normalisedScore
@@ -168,7 +167,6 @@ def add_twitter_username():
 @app.route('/get_tweets', methods=['POST'])
 def get_tweets():
     user_id = request.args.get('user_id')
-    category = request.args.get('category')
     user = UserData.query.filter_by(ud_id=user_id).first()
 
     if not user:
@@ -182,11 +180,11 @@ def get_tweets():
             "Message": "Please ensure the user has a social media account registered"
             })
     else:
-        scores = getTweets(user.ud_id_twitter, category)
+        scores = getTweets(user.ud_id_twitter)
         for name, score in scores.items():
             user_interests = UserInterestData.query.filter_by(uid_ud_id=user_id, uid_interest_type=name).first()
             if user_interests: 
-                user_interests.uid_twitter_score = score
+                user_interests.uid_twitter_score = score + 1
                 user_interests.updateScores()
                 db.session.commit()
             else:

@@ -41,7 +41,7 @@ def connect_to_endpoint(url, headers, params={}):
 
     return response.json()
 
-def getTweets(user, category):
+def getTweets(user):
     bearer_token = auth()
     headers = create_headers(bearer_token)
     params = get_params()
@@ -87,7 +87,7 @@ def categoryScore(data):
               
              }
     total_sen = {"sports": 0,
-                 "film/tv": 0,
+                 "films/tv": 0,
                  "music": 0,
                  "video_games": 0
                 }
@@ -100,7 +100,7 @@ def categoryScore(data):
                     if int(value["domain"]["id"]) in id_list:
                         sentence = data[i]["text"]
                         vs = analyzer.polarity_scores(sentence)
-                        #print("{:-<65} {}".format(sentence, str(vs)))
+                        print("{:-<65} {}".format(sentence, str(vs)))
                         scores[name] = scores[name] + vs["compound"] 
                         total_sen[name] +=1
                         break
