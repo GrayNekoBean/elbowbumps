@@ -60,8 +60,8 @@ export default {
     data(){
         return {
             currentEdit: '',
-            firstName: 'Derek',
-            lastName: 'Wang',
+            firstName: '',
+            lastName: '',
             email: '',
             phoneNumber: '',
             twitter: '',
@@ -109,14 +109,20 @@ export default {
             );
         },
         uploadAvatar: function(event){
-            let header = {'Authorization': 'Client-ID 7a7f16c6427fe66'};
+            let header = {Authorization: 'Client-ID 7a7f16c6427fe66'};
             let postData = {
-                image: event.file,
+                image: event.files[0],
                 name: "elbowbumps_avatar_"+this.$store.getters.userId,
-                album: "X1mK7aP",
+                //album: "X1mK7aP",
                 type: "file"
             }
-            axios.post('https://api.imgur.com/3/upload', postData, {headers: header}).then(
+
+            let formData = new FormData();
+            for (let dat in postData){
+                formData.append(dat, postData[dat]);
+            }
+
+            axios.post('https://api.imgur.com/3/image', formData, {headers: header}).then(
                 (response) => {
                     this.avatar = response.data.id;
                     let updateAvatarData = {
@@ -136,7 +142,9 @@ export default {
                         (e) => {console.error(e);}
                     )
                 }
-            ).catch((e) => console.error(e));
+            ).catch((e) => {
+                console.error(e)
+            });
         },
         switchEditable: function(target){
             let inputText = target.getAttribute('id');
