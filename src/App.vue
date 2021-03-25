@@ -30,7 +30,7 @@
               </Button>
             </div>
             <div class="header-title" :class="logined() ? 'longer-title' : ''">
-              <h3> Elbow Bumps </h3>
+              <h3> <span style = "color: #a9edfe">ELBOW</span> <span style = "color: #ffaaaa">BUMPS</span> </h3>
             </div>
           </template>
         </Card>
@@ -178,7 +178,7 @@ export default {
 
 $primitive-color: #a9edfe;
 $secondary-color: #ffaaaa;
-$background-color: #fffaba;
+$background-color: #80929F;
 
 :root{
   --primary-color: #ffaaaa !important;
@@ -340,4 +340,5 @@ div.p-menubar{
   width: 100%;
   z-index: 0;
 }
+
 </style>
