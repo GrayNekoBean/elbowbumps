@@ -15,7 +15,7 @@
       <Panel style="margin-top: 0rem;">
         <div style="display: flex; flex-direction: column;">
           <!-- Buttons to display questions from the questions.txt bank based on their category -->
-          <div class="topic-buttons">
+          <!-- <div class="topic-buttons">
             <div class = "divider"/>
             <Button @click = "LoadQuestion('music')" style="background-color: #75c9deff;">Music</Button>
             <div class ="divider"/>
@@ -24,16 +24,19 @@
             <Button @click = "LoadQuestion('films/tv')" style="background-color: #75c9deff;">Film/TV</Button>
             <div class ="divider"/>
             <Button @click = "LoadQuestion('video games')" style="background-color: #75c9deff;">Video Games</Button>
-          </div>
+          </div> -->
 
-          <SingleQuestion v-for="i in questions.length"
-          :key="i"
-          @selected="(val) => updateScore(i - 1, val)"
-          >
-            {{ questions[i - 1].q }}
-          </SingleQuestion>
+          <Accordion>
+            <AccordionTab v-for="(qsList, cate) in questions" :key="cate" :header="cate">
+              <SingleQuestion v-for="i in qsList.length"
+              :key="i"
+              @selected="(val) => updateScore(cate, i - 1, val)"
+              >
+                {{ qsList[i - 1] }}
+              </SingleQuestion>
+            </AccordionTab>
+          </Accordion>
           <Button @click = "submitScore">Submit Score</Button>
-          
         </div>
         <br /><br />
       </Panel>
@@ -67,7 +70,7 @@ export default {
   data() {
     return {
       question_bank: "../assets/questions.txt",
-      questions: [],
+      questions: {},
       results: {},
       scores: []
     };
@@ -96,76 +99,74 @@ export default {
         }
       );
     },
-    updateScore(index, val) {
-      this.scores[index] = val;
+    updateScore(category, index, val) {
+      this.scores[category][index] = val;
       console.log(index, val);
     },
     calcResults() {
-      let i = 0;
-      for (let s in this.scores){
-        let cat = this.questions[i].c;
-        let score = Number(this.scores[s]);
-        if (cat in this.results){
-          this.results[cat] += score/5;
-        }else{
-          this.results[cat] = score/5;
-          console.warn("There are inconsistent category");
+      for (let cat in this.scores){
+        this.results[cat] = 0;
+        let len = this.scores[cat].length;
+        for (let score in this.scores[cat]){
+          this.results[cat] += score/(5*len);
         }
-        i++;
       }
     },
-    LoadQuestion(category){
+    LoadQuestion(){
       let text = "";
       text = question_bank;
-      console.log(category);
-      this.questions = [];
+      this.questions = {};
 
       let lines = text.split("\n");
-      lines.forEach(line => {
-          line = line.trim();
+      for (let line in lines) {
+          line = lines[line].trim();
           if (line.includes(":")) {
             let parts = line.split(':');
             let qsText = parts[0].trim();
             let cat = parts[1].trim();
 
-            //load all music related questions
-            if(category == "music" && cat == "music"){
-              this.questions.push({
-                q: qsText,
-                c: cat
-              })
-            }
-            //load all sport questions
-            if(category == "sports" && cat == "sports"){
-              this.questions.push({
-                q: qsText,
-                c: cat
-              })
-            }
-            //load all film/tv related questions
-            if(category == "films/tv" && cat == "films/tv"){
-              this.questions.push({
-                q: qsText,
-                c: cat
-              })
-            }
-            //load all video games questions
-            if(category == "video games" && cat == "video games"){
-              this.questions.push({
-                q: qsText,
-                c: cat
-              })
+            if (!(cat in this.questions)){
+              this.questions[cat] = [qsText];
+              this.scores[cat] = [];
+            }else{
+              this.questions[cat].push(qsText);
             }
 
-            if (!(cat in this.results)){
-              this.results[cat] = Number(0);
-            }
+            // //load all music related questions
+            // if(category == "music" && cat == "music"){
+            //   this.questions.push({
+            //     q: qsText,
+            //     c: cat
+            //   })
+            // }
+            // //load all sport questions
+            // if(category == "sports" && cat == "sports"){
+            //   this.questions.push({
+            //     q: qsText,
+            //     c: cat
+            //   })
+            // }
+            // //load all film/tv related questions
+            // if(category == "films/tv" && cat == "films/tv"){
+            //   this.questions.push({
+            //     q: qsText,
+            //     c: cat
+            //   })
+            // }
+            // //load all video games questions
+            // if(category == "video games" && cat == "video games"){
+            //   this.questions.push({
+            //     q: qsText,
+            //     c: cat
+            //   })
+            // }
           }
-      });
-
-
+      }
     }
   },
+  mounted: function(){
+    this.LoadQuestion();
+  }
 };
 </script>
 

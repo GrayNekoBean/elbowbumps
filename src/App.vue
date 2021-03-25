@@ -65,8 +65,8 @@ export default {
   },
   data(){
     return {
-      current_user: "",
-      avatar: "",
+      current_user: this.$store.getters.fName,
+      avatar: this.$store.getters.avatar,
       header_active: 0,
       show_menu: false,
       id_routers: {
@@ -118,7 +118,8 @@ export default {
       this.setLoginState();
     }
 
-    //this.current_user = this.$store.getters.userId;
+
+    this.current_user = this.$store.getters.fName;
     this.avatar = "assets/test.jpg";
   },
   methods: { 
@@ -132,15 +133,15 @@ export default {
     showMenu: function(event){
       this.$refs.user_menu.toggle(event);
     },
-    setLoginState: function(userFName, avatar = ''){
+    setLoginState: function(){
       
       // this.login_profile = "Profile";
       // this.register_settings = "Settings";
 
       // this.id_routers[9] = "/profile";
       // this.id_routers[10] = "/settings";
-        this.current_user = userFName;
-      this.avatar = avatar;
+      this.current_user = this.$store.getters.fName;
+
       this.user_menu_items[0]['label'] = "You're now login as " + this.current_user;
       this.routers_id = this.swapKeyValue(this.id_routers);
       this.$forceUpdate();

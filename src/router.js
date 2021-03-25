@@ -14,6 +14,7 @@ import Profile from "./pages/Profile.vue";
 import Matches from "./pages/Matches.vue";
 import Bumps from "./pages/Bumps.vue";
 import AccessDenied from "./pages/AccessDenied";
+import HomePageAfter from "./pages/HomePageAfter.vue"
 
 export default createRouter({
   history: createWebHistory(),
@@ -94,6 +95,11 @@ export default createRouter({
       name: "access_denied",
       path: "/access-denied",
       component: AccessDenied
+    },
+    {
+      name: "HPA",
+      path: "/hpa",
+      component: HomePageAfter
     }
   ],
   linkActiveClass: "active",

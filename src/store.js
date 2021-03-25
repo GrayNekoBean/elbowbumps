@@ -8,15 +8,19 @@ export default createStore({
   state: {
     isLoggedIn: false,
     userId: null,
+    userFName: null,
+    userAvatar: null,
     remoteURL: "http://secret-crag-87848.herokuapp.com/",
     localURL: "http://localhost:5000/",
     isUsingRemote: false,
     matchesRetrieved: false,
   },
   mutations: {
-    logIn(state, id) {
+    logIn(state, userInfo) {
       state.isLoggedIn = true;
-      state.userId = id;
+      state.userId = userInfo.id;
+      state.userFName = userInfo.fName;
+      state.userAvatar = userInfo.avatar;
     },
     logOut(state) {
       state.isLoggedIn = false;
@@ -50,5 +54,11 @@ export default createStore({
     matchesRetrieved: (state) => {
       return state.matchesRetrieved;
     },
+    fName: (state) => {
+      return state.userFName;
+    },
+    avatar: (state) => {
+      return state.userAvatar;
+    }
   },
 });
