@@ -4,133 +4,112 @@
   </div>
   <div id="frame">
     <div id="top-right">
-      <div id = "poster">
+      <div >
         <img src="../assets/elbows-w-lines.png" id="elb-poster" />
       </div>
     </div>
     <div id="top-left">
-      <h1 style = "color: #ffe38f">Welcome to</h1>
-      <h1 style = "color: #a9edfe">Elbow</h1>
-      <h1 style = "color: #ffaaaa">Bumps!</h1>
+      <h1 style = "color: #ffe38f">WELCOME TO</h1>
+      <h1 style = "color: #a9edfe">ELBOW <span style = "color: #ffaaaa">BUMPS</span></h1>
+      <!-- <h1 style = "color: #ffaaaa">BUMPS</h1> -->
     </div>
     <div id="bottom-left">
       <p></p>
-      <p style =" color: #444444">Elbow Bumps is a website that will recommend friends with similar interests to you!</p>
-      <p style =" color: #444444">Register above to get started</p>
-      <div id="button2"><Button id="button" @click="this.$root.route_to('/login');">Get Started!</Button></div>
+      <p >Is lockdown loneliness bogging you down? Do you want to find other people who are passionate in the same things you are? Elbow Bumps provides a new, innovative way for you to do just that! <br> <br>Simply register, fill in a questionnaire and give us your Twitter, and we'll find you people who love the very same things you love.</p>
+      <div id="button2"><Button id="button" @click="$router.push('Register')">GET STARTED</Button></div>
     </div>
-    <div id="bottom-right">
+    <!-- <div id="bottom-right">
       <img src="../assets/pic.png" id="pic"/>
-    </div>
-  </div>
-</template>
+    </div> -->
+  </div> 
+</template> 
 
 <script>
 export default {};
 </script>
 
 <style lang="scss" scoped>
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap');
 $primitive-color: #a9edfe;
 $secondary-color: #ffaaaa;
-$background-color: #fffaba;
+$background-color: 	#80929F;
+//$background-color: #E95B46;
+//$background-color: 	#DB744E;
+//$background-color: #ffffff;
+//$background-color: #fffaba;
 
 #frame {
   position: absolute;
   height: 100%;
   width: 100%;
-  margin-top: 4%;
-  background: #ffffff;
+  background: $background-color;
 }
 
 #top-right {
   position: absolute;
-  height: 50%;
+  margin-left:2%;
+  margin-right:6%;
+  height: 100%;
   right: 0px;
-  width: 50%;
-  margin-right: 4%;
+  width: 42%;
   background: $background-color;
 }
 
-
-#poster {
-  position: absolute;
-  //display: block;
-  z-index: 0;
-  margin-left: 40%;
-  margin-top: 10%;
-  border-radius: 50%;
-}
 
 #elb-poster {
-  display: flex;
-  object-fit: contain;
-  height: 10rem;
-  width: 10rem;
-  margin-left: 36%;
-  margin-top: 32%;
-  z-index: 1;
-  border-radius: 50%;
-  background: $background-color;
+  display: block;
+  height: auto;
+  width: 100%;
+  max-height: 100%;
 }
 
+
 #top-left {
+  padding: 1%;
+  border: 1%;
   position: absolute;
+  margin-left:2%;
+  margin-top: 5%;
+  margin-bottom:7.5%;
   height: 50%;
   left: 0px;
   width: 50%;
-  font-size: 50px;
-  text-align: center;
-  font-family: IBM Plex Sans;
-  line-height: 35px;
-  background: #ffffff;
+  font-size: 3.75vw;
+  text-align: right;
+  font-family: 'Montserrat', sans-serif;
+  line-height: 2.2vw;
 }
 
 #bottom-left {
+  padding: 1%;
+  border: 1%;
   position: absolute;
-  margin-top: 25%;
-  margin-left:2%;
+  margin-top: 20%;
+  margin-left:3%;
   height: 50%;
   left: 0px;
-  width: 45%;
-  font-size: 30px;
-  font-family: IBM Plex Sans;
-  line-height: 35px;
-  background: #ffffff;
+  width: 48.5%;
+  font-size: 1.5vw;
+  text-align: right;
+  font-family: 'Lato', sans-serif;
+  //line-height: 3.75vw;
+  color: #ffffff;
 }
 
 #button {
-    //font-weight: bold;
+    font-weight: bold;
     width: 30%;
     height: 5%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     text-align: center;
     color: #ffffff;
-    font-family: IBM Plex Sans;
+    font-family: 'Lato', sans-serif;
     font-size: 35px;
     justify-content: center;
     background: $secondary-color;
     border: none;
 }
 
-#bottom-right {
-  position: absolute;
-  margin-top: 22.5%;
-  margin-right: 2%;
-  height: 50%;
-  right: 0px;
-  width: 50%;
-  background: $primitive-color;
-}
-
-#pic {
-  display: flex;
-  object-fit: contain;
-  height: 100%;
-  width: 100%;
-  z-index: 1;
-  background: $primitive-color;
-}
 </style>
 
