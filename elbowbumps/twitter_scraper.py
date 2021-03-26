@@ -42,7 +42,7 @@ def connect_to_endpoint(url, headers, params={}):
     return response.json()
 
 def getTweets(user):
-    MAX_TWEETS = 500
+    MAX_TWEETS = 250
     bearer_token = auth()
     headers = create_headers(bearer_token)
     params = get_params()
@@ -74,41 +74,64 @@ def getTweets(user):
         return 0
 
 def categoryScore(data):
-    analyzer = SentimentIntensityAnalyzer()
-    
-    ids = {"sports": [11, 12, 26, 27, 28, 39, 40, 60, 68, 138, 137, 92],
-            "films/tv": [4, 117, 86, 87, 55, 56],
-            "music": [54, 86, 89, 90, 114], 
-            "video_games": [71, 78, 79, 136, 137, 138, 115, 116]
-          }
-    scores = {"video_games": 0,
-              "sports": 0,
-              "films/tv": 0,
-              "music": 0
-              
-             }
-    total_sen = {"sports": 0,
-                 "films/tv": 0,
-                 "music": 0,
-                 "video_games": 0
-                }
-
+    categories = {"sports": 
+                    {"ids": [11, 12, 26, 27, 28, 39, 40, 60, 68, 138, 137, 92],
+                    "total_sen": 0,
+                    "score": 0,
+                    "genre_id": [11],
+                    "genre_scores" : {}},
+                "films/tv": 
+                    {"ids": [4, 117, 86, 87, 55, 56],
+                    "total_sen": 0,
+                    "score": 0,
+                    "genre_id": [87,3],
+                    "genre_scores" : {}},
+                "music": 
+                    {"ids": [54, 89, 132, 89, 90, 84],
+                    "total_sen": 0,
+                    "score": 0,
+                    "genre_id": [84],
+                    "genre_scores": {}},
+                "video_games": 
+                    {"ids": [71, 78, 79, 136, 137, 138, 115, 116],
+                    "total_sen": 0,
+                    "score": 0,
+                    "genre_id": [71],
+                    "genre_scores": {}}
+            }
+    scores = {}
+  
     for i in range(len(data)):
         if "context_annotations" in data[i]:
             for value in data[i]["context_annotations"]:
-
-                for name, id_list in ids.items():      
-                    if int(value["domain"]["id"]) in id_list:
-                        sentence = data[i]["text"]
-                        vs = analyzer.polarity_scores(sentence)
-                        #print("{:-<65} {}".format(sentence, str(vs)))
-                        scores[name] = scores[name] + vs["compound"] 
-                        total_sen[name] +=1
+                for cat in categories.values():      
+                    if int(value["domain"]["id"]) in cat["ids"]:
+                        score = sentimentScore(data[i]["text"])
+                        cat["score"] = cat["score"] + score
+                        cat["total_sen"] += 1
+                        if (int(value["domain"]["id"]) in cat["genre_id"]) and ("entity" in value):
+                            genre = value["entity"]["name"]
+                            if genre in cat["genre_scores"]:
+                                cat["genre_scores"][genre]["score"] += score
+                                cat["genre_scores"][genre]["total_sen"] += 1
+                            else:
+                                cat["genre_scores"][genre] = {
+                                    "score": score,
+                                    "total_sen": 1
+                                } 
                         break
 
                 
-    for name, total in total_sen.items():
-        if total != 0:
-            scores[name] = scores[name] / total
+    for name, cat in categories.items():
+        if cat["total_sen"] != 0:
+            scores[name] = cat["score"] / cat["total_sen"]
+            for genre_name, genre in cat["genre_scores"].items():
+                scores[genre_name] = genre["score"] / genre["total_sen"]
             #print(name + " : " + str(total))
     return scores
+
+def sentimentScore(sentence):
+    analyzer = SentimentIntensityAnalyzer()
+    vs = analyzer.polarity_scores(sentence)
+    #print("{:-<65} {}".format(sentence, str(vs)))
+    return vs["compound"]
