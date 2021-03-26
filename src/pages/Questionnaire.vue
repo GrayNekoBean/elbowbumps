@@ -76,11 +76,11 @@ export default {
     submitScore() {
       this.calcResults();
       console.log(this.results);
-      axios.post(this.$store.getters.URL + "/questionnaire",
-      {
-        user_id: this.$store.getters.userId,
-        scores: this.results
-      }).then(
+      const formData = new FormData()
+      Object.keys(this.results).forEach(key => formData.append(key, this.results[key]))
+      formData.append("user_id", this.$store.getters.userId)
+      axios.post(this.$store.getters.URL + "questionnaire",
+      formData).then(
         (response) => {
           let jsonData = response.data;
           if (jsonData['STATUS_CODE'] == 200){
