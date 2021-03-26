@@ -10,7 +10,7 @@ export default createStore({
     userId: null,
     userFName: null,
     userAvatar: null,
-    remoteURL: "http://secret-crag-87848.herokuapp.com/",
+    remoteURL: "https://secret-crag-87848.herokuapp.com/",
     localURL: "http://localhost:5000/",
     isUsingRemote: true,
     matchesRetrieved: false,

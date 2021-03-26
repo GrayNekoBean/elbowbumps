@@ -87,7 +87,6 @@ export default {
       const URL = `${this.$store.getters.URL}match_info`;
 
       const form = new FormData();
-      console.log(JSON.stringify(this.matches))
       form.append("matches", JSON.stringify(this.matches));
       axios
         .post(URL, form)

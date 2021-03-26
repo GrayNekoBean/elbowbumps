@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     registerUser() {
-      let url = `${this.$store.getters.URL}/register`;
+      let url = `${this.$store.getters.URL}register`;
       console.log(url)
 
       let hashedPw = crypto
