@@ -103,7 +103,7 @@ export default {
             this.errors.push(response.data.Message)
           } else {
             this.errors = []
-            this.$store.dispatch('logIn', response.data.id)
+            this.$store.dispatch('logIn', { id: response.data.id, fName: this.enteredfName })
             console.log(response.data)
             console.log(this.$store.getters.userId)
             this.enteredfName = "";

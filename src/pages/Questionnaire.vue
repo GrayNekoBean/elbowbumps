@@ -64,7 +64,7 @@ export default {
   components: { SingleQuestion, SplitedPage },
   watch: {
     results(val) {
-      console.log(val);
+      // console.log(val);
     }
   },
   data() {
@@ -78,8 +78,8 @@ export default {
   methods: {
     submitScore() {
       this.calcResults();
-      console.log(this.results);
       let form = new FormData();
+      // console.log(this.results)
       
       if (this.$store.getters.userId){
         form.append("user_id", this.$store.getters.userId);
@@ -101,15 +101,16 @@ export default {
     },
     updateScore(category, index, val) {
       this.scores[category][index] = val;
-      console.log(index, val);
     },
     calcResults() {
-      for (let cat in this.scores){
-        this.results[cat] = 0;
-        let len = this.scores[cat].length;
-        for (let score in this.scores[cat]){
-          this.results[cat] += score/(5*len);
+      for (const cat in this.scores){
+        if (this.scores[cat].length == 0) {
+          continue;
         }
+        let sum = 0;
+        let len = this.scores[cat].length;
+        this.scores[cat].forEach((score) => sum += score)
+        this.results[cat] = sum/(5*len)
       }
     },
     LoadQuestion(){

@@ -44,14 +44,14 @@ export default {
   },
   methods: {
     submitUsername() {
-      let localURL = `${this.$store.getters.localURL}/social_media_info`;
+      let localURL = `${this.$store.getters.URL}/social_media_info`;
+
+      const form = new FormData()
+
+      form.append('id', this.$store.getters.userId)
+      form.append('twitter', this.twitterusername)
       axios
-        .post(localURL, {
-          params: {
-            id: this.$store.getters.userId,
-            twitter: this.twitterUsername,
-          },
-        })
+        .post(localURL, form)
         .then((res) => {
           if (res.data.STATUS_CODE == 200) {
             this.$router.push("/matches");
