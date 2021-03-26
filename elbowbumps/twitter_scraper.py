@@ -42,7 +42,7 @@ def connect_to_endpoint(url, headers, params={}):
     return response.json()
 
 def getTweets(user):
-    MAX_TWEETS = 250
+    MAX_TWEETS = 500
     bearer_token = auth()
     headers = create_headers(bearer_token)
     params = get_params()
