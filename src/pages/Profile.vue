@@ -42,7 +42,13 @@
             </Button>
             <Button @click="updateProfile">
                 Save
-            </Button> 
+            </Button>
+            <Button id="button" @click="$router.push('Matches')">
+            Matching Page
+            </Button>
+            <Button id="button" @click="$router.push('SocialMediaInfo')">
+            Twitter
+            </Button>
             </div>
         </div>
     </div>
@@ -74,7 +80,7 @@ export default {
             avatar: "../assets/test.jpg"
         };
     },
-    methods: { 
+    methods: {
         logout: function(){
             sessionStorage.removeItem("current_user");
             localStorage.removeItem("current_user");
@@ -182,7 +188,7 @@ export default {
 
                 });
             }else{
-                console.warn("not loged in")
+                console.warn("not logged in")
             }
         }
     },
