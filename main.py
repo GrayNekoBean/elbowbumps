@@ -153,6 +153,7 @@ def add_twitter_username():
                 user.ud_twitter = twitter
                 user.ud_id_twitter = twitter_id
                 db.session.commit()
+                get_tweets(user.ud_id)
                 return jsonify({
                     "STATUS_CODE": "200",
                     "Message": "Thank you!"
@@ -164,10 +165,7 @@ def add_twitter_username():
             })
 
 
-
-@app.route('/get_tweets', methods=['POST'])
-def get_tweets():
-    user_id = request.form.get('user_id')
+def get_tweets(user_id):
     user = UserData.query.filter_by(ud_id=user_id).first()
 
     if not user:
