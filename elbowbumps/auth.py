@@ -3,14 +3,15 @@ import hashlib
 
 from flask import Flask, request, jsonify
 from flask.wrappers import Request, Response
-from __main__ import app
 from __main__ import user_session_keys
 
-from elbowbumps import db
+from elbowbumps import db, create_app
 
 from elbowbumps.models import UserData
 
 import requests as HttpRequest
+
+app = create_app()
 
 #TODO: For safety reasons, we'd better hash the password again at here. Still, it's not unhackable, but just for a little more safe.
     

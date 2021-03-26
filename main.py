@@ -11,6 +11,7 @@ cors = CORS(app)
 from elbowbumps.models import UserData, UserInterestData, UserMatch
 
 user_session_keys = {}
+
 from elbowbumps import auth
 
 # Updates interests for a given user
@@ -106,7 +107,7 @@ def add_questionnaire_scores():
         
         # will end up being a list, probably, when we have multiple scores instrad of one
         score = scores[cat]
-        normalisedScore = ((int(score) - 3) / 2) + 1
+        normalisedScore = ((float(score) - 3) / 2) + 1
         user_interests = UserInterestData.query.filter_by(uid_ud_id=user_id, uid_interest_type=cat).first()
         if user_interests:
             user_interests.uid_questionnaire_score = normalisedScore
@@ -204,7 +205,7 @@ def get_tweets():
 def find_matches():
     param = request.args.get('user_id')
     limit = request.args.get('limit')
-    query = f'select uid1.uid_ud_id, uid2.uid_ud_id, sqrt(Abs(uid1.uid_squared_weight + uid2.uid_squared_weight - (2*uid1.uid_interest_weight*uid2.uid_interest_weight))) as distance from user_interest_data uid1 , user_interest_data uid2 where uid1.uid_interest_type = uid2.uid_interest_type and uid1.uid_id <> uid2.uid_id and uid1.uid_ud_id = {param} and uid1.uid_ud_id <> uid2.uid_ud_id group by uid2.uid_ud_id, uid1.uid_ud_id, uid1.uid_squared_weight,uid2.uid_squared_weight,uid1.uid_interest_weight,uid2.uid_interest_weight order by distance limit {limit};'
+    query = f'select uid1.uid_ud_id, uid2.uid_ud_id, sqrt(Abs(sw1.sum + sw2.sum - sum(2*uid1.uid_interest_weight*uid2.uid_interest_weight))) as distance from squared_weights sw1 , squared_weights sw2 , user_interest_data uid1 , user_interest_data uid2 where sw1.uid_ud_id = uid1.uid_ud_id and sw2.uid_ud_id = uid2.uid_ud_id and uid1.uid_interest_type = uid2.uid_interest_type and uid1.uid_id <> uid2.uid_id and uid1.uid_ud_id = {param} and uid1.uid_ud_id <> uid2.uid_ud_id group by uid2.uid_ud_id, uid1.uid_ud_id, uid1.uid_squared_weight,uid2.uid_squared_weight,uid1.uid_interest_weight,uid2.uid_interest_weight,sw1.sum,sw2.sum order by distance limit {limit};'
     results = db.engine.execute(query)
     response = []
     for res in results:
