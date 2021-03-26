@@ -49,7 +49,7 @@ export default {
       const form = new FormData()
 
       form.append('id', this.$store.getters.userId)
-      form.append('twitter', this.twitterusername)
+      form.append('twitter', this.twitterUsername)
       axios
         .post(localURL, form)
         .then((res) => {
