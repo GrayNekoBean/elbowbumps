@@ -55,7 +55,6 @@ $background-color: 	#80929F;
   right: 0px;
   width: 42%;
   top: -10%;
-  background: $background-color;
 }
 
 
