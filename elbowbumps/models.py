@@ -74,12 +74,12 @@ class UserInterestData(db.Model):
         if sw:
             with db.engine.connect() as con:
                 new_weight = con.execute(f'select sum(uid_interest_weight * uid_interest_weight) from user_interest_data uid where uid_ud_id = {self.uid_ud_id};')
-                sw.sum = new_weight
+                sw.sum = new_weight.first().sum
                 db.session.commit()
 
         else:
             with db.engine.connect() as con:
-                weight = con.execute(f'select sum(uid_interest_weight * uid_interest_weight) from user_interest_data uid where uid_ud_id = {self.uid_ud_id};')
+                weight = con.execute(f'select sum(uid_interest_weight * uid_interest_weight) from user_interest_data uid where uid_ud_id = {self.uid_ud_id};').first().sum
                 sw = SquaredWeights(self.uid_ud_id, weight)
                 db.session.add(sw)
                 db.session.commit()

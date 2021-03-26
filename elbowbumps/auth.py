@@ -1,7 +1,7 @@
 import uuid as UUID
 import hashlib
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Blueprint
 from flask.wrappers import Request, Response
 
 from elbowbumps import db, create_app
@@ -10,7 +10,7 @@ from elbowbumps.models import UserData
 
 import requests as HttpRequest
 
-app = create_app()
+auth = Blueprint('auth', __name__)
 
 #TODO: For safety reasons, we'd better hash the password again at here. Still, it's not unhackable, but just for a little more safe.
 
@@ -59,7 +59,7 @@ def check_password_hash(userpw, pw):
             return True
     return False
 
-@app.route('/register', methods=['POST'])
+@auth.route('/register', methods=['POST'])
 def register():
     reg_info = request.form
     if 'fName' in reg_info and 'sName' in reg_info and 'phoneNum' in reg_info and 'emailAdd' in reg_info and 'pw' in reg_info:
@@ -106,7 +106,7 @@ def register():
             "Message": f"Fill in all fields"
         },status = 'INVALID_DATA', status_code = 500)
             
-@app.route('/login', methods=['POST'])
+@auth.route('/login', methods=['POST'])
 def loginUser():
     status = 'SUCCESS'
     status_code = 200
@@ -150,7 +150,7 @@ def getImgurImage(imageHash):
     else:
         return ''
 
-@app.route('/user_data', methods=['GET', 'POST'])
+@auth.route('/user_data', methods=['GET', 'POST'])
 def getUserData():
     if request.method == 'GET': 
         if ('user_id' in request.args):

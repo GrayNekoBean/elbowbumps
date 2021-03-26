@@ -10,9 +10,9 @@ app = create_app()
 cors = CORS(app)
 from elbowbumps.models import UserData, UserInterestData, UserMatch
 
-user_session_keys = {}
+from elbowbumps.auth import auth
 
-from elbowbumps import auth
+app.register_blueprint(auth)
 
 # Updates interests for a given user
 @app.route('/update_interests', methods=['POST'])
@@ -107,14 +107,14 @@ def add_questionnaire_scores():
         
         # will end up being a list, probably, when we have multiple scores instrad of one
         score = scores[cat]
-        normalisedScore = ((float(score) - 3) / 2) + 1
+        normalisedScore = float(score) * 2
         user_interests = UserInterestData.query.filter_by(uid_ud_id=user_id, uid_interest_type=cat).first()
         if user_interests:
             user_interests.uid_questionnaire_score = normalisedScore
             user_interests.updateScores()
             db.session.commit()
         else:
-            data = UserInterestData(user_id, cat, 0, score)
+            data = UserInterestData(user_id, cat, 0, normalisedScore)
             db.session.add(data)
             db.session.commit()
     return jsonify({
@@ -126,8 +126,8 @@ def add_questionnaire_scores():
 # updating record to fill in the questionnaire score in the database - Lily
 @app.route('/social_media_info', methods=['POST'])
 def add_twitter_username():
-    twitter = request.args.get('twitter')
-    id = request.args.get('id')
+    twitter = request.form.get('twitter')
+    id = request.form.get('id')
     user = UserData.query.filter_by(ud_id = id).first()
     if not user:
         return jsonify({
@@ -167,7 +167,7 @@ def add_twitter_username():
 
 @app.route('/get_tweets', methods=['POST'])
 def get_tweets():
-    user_id = request.args.get('user_id')
+    user_id = request.form.get('user_id')
     user = UserData.query.filter_by(ud_id=user_id).first()
 
     if not user:
@@ -205,7 +205,7 @@ def get_tweets():
 def find_matches():
     param = request.args.get('user_id')
     limit = request.args.get('limit')
-    query = f'select uid1.uid_ud_id, uid2.uid_ud_id, sqrt(Abs(sw1.sum + sw2.sum - sum(2*uid1.uid_interest_weight*uid2.uid_interest_weight))) as distance from squared_weights sw1 , squared_weights sw2 , user_interest_data uid1 , user_interest_data uid2 where sw1.uid_ud_id = uid1.uid_ud_id and sw2.uid_ud_id = uid2.uid_ud_id and uid1.uid_interest_type = uid2.uid_interest_type and uid1.uid_id <> uid2.uid_id and uid1.uid_ud_id = {param} and uid1.uid_ud_id <> uid2.uid_ud_id group by uid2.uid_ud_id, uid1.uid_ud_id, uid1.uid_squared_weight,uid2.uid_squared_weight,uid1.uid_interest_weight,uid2.uid_interest_weight,sw1.sum,sw2.sum order by distance limit {limit};'
+    query = f'select uid1.uid_ud_id, uid2.uid_ud_id, sqrt(sw1.sum + sw2.sum - sum(2*uid1.uid_interest_weight*uid2.uid_interest_weight)) as distance from squared_weights sw1 , squared_weights sw2 , user_interest_data uid1 , user_interest_data uid2 where sw1.uid_ud_id = uid1.uid_ud_id and sw2.uid_ud_id = uid2.uid_ud_id and uid1.uid_interest_type = uid2.uid_interest_type and uid1.uid_id <> uid2.uid_id and uid1.uid_ud_id = {param} and uid1.uid_ud_id <> uid2.uid_ud_id group by uid2.uid_ud_id, uid1.uid_ud_id, uid1.uid_squared_weight,uid2.uid_squared_weight,uid1.uid_interest_weight,uid2.uid_interest_weight,sw1.sum,sw2.sum order by distance limit {limit};'
     results = db.engine.execute(query)
     response = []
     for res in results:
