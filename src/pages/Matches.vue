@@ -73,13 +73,14 @@ export default {
         .get(URL, {
           params: {
             user_id: userId,
-            limit: 5,
+            limit: 8,
           },
         })
         .then((res) => (this.matches = res.data.result))
         .catch((err) => {
           console.log(err);
         });
+
       this.getMatchInfo();
     },
     getMatchInfo() {
@@ -93,7 +94,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-      console.log(this.users);
     },
     bump(id) {
       const URL = `${this.$store.getters.URL}bump`;
