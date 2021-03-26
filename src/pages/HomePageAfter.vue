@@ -6,7 +6,7 @@
   <div id="frame">
     <div id="top-right">
       <div >
-        <img src="../assets/elbows-w-lines.png" id="elb-poster" />
+        <img src="../assets/eb_logo.svg" id="elb-poster" />
       </div>
     </div>
     <div id="top-left">
@@ -60,6 +60,7 @@ $background-color: 	#80929F;
   height: 100%;
   right: 0px;
   width: 42%;
+  top: -10%;
   background: $background-color;
 }
 
