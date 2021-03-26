@@ -1,4 +1,5 @@
 <template>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <div id = "welcome">
     <h1>Welcome</h1>
   </div>
@@ -14,9 +15,10 @@
       <!-- <h1 style = "color: #ffaaaa">BUMPS</h1> -->
     </div>
     <div id="bottom-left">
-      <p></p>
-      <p >Is lockdown loneliness bogging you down? Do you want to find other people who are passionate in the same things you are? Elbow Bumps provides a new, innovative way for you to do just that! <br> <br>Simply register, fill in a questionnaire and give us your Twitter, and we'll find you people who love the very same things you love.</p>
-      <div id="button2"><Button id="button" @click="$router.push('Register')">GET STARTED</Button></div>
+      <button id="button" @click="$router.push('Bumps')"><i class="fa fa-bars" style="margin-right:19%;"></i>  VIEW PAST BUMPS</button>
+      <button id="button" @click="$router.push('SocialMediaInfo')"><i class="fa fa-twitter" style="margin-right:31%;"></i>  YOUR SOCIALS</button>
+      <button id="button" @click="$router.push('Matches')"><i class="fa fa-heart" style="margin-right:23%;"></i>  MATCHING PAGE</button>
+      <button id="button" @click="$router.push('Questionnaire')"><i class="fa fa-question-circle" style="margin-right:24%;"></i> QUESTIONNAIRE</button>
     </div>
     <!-- <div id="bottom-right">
       <img src="../assets/pic.png" id="pic"/>
@@ -31,14 +33,18 @@ export default {};
 <style lang="scss" scoped>
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 $primitive-color: #a9edfe;
-$secondary-color: #ffaaaa;
+$secondary-color: #ffaaaab9;
 $background-color: 	#80929F;
 //$background-color: #E95B46;
 //$background-color: 	#DB744E;
 //$background-color: #ffffff;
 //$background-color: #fffaba;
+
+#icon1 {
+  background: url()
+}
 
 #frame {
   position: absolute;
@@ -49,7 +55,7 @@ $background-color: 	#80929F;
 
 #top-right {
   position: absolute;
-  margin-left:2%;
+  //margin-left:2%;
   margin-right:6%;
   height: 100%;
   right: 0px;
@@ -66,12 +72,10 @@ $background-color: 	#80929F;
   max-height: 100%;
 }
 
-
 #top-left {
   padding: 1%;
   border: 1%;
   position: absolute;
-  margin-left:2%;
   margin-top: 5%;
   margin-bottom:7.5%;
   height: 50%;
@@ -87,26 +91,30 @@ $background-color: 	#80929F;
   padding: 1%;
   border: 1%;
   position: absolute;
-  margin-top: 20%;
-  margin-left:3%;
+  margin-top: 23%;
+  margin-left:7.5%;
   height: 50%;
   left: 0px;
-  width: 48.5%;
-  font-size: 1.5vw;
+  width: 42%;
+  font-size: 2vw;
   text-align: right;
   font-family: 'Lato', sans-serif;
-  //line-height: 3.75vw;
+  line-height: 3.75vw;
   color: #ffffff;
 }
 
 #button {
-    font-weight: bold;
-    width: 30%;
-    height: 5%;
-    text-align: center;
+    //font-weight: bold;
+    width:60%;
+    height: 15%;
+    margin-top: 1%;
+    padding: 1% 2% 1% 1%;
+    border: 1% 1% 1% 1%;
+    margin-bottom: 1%;
+    text-align: right;
     color: #ffffff;
     font-family: 'Lato', sans-serif;
-    font-size: 35px;
+    font-size: 1.7vw;
     justify-content: center;
     background: $secondary-color;
     border: none;

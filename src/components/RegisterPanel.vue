@@ -120,14 +120,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+p{
+  padding-left: 2rem;
+}
+
+.heading{
+  font-family: 'Montserrat', sans-serif;
+  font-weight: lighter;
+  font-size: 1.5rem;
+  padding-left: 2rem;
+}
+
 .register-card{
     position: absolute;
     display: block;
-    margin-top: 10%;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
     padding-left: 1rem;
     margin-left: 5rem;
     width: 40rem; 
     height: 45rem; 
     z-index: 2;
+    font-size: 1rem;
+    font-family: 'Lato', sans-serif;
+}
+
+#creds{
+  margin-left: 2rem;
 }
 </style>

@@ -3,7 +3,7 @@
         <div class="splited-left">
             <slot name="left"></slot>
         </div>
-
+          
         <div class="splited-right">
             <slot name="right"></slot>
         </div>
@@ -14,7 +14,7 @@
 
 $primitive-color: #a9edfe;
 $secondary-color: #ffaaaa;
-$background-color: #fffaba;
+$background-color: 	#80929F;
 
 .splited-frame {
   position: absolute;

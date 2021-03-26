@@ -20,6 +20,8 @@ import Toast from 'primevue/toast';
 import Menubar from 'primevue/menubar';
 import Menu from 'primevue/menu';
 import Avatar from 'primevue/avatar';
+import Accordion from 'primevue/accordion';
+import AccordionTab from 'primevue/accordiontab';
 
 import "primevue/resources/themes/saga-blue/theme.css"; // theme
 import "primevue/resources/primevue.min.css"; // core css
@@ -49,5 +51,7 @@ app.component("Toast", Toast);
 app.component("Menubar", Menubar);
 app.component("Menu", Menu);
 app.component("Avatar", Avatar);
+app.component("Accordion", Accordion);
+app.component("AccordionTab", AccordionTab);
 
 app.mount("#app");

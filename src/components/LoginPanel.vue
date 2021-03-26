@@ -115,8 +115,12 @@ export default {
           if (responseStatus == "200") {
             //TODO: Show a notification with info like this: "Login Successful"
             this.errors = "";
-            this.$store.dispatch("logIn", response.data.id);
-            this.$root.setLoginState();
+            axios.get(this.$store.getters.URL + "user_data", {params: {user_id: response.data.id}}).then(
+              (resp) => {
+                this.$store.dispatch("logIn",{ id: response.data.id, fName: resp.data.data.fName, avatar: resp.data.data.avatar });
+                this.$root.setLoginState();
+              }
+            )
             this.$router.push("/matches");
           } else if (responseStatus == "500") {
             this.errors = responseData.Message;
