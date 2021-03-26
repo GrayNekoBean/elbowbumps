@@ -106,6 +106,6 @@ class SquaredWeights(db.Model):
     uid_ud_id = db.Column(db.Integer, primary_key=True)
     sum = db.Column(db.Integer)
 
-    def __inite(self, ud_id, weight):
+    def __init__(self, ud_id, weight):
         self.uid_ud_id = ud_id
         self.sum = weight
