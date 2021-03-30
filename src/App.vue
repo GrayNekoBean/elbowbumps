@@ -95,11 +95,6 @@ export default {
               label: "Profile",
               icon: "pi pi-user",
               to: "/profile"
-            },
-            {
-              label: "Settings",
-              icon: "pi pi-sliders-h",
-              to: "/settings"
             }
           ]
         }

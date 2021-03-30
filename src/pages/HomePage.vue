@@ -49,7 +49,7 @@ $background-color: 	#80929F;
   height: 100%;
   right: 0px;
   width: 42%;
-  top: -10%;
+  top: -3%;
 }
 #elb-poster {
   display: block;
