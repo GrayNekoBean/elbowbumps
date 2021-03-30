@@ -1,28 +1,128 @@
 <template>
-  <div>
-      <h1>About Us</h1>
-
-  </div>
   <div id="frame">
-    <div id="top">
-      <img src="../assets/pic2.png" id="pic2"/>
-    </div>
+    <br>
+    <h1 id="about-us" style = "color: #ffffff">THE BRAINS BEHIND <span style = "color:  #a9edfe">ELBOW</span> <span style = "color: #ffaaaa">BUMPS</span></h1>
+    <hr class="solid">
+    <br>
+    <br>
+    <br>
     <div id="bottom">
-      <h3>Having trouble making friends during covid?</h3>
+       <div class="column">
+        <div id="rectangle"></div>
+        <div class="card">
+          <img class="img-circular" src="../assets/zoya.jpg" alt="Zoya">
+          <div class="container">
+            <div id="name">
+            <h2>Zoya Anwar</h2>
+            </div>
+            <p class="title">CEO</p>
+            <!-- <p>Some text that describes me lorem ipsum ipsum lorem.</p> -->
+          </div>
+        </div>
+      </div>
 
-      <p style =" color: #444444"> Elbow bumps is here to help!<br> Elbow Bumps is an interest-based friend recommendation platform, 
-          which will allow you to find other people whose interests closely match yours. 
-          You can either provide us with your twitter account or answer a few short questions so we can get to know your
-          interests. Then, you can get a list of matches, 'bump' with them, and get chatting!<br><br>
+      <div class="column">
+        <div class="card">
+          <div id="rectangle"></div>
+          <img class="img-circular" src="../assets/eve.jpg" alt="Eve" style="width:100%">
+          <div class="container">
+            <div id="name"> 
+            <h2>Eve Ashton</h2>
+            </div>
+            <p class="title">CEO</p>
+            <!-- <p>Some text that describes me lorem ipsum ipsum lorem.</p> -->
+          </div>
+        </div>
+      </div>
 
-          Register <router-link to="/register">here</router-link> to get started and beat lockdown loneliness.<br><br>
+        <div class="column">
+        <div class="card">
+          <div id="rectangle"></div>
+          <img class="img-circular" src="../assets/faridz.jpg" alt="Faridz" style="width:100%">
+          <div class="container">
+            <div id="name">
+            <h2>Faridz Ibrahim</h2>
+            </div>
+            <p class="title">CEO</p>
+            <!-- <p>Some text that describes me lorem ipsum ipsum lorem.</p> -->
+          </div>
+        </div>
+      </div>
 
-          <i>For more on the terms of use of our website, and how we use your data, please read our <router-link to="/terms">Terms and Conditions</router-link> and <router-link to="/privacy">Privacy Policy</router-link></i>
-          
-        </p>
-    </div>
+        <div class="column">
+        <div class="card">
+          <div id="rectangle"></div>
+          <img class="img-circular" src="../assets/lily.jpg" alt="Lily" style="width:100%">
+          <div class="container">
+            <div id="name">
+            <h2>Lily Nicholson</h2>
+            </div>
+            <p class="title">CEO</p>
+            <!-- <p>Some text that describes me lorem ipsum ipsum lorem.</p> -->
+          </div>
+        </div>
+      </div>
 
+        <div class="column">
+        <div class="card">
+          <div id="rectangle"></div>
+          <img class="img-circular" src="../assets/matthew.jpg" alt="Matthew" style="width:100%">
+          <div class="container">
+            <div id="name">
+            <h2>Matthew Oladimeji</h2>
+            </div>
+            <p class="title">CEO</p>
+            <!-- <p>Some text that describes me lorem ipsum ipsum lorem.</p> -->
+          </div>
+        </div>
+      </div>
+
+        <div class="column">
+        <div class="card">
+          <div id="rectangle"></div>
+          <img class="img-circular" src="../assets/naomi.jpg" alt="Naomi" style="width:100%">
+          <div class="container">
+            <div id="name">
+            <h2>Naomi Felix</h2>
+            </div>
+            <p class="title">CEO</p>
+            <!-- <p>Some text that describes me lorem ipsum ipsum lorem.</p> -->
+          </div>
+        </div>
+      </div>
+
+        <div class="column">
+        <div class="card">
+          <div id="rectangle"></div>
+          <img class="img-circular" src="../assets/derek.jpg" alt="Derek" style="width:100%">
+          <div class="container">
+            <div id="name">
+            <h2>Derek Wang</h2>
+            </div>
+            <p class="title">CEO</p>
+            <!-- <p>Some text that describes me lorem ipsum ipsum lorem.</p> -->
+          </div>
+        </div>
+      </div>
+
+        <div class="column">
+        <div class="card">
+          <div id="rectangle"></div>
+          <img class="img-circular" src="../assets/bijan.jpg" alt="Bijan" style="width:100%">
+          <div class="container">
+            <div id="name">
+            <h2>Bijan Parsia</h2>
+            </div>
+            <p class="title">Intern</p>
+            <!-- <p>Some text that describes me lorem ipsum ipsum lorem.</p> -->
+          </div>
+        </div>
+      </div>
+
+      
   </div>
+</div>
+
 </template>
 
 <script>
@@ -34,46 +134,97 @@ export default {
 <style lang="scss">
 $primitive-color: #a9edfe;
 $secondary-color: #ffaaaa;
-$background-color: #fffaba;
+$background-color: 	#80929F;
+
+.solid {
+  background: #ffff;
+  height: 0.5%;
+}
 
 #frame {
-  position: absolute;
+  position: relative;
   height: 100%;
   width: 100%;
-  background: #ffffff;
+  padding: 2.5%;
+  background: $background-color;
 }
 
-#top {
-  position: absolute;
-  height: 50%;
-  left: 0px;
-  width: 100%;
-  margin-right: 4%;
-  background: $primitive-color;
+#about-us {
+  padding-top: 3vw;
+  margin-bottom: 0;
+  font-size: 60px;
+  font-family: 'Montserrat', sans-serif;
+  text-align: left;
+
 }
 
-#bottom {
-  position: absolute;
-  margin-top: 22%;
-  height: 50%;
-  left: 0px;
-  width: 100%;
-  margin-right: 4%;
-  font-size: 30px;
-  text-color: #444444;
-  text-align: center;
-  font-family: IBM Plex Sans;
-  line-height: 35px;
-  background: #ffffff;
+#name {
+  height: 4vw;
 }
 
-#pic2 {
-  display: flex;
-  object-fit: contain;
-  height: 100%;
-  width: 100%;
-  z-index: 1;
-  background: $primitive-color;
+h2 {
+  line-height: 110%;
+  font-family: 'Montserrat', sans-serif;
 }
+
+
+@media screen and (min-width: 1501px) {
+.column {
+  float: left;
+  width: 12.5%;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+}
+
+/* Display the columns below each other instead of side by side on small screens */
+@media screen and (max-width: 1000px) {
+  .column {
+    width: 100%;
+    display: block;
+  }
+}
+
+@media screen and (max-width: 1500px) and (min-width: 1000px) {
+  .column {
+    float: left;
+    width: 25%;
+    margin-bottom: 8px;
+    padding: 0 5px;
+  }
+}
+
+
+.card {
+  z-index:10;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  background: linear-gradient( 180deg, $primitive-color, $primitive-color  30%, white 30%, white 60%, white 60% ); 
+}
+
+
+.container {
+  padding: 0 16px;
+}
+
+
+
+.title {
+  color: grey;
+  padding: 4px;
+}
+
+.img-circular {
+  position: relative;
+  width: 100%;
+  height: 75%;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.img-circular img {
+  width: 100%;
+  height: auto;
+}
+
 
 </style>

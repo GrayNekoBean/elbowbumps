@@ -1,7 +1,5 @@
 <template>
-  <div id = "welcome">
-    <h1>Welcome</h1>
-  </div>
+
   <div id="frame">
     <div id="top-right">
       <div >
@@ -29,7 +27,6 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap');
 $primitive-color: #a9edfe;
@@ -39,14 +36,12 @@ $background-color: 	#80929F;
 //$background-color: 	#DB744E;
 //$background-color: #ffffff;
 //$background-color: #fffaba;
-
 #frame {
   position: absolute;
   height: 100%;
   width: 100%;
   background: $background-color;
 }
-
 #top-right {
   position: absolute;
   margin-left:2%;
@@ -56,16 +51,12 @@ $background-color: 	#80929F;
   width: 42%;
   top: -10%;
 }
-
-
 #elb-poster {
   display: block;
   height: auto;
   width: 100%;
   max-height: 100%;
 }
-
-
 #top-left {
   padding: 1%;
   border: 1%;
@@ -81,7 +72,6 @@ $background-color: 	#80929F;
   font-family: 'Montserrat', sans-serif;
   line-height: 2.2vw;
 }
-
 #bottom-left {
   padding: 1%;
   border: 1%;
@@ -97,7 +87,6 @@ $background-color: 	#80929F;
   //line-height: 3.75vw;
   color: #ffffff;
 }
-
 #button {
     font-weight: bold;
     width: 30%;
@@ -110,6 +99,5 @@ $background-color: 	#80929F;
     background: $secondary-color;
     border: none;
 }
-
 </style>
 

@@ -1,4 +1,4 @@
-<template>
+<template id="frame">
   <section>
     <Card class="main-frame">
       <template #header>
@@ -185,6 +185,7 @@ $background-color: #80929F;
   --primary-color: #ffaaaa !important;
   --primary-color-text: #fffaba !important;
 }
+
 
 body{
   margin: 0px;
