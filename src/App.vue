@@ -54,7 +54,8 @@
 <script>
 //import AppFrame from "./components/App-Frame.vue";
 
-import router from "./router"
+import axios from "axios";
+import router from "./router";
 
 export default {
   components: {},
@@ -163,6 +164,26 @@ export default {
       console.log('route');
       this.header_active = Number(this.routers_id[path]);
       this.$router.push(path);
+    },
+    getUserData: function(userId){
+      let address = this.$store.getters.URL + "user_data";
+      let args = {
+        user_id: userId
+      }
+      let userData = null;
+      axios.get(address, {params: args}).then(
+        (response) => {
+          if (response.data.STATUS_CODE == "200"){
+            userData = response.data.data;
+          }else{
+            console.error(response.STATUS);
+            console.error(response.Message);
+          }
+        }
+      ).catch((e) => {
+        console.error(e);
+      });
+      return userData;
     }
   }
 };

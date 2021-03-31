@@ -20,8 +20,9 @@
             :key="user.id"
             :header="user.forename"
           >
-            <h2>{{ user.forename }} {{ user.surname }}</h2>
-            <Button @click="bump(user.id)">Bump {{ user.forename }}!</Button>
+            <!-- <h2>{{ user.forename }} {{ user.surname }}</h2>
+            <Button @click="bump(user.id)">Bump {{ user.forename }}!</Button> -->
+            <BumperCard :userID="user.id"></BumperCard>
           </accordion-tab>
         </accordion>
         <div style="padding-bottom:3rem; display:flex; justify-content:center;">
@@ -47,8 +48,10 @@ import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
 import axios from "axios";
 
+import BumperCard from "../components/BumperCard";
+
 export default {
-  components: { Accordion, AccordionTab },
+  components: { Accordion, AccordionTab, BumperCard },
   data() {
     return {
       matches: [],
