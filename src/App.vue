@@ -80,6 +80,7 @@ export default {
       header_items: [
         { label: "Home", to: "/" },
         { label: "Login", to: "login" },
+        { label: "Matching Page", to: "matches"},
         { label: "Sign up", to: "register" },
         { label: "About us", to: "about" },
       ],
@@ -96,6 +97,11 @@ export default {
               label: "Profile",
               icon: "pi pi-user",
               to: "/profile"
+            },
+            {
+              label: "Matches",
+              icon: "pi pi-users",
+              to: "/matches"
             }
           ]
         }
@@ -118,7 +124,7 @@ export default {
     this.current_user = this.$store.getters.fName;
     this.avatar = "assets/test.jpg";
   },
-  methods: { 
+  methods: {
     logined: function(){
       if (this.$store.getters.userId){
         return true;
@@ -130,7 +136,7 @@ export default {
       this.$refs.user_menu.toggle(event);
     },
     setLoginState: function(){
-      
+
       // this.login_profile = "Profile";
       // this.register_settings = "Settings";
 
@@ -141,7 +147,7 @@ export default {
       this.user_menu_items[0]['label'] = "You're now login as " + this.current_user;
       this.routers_id = this.swapKeyValue(this.id_routers);
       this.$forceUpdate();
-      
+
     },
     setLogoutState: function(){
       // this.login_profile = "Login";
@@ -222,7 +228,7 @@ body{
         padding: 0 !important;
         height: 0%;
     }
-    
+
 
     .p-tabview-nav{
         li {

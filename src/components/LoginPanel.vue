@@ -1,65 +1,43 @@
 <template>
   <div>
-    <Toast position="top-right" />
     <Card class="login-card">
       <template #header>
-        <div class="heading">
-          <br />
-          <h2 style="margin-left: 2rem">Log in to an existing account:</h2>
+        <div class="heading" style="margin-top: 10%;">
+          <h2>Login</h2>
         </div>
       </template>
+
       <template #content>
-        <div style="margin-left: 2rem">
-          <Panel header="Login">
-            <div id="creds">
-              <form method="POST" @submit.prevent="submitLoginInfo()">
-                <br />
-                <label>Email:</label><br />
-                <InputText id="Email" type="text" v-model="email" required />
-                <br />
-                <br />
-                <label>Password:</label><br />
-                <Password
-                  id="passwd"
-                  v-model="pw"
-                  required
-                  toggleMask
-                /><br /><br />
-                <Checkbox
-                  id="agree"
-                  v-model="agree_terms"
-                  :binary="true"
-                  required
-                />
-                <router-link to="/terms"> Terms & Conditions</router-link>
-                <br /><br />
-                <Button class="p-button-raised" type="submit"
-                  ><i class="pi pi-plus-circle" style="margin-top: 0px;" />
-                  <div style="margin: 5px;">Login</div></Button
-                >
-                <br />
-              </form>
-            </div>
-          </Panel>
+        <div id="creds">
+          <form method="POST" @submit.prevent="submitLoginInfo()">
+            <label>Email:</label><br />
+            <InputText
+              type="text"
+              id="Email"
+              v-model="email"
+              required
+            /><br /><br />
+            <label>Password:</label><br />
+            <Password
+              id="passwd"
+              v-model="pw"
+              required
+              toggleMask
+            /><br /><br />
+            <Button type="submit">Login</Button><br />
+          </form>
         </div>
-        <div style="margin-left: 2rem">
-          <p>
-            Forgottten your password? Click
-            <router-link to="/forgot_password">here</router-link> to fix that.
-          </p>
-          <p>Don't already have an account? Register here:</p>
-          <Button
-            class="p-button-raised"
-            @click="this.$root.route_to('/register')"
-          >
-            Register
-          </Button>
-          <Dialog v-model:visible="hasErrors" header="Oh no!" class="error">
-            {{ error }} <br /><br />
-            <Button label="Got it!" autofocus @click="removeErrors"></Button>
-          </Dialog>
-          <br /><br />
-        </div>
+            <p v-if="hasErrors">
+              <ul v-for="error in errors" :key="error">
+                <li>{{error}}</li>
+              </ul>
+            </p>
+
+        <p>
+          Don't have an account? Click
+          <router-link to="/register">here</router-link> to register
+        </p>
+        <br /><br /><br />
       </template>
     </Card>
   </div>
@@ -68,10 +46,9 @@
 <script>
 import axios from "axios";
 import crypto from "crypto";
-import Dialog from "primevue/dialog";
+
 
 export default {
-  components: { Dialog },
 
   data() {
     return {
@@ -140,43 +117,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$primitive-color: #a9edfe;
-$secondary-color: #ffaaaa;
-$background-color: #fffaba;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
-.login-card {
-  display: block;
-  margin-top: 5rem;
-  margin-left: 5rem;
-  top: 20%;
-  bottom: 10%;
-  width: 40rem;
-  height: 40rem;
-  z-index: 2;
+p{
+  padding-left: 2rem;
 }
-
-h2 {
-  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-  color: $primitive-color;
-  font-size: 32px;
+.heading{
+  font-family: 'Montserrat', sans-serif;
+  font-weight: lighter;
+  font-size: 1.5rem;
+  padding-left: 2rem;
 }
-
-p {
-  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-  color: $primitive-color;
+.login-card{
+    position: absolute;
+    display: block;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    padding-left: 1rem;
+    margin-left: 5rem;
+    width: 40rem;
+    height: 45rem;
+    z-index: 2;
+    font-size: 1rem;
+    font-family: 'Lato', sans-serif;
 }
-
-::v-deep{
-  button.p-button {
-    font-weight: bold;
-    width: 10rem;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    background: $primitive-color;
-    border: none;
-  }
+#creds{
+  margin-left: 2rem;
 }
 </style>

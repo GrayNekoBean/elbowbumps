@@ -5,8 +5,8 @@
     <div class="top-part">
         <div class="profile-title">
             <img src="../assets/test.jpg" class="avatar" />
-            <FileUpload mode="basic" name="image" :customUpload="true" @uploader="uploadAvatar" />
-            <div style="text-align: center;">
+            <FileUpload mode="basic" name="image" :customUpload="true" @uploader="uploadAvatar" style="text-align: center" />
+            <div style="text-align: center">
                 <h2>
                     {{firstName}} {{lastName}}
                 </h2>
@@ -42,12 +42,6 @@
             </Button>
             <Button @click="updateProfile">
                 Save
-            </Button>
-            <Button id="button" @click="$router.push('Matches')">
-            Matching Page
-            </Button>
-            <Button id="button" @click="$router.push('SocialMediaInfo')">
-            Twitter
             </Button>
             </div>
         </div>
