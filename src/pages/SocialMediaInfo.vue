@@ -1,33 +1,40 @@
 <template>
-  <Card>
-    <template #header>
-      <div class="heading">
-        <h1>Please share your Twitter username with us</h1>
-      </div>
-    </template>
-    <template #content>
-      <form @submit.prevent="submitUsername">
-        <label for="twitterUsername">Twitter @</label>
-        <input
-          type="text"
-          id="twitterUsername"
-          name="twitterUsername"
-          v-model="twitterUsername"
-        />
-        <br /><br />
-        <Button type="submit">Submit</Button> <br /><br />
-        <Dialog v-model:visible="hasErrors" header="Oh no!" class="error">
-          {{ error }} <br/><br/>
-          <Button label="Got it!" autofocus @click="removeErrors"></Button>
-        </Dialog>
-      </form>
-    </template>
-  </Card>
+  <div id="frame">
+    <img id="twitter-icon" src="../assets/twitter.png">
+    <Card class = "social-card">
+      <template #header>
+        <div class="heading">
+          <h1>Please share your Twitter username with us</h1>
+        </div>
+      </template>
+      <template #content>
+          <div id ="textbox">
+            <form @submit.prevent="submitUsername">
+              <label for="twitterUsername">@</label>
+              <input
+                type="text"
+                id="twitterUsername"
+                name="twitterUsername"
+                v-model="twitterUsername" 
+                value @click="getValue"
+              />
+              <br /><br />
+              <div id="button"><Button type="submit" id="button">Submit</Button></div> <br /><br />
+              <Dialog v-model:visible="hasErrors" header="Oh no!" class="error">
+                {{ error }} <br/><br/>
+                <Button label="Got it!" autofocus @click="removeErrors"></Button>
+              </Dialog>
+            </form>
+          </div>
+      </template>
+    </Card>
+  </div>
 </template>
 
 <script>
 import Dialog from "primevue/dialog";
 import axios from "axios";
+import twitter from "../pages/Profile.vue";
 
 export default {
   components: { Dialog },
@@ -67,15 +74,94 @@ export default {
     },
     removeErrors() {
       this.error = ""
+    },
+    getValue() {
+      //this.twitterUsername= "elbowbumps";
+      if (twitter == '[object Object]'){
+        this.twitterUsername = '';
+      }else{
+        this.twitterUsername = twitter;
+      }
     }
   },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap');
+
+
 .heading {
-  margin-top: 9rem;
+  margin-top: 20px;
   text-align: center;
   padding-top: 1px;
 }
+
+#frame {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: #ffffff; 
+}
+
+#textbox {
+  position: center;
+  height: 10000px;
+  width: 700px;
+  font-size: 40px;
+  left: 500px;
+  margin-left:5%;
+  margin-top: 200px;
+}
+
+
+#twitterUsername {
+  height: 60px;
+  width: 500px;
+  font-size: 30px;
+}
+
+#twitter-icon {
+  padding: 1%;
+  border: 1%;
+  margin-left:20%;
+  margin-top: 7.5%;
+  margin-bottom:7.5%;
+  height: 450px;
+  left: 100px;
+  width: 450px;
+}
+
+.social-card{
+    position: absolute;
+    display: block;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    padding-left: 1rem;
+    margin-left: 5rem;
+    right: 300px;
+    width: 40rem; 
+    height: 45rem; 
+    z-index: 2;
+    font-size: 1rem;
+    font-family: 'Lato', sans-serif;
+}
+
+#button {
+    font-weight: bold;
+    //width: 50%;
+    //height: 5%;
+    height: 60px;
+    width: 500px;
+    text-align: center;
+    //color: #ffffff;
+    font-family: 'Lato', sans-serif;
+    font-size: 35px;
+    justify-content: center;
+    border: none;
+    left: 33px;
+}
+
 </style>
