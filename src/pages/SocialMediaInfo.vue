@@ -4,18 +4,20 @@
     <Card class = "social-card">
       <template #header>
         <div class="heading">
-          <h1>Please share your Twitter username with us</h1>
+          <h1>Please authorise your Twitter account with us</h1>
         </div>
       </template>
       <template #content>
+          <h1>{{generateURL()}}</h1>
+          <h2>Enter the PIN you recieved above</h2>
           <div id ="textbox">
-            <form @submit.prevent="submitUsername">
-              <label for="twitterUsername">@</label>
+            <form @submit.prevent="submitPIN">
+              <label for="twitterPIN">@</label>
               <input
                 type="text"
-                id="twitterUsername"
-                name="twitterUsername"
-                v-model="twitterUsername" 
+                id="twitterPIN"
+                name="twitterPIN"
+                v-model="twitterPIN" 
                 value @click="getValue"
               />
               <br /><br />
@@ -40,8 +42,11 @@ export default {
   components: { Dialog },
   data() {
     return {
-      twitterUsername: "",
+      twitterPIN: "",
       error: "",
+      oauthToken: "",
+      oauthTokenSecret: "",
+      oauthURL: ""
     };
   },
   computed: {
@@ -56,7 +61,9 @@ export default {
       const form = new FormData()
 
       form.append('id', this.$store.getters.userId)
-      form.append('twitter', this.twitterUsername)
+      form.append('OAUTH_TOKEN', this.oauthToken)
+      form.append('OAUTH_TOKEN_SECRET', this.oauthTokenSecret)
+      form.append('pin', this.twitterPIN)
       axios
         .post(localURL, form)
         .then((res) => {
@@ -74,6 +81,23 @@ export default {
     },
     removeErrors() {
       this.error = ""
+    },
+    generateURL() {
+      let localURL = `${this.$store.getters.URL}/twitter_oauth_url`;
+      axios
+      .post(localURL)
+      .then((res) => {
+        if (res.data.STATUS_CODE == 200) {
+          this.oauthURL = res.data.oauthURL;
+          this.oauthToken = res.data.oauthToken;
+          this.oauthTokenSecret = res.data.oauthTokenSecret;   
+        } else {
+          this.error = res.data.Message;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
     getValue() {
       //this.twitterUsername= "elbowbumps";
