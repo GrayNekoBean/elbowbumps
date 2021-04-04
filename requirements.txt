@@ -6,4 +6,3 @@ psycopg2-binary
 vaderSentiment
 python-dotenv
 twython
-requests-oauthlib
