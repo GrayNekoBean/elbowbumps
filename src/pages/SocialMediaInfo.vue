@@ -8,11 +8,11 @@
         </div>
       </template>
       <template #content>
-          <h1>{{generateURL()}}</h1>
+          <p>{{generateURL()}}</p>
           <h2>Enter the PIN you recieved above</h2>
           <div id ="textbox">
             <form @submit.prevent="submitPIN">
-              <label for="twitterPIN">@</label>
+              <label for="twitterPIN"></label>
               <input
                 type="text"
                 id="twitterPIN"
@@ -55,7 +55,7 @@ export default {
     },
   },
   methods: {
-    submitUsername() {
+    submitPIN() {
       let localURL = `${this.$store.getters.URL}/social_media_info`;
 
       const form = new FormData()
@@ -83,6 +83,7 @@ export default {
       this.error = ""
     },
     generateURL() {
+      if (this.oauthURL == ""){
       let localURL = `${this.$store.getters.URL}/twitter_oauth_url`;
       axios
       .post(localURL)
@@ -97,7 +98,8 @@ export default {
       })
       .catch((err) => {
         console.log(err);
-      });
+      });}
+      return this.oauthURL;
     },
     getValue() {
       //this.twitterUsername= "elbowbumps";
