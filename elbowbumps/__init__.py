@@ -23,7 +23,7 @@ def create_app():
 
     else:
         app.debug = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
+        app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL').replace("://", "ql://", 1)
     
     db.init_app(app)    
     
