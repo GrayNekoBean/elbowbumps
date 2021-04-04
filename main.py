@@ -5,6 +5,7 @@ from elbowbumps.twitter_id_lookup import twitterID
 from flask_cors import CORS, cross_origin
 from elbowbumps import create_app, db
 from json import loads
+from twython import Twython
 
 app = create_app()
 cors = CORS(app)
@@ -122,48 +123,71 @@ def add_questionnaire_scores():
         "Message": f"Updated userID {user_id} interest data."
     })
 
+@app.route('/twitter_oauth_url', methods=['POST'])
+def oauth_twitter():
+    # need these in the server environment variables
+    APP_KEY = '2pHz1BZBRluCVPALHah1rF92o'
+    APP_SECRET = 'xY7W7TfQpnovvYcL4g71hzYGj27sT3BgogKXGIWAn1OHntDjBL'
+    twitter = Twython(APP_KEY, APP_SECRET)
+    try:
+        auth = twitter.get_authentication_tokens(callback_url='oob')
+        OAUTH_TOKEN = auth['oauth_token']
+        OAUTH_TOKEN_SECRET = auth['oauth_token_secret']
+        # display/ open this url in a new tab
+        return jsonify({
+                "STATUS_CODE": 200,
+                "oauthURL": auth['auth_url'],
+                "oauthToken": OAUTH_TOKEN,
+                "oauthTokenSecret": OAUTH_TOKEN_SECRET
+            })
+    except:
+        return jsonify({
+                "STATUS_CODE": 500,
+                "Message": "Couldn't generate the Twitter URL"
+            })
 
-# updating record to fill in the questionnaire score in the database - Lily
 @app.route('/social_media_info', methods=['POST'])
-def add_twitter_username():
-    twitter = request.form.get('twitter')
+def callback_twitter():
+    APP_KEY = '2pHz1BZBRluCVPALHah1rF92o'
+    APP_SECRET = 'xY7W7TfQpnovvYcL4g71hzYGj27sT3BgogKXGIWAn1OHntDjBL'
+    oauth_verifier = request.form.get('pin')
     id = request.form.get('id')
+    OAUTH_TOKEN = request.form.get('OAUTH_TOKEN')
+    OAUTH_TOKEN_SECRET = request.form.get('OAUTH_TOKEN_SECRET')
+    # need OAUTH_TOKEN and OAUTH_TOKEN_SECRET to be global/passed between the endpoints
+    try:
+        twitter = Twython(APP_KEY, APP_SECRET,
+                        OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
+        response = twitter.get_authorized_tokens(oauth_verifier)
+    except:
+        return jsonify({
+            "STATUS_CODE": "500",
+            "Message": "That wasn't the correct pin"
+        })
+
+    return add_twitter_db(id, response['user_id'], response['screen_name'])
+
+def add_twitter_db(id, twitter_id, twitter_name):
     user = UserData.query.filter_by(ud_id = id).first()
     if not user:
         return jsonify({
             "STATUS_CODE": "500",
             "Message": "Please ensure the user exists!"
         })
-    if (twitter == ""):
-        return jsonify({
-            "STATUS_CODE": "500",
-            "Message": "Please provide a twitter username"
-        })
     else:
-        query = f'SELECT * FROM user_data WHERE ud_twitter = \'{twitter}\';'
+        query = f'SELECT * FROM user_data WHERE ud_twitter = \'{twitter_name}\';'
         results = db.engine.execute(query)
         if results.rowcount == 0:
-            twitter_id = twitterID(twitter)
-            if twitter_id == False:
-                return jsonify ({
-                    "STATUS_CODE": "500",
-                    "Message": "Please provide a real twitter username"
-                })
-            else:
-                user.ud_twitter = twitter
-                user.ud_id_twitter = twitter_id
-                db.session.commit()
-                get_tweets(user.ud_id)
-                return jsonify({
-                    "STATUS_CODE": "200",
-                    "Message": "Thank you!"
-                })
+            user.ud_twitter = twitter_name
+            user.ud_id_twitter = twitter_id
+            db.session.commit()
+            response = get_tweets(user.ud_id)
+            return response
         else:
             return jsonify ({
             "STATUS_CODE": "500",
             "Message": "Please provide a unique twitter username"
             })
-
 
 def get_tweets(user_id):
     user = UserData.query.filter_by(ud_id=user_id).first()

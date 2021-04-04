@@ -1,7 +1,6 @@
 import requests
 import os
 import json
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 
 def auth():
