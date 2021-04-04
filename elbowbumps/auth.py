@@ -1,9 +1,13 @@
 import uuid as UUID
 import hashlib
+
 from flask import Flask, request, jsonify, Blueprint
 from flask.wrappers import Request, Response
+
 from elbowbumps import db, create_app
+
 from elbowbumps.models import UserData
+
 import requests as HttpRequest
 
 auth = Blueprint('auth', __name__)
@@ -101,7 +105,6 @@ def register():
             "STATUS_CODE": '500',
             "Message": f"Fill in all fields"
         },status = 'INVALID_DATA', status_code = 500)
-
             
 @auth.route('/login', methods=['POST'])
 def loginUser():
@@ -125,7 +128,7 @@ def loginUser():
                     status_code = 500
                     msg = "Incorrect password, please check any typo in the password or try go to \"forget password\""
                 else:
-                    userID = user.ud_id
+                    userID = user.ud_id;
             else:
                 status = "INVALID_DATA"
                 status_code = 500
