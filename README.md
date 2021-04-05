@@ -1,3 +1,9 @@
+# Elbow Bumps Project
+
+Welcome to our first year team project, a friendship recommendation web application 
+
+View the website here: https://condescending-brattain-49a2b0.netlify.app/
+
 # Elbow Bump Backend
 
 ## Introduction
