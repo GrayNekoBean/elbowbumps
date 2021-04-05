@@ -89,3 +89,34 @@ if use heroku CLI, use
 <pre> git push heroku main </pre>
 
 instead of general "git push", but shouldn't going to use that anymore.
+
+# Elbow Bumps Frontend 
+
+Can be found in  <pre> elbow-bump-frontend </pre> branch on this repository, built with Vue.js. 
+
+---
+
+## Installation
+
+```
+yarn install
+```
+
+### Compiles and hot-reloads for development
+```
+yarn serve
+```
+
+### Compiles and minifies for production
+```
+yarn build
+```
+
+### Lints and fixes files
+```
+yarn lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
+
