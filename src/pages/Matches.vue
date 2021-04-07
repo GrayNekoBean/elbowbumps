@@ -1,7 +1,7 @@
 <template>
-  <SplitedPage ratio="0.6">
+  <SplitedPage ratio="1">
     <template #left>
-      <h2 style="text-align: center; margin-top:4rem;">
+      <h2 style="text-align: center; margin-top:5rem; padding-top: 3rem;">
         Welcome to your matches!
       </h2>
       <div v-if="noMatches" style="text-align: center;">
@@ -11,7 +11,7 @@
         <router-link to="/socialmediainfo">here</router-link> to update your
         Twitter info!
       </div>
-      <div style="margin-left:10%; margin-top: 8%; width: 75%; overflow: hidden;" v-else>
+      <div style="margin-left:10%; margin-top: 5%; width: 75%; overflow: hidden;" v-else>
           <!-- <h2>{{ user.forename }} {{ user.surname }}</h2>
           <Button @click="bump(user.id)">Bump {{ user.forename }}!</Button> -->
           <div class="matches-list" ref="matches">
