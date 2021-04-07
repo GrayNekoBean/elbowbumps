@@ -1,7 +1,7 @@
 <template>
     <span :id="textID" class="p-float-label info-text">        
-        <div style="margin-right: 5%; margin-top: 5%;"><slot>Text</slot></div>
-        <InputText :class="editable ? 'editing' : 'non-editing'" type="text" v-model="text" :disabled="!editable" />
+        <div class="text-title"><slot></slot></div>
+        <InputText :style="fullWidth ? 'width: 100%' : ''" :class="editable ? 'editing' : 'non-editing'" type="text" v-model="text" :disabled="!editable" />
         <div class="edit-button">
             <i class="pi edit-icon" :class="editable ? 'pi-check' : 'pi-pencil'" @click="switchEditable()"></i>
         </div>
@@ -26,6 +26,10 @@ export default {
         textVar: {
             type: String,
             required: true
+        },
+        fullWidth: {
+            type: Boolean,
+            default: false
         }
     },
     // emits: [
@@ -61,6 +65,12 @@ export default {
 //         }
 //     }
 // }
+
+.text-title{
+    margin-right: 5%; 
+    margin-top: 5%; 
+    width: 10rem;
+}
 
 .non-editing{
  border-width: 0px;

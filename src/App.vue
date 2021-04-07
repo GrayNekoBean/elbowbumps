@@ -1,33 +1,71 @@
 <template id="frame">
   <section>
+    <Sidebar v-model:visible="sidebarOpen">
+      <div style="margin: 1rem">
+      <h3> <span style = "color: #a9edfe">ELBOW</span> <span style = "color: #ffaaaa">BUMPS</span> </h3>
+      </div>
+      <Menu style="width: 100%" :model="sidebar_items" />
+    </Sidebar>
     <Card class="main-frame">
       <template #header>
         <Card class="header-menu">
-          <template #header>
-            <!--<h1 style="text-align: left">Welcome to Elbow Bump</h1>-->
-            <TabView v-model:activeIndex="header_active">
-              <TabPanel header="Home"></TabPanel>
-              <TabPanel header="About"></TabPanel>
-              <TabPanel></TabPanel>
-              <TabPanel></TabPanel>
-              <TabPanel></TabPanel>
-              <TabPanel></TabPanel>
-              <TabPanel></TabPanel>
-              <TabPanel></TabPanel>
-              <TabPanel v-if="!logined()" header="Login"></TabPanel>
-              <TabPanel v-else header=""></TabPanel>
-              <TabPanel v-if="!logined()" header="Register"></TabPanel>
-              <TabPanel v-else header=""></TabPanel>
-            </TabView>
-            <div v-if="logined()" class="user-info-cover"></div>
-            <div v-if="logined()" class="user-info-area">
-              <div>
-                <Avatar image="https://i.imgur.com/VtIwKXj.jpg" class="p-mr-2" size="large" shape="circle" style="background-color:#2196F3; color: #ffffff" />
+          <template #header>  <!--<h1 style="text-align: left">Welcome to Elbow Bump</h1>-->
+            <div class="header-right-menu">
+              <TabView class="top-tab" v-model:activeIndex="header_active" v-if="!logined()">
+                <TabPanel>
+                  <template #header>
+                    <i class="pi pi-home tab-icon"></i>
+                    <span>Home</span>
+                  </template>
+                </TabPanel>
+                <TabPanel>
+                  <template #header>
+                    <i class="pi pi-info-circle tab-icon"></i>
+                    <span>About</span>
+                  </template>
+                </TabPanel>
+                <TabPanel>
+                  <template #header>
+                    <i class="pi pi-sign-in tab-icon"></i>
+                    <span>Login</span>
+                  </template>
+                </TabPanel>
+                <TabPanel>
+                  <template #header>
+                    <i class="pi pi-user-plus tab-icon"></i>
+                    <span>Register</span>
+                  </template>
+                </TabPanel>
+              </TabView>
+              <TabView class="top-tab" v-model:activeIndex="header_active" v-else>
+                <TabPanel>
+                  <template #header>
+                    <i class="pi pi-home tab-icon"></i>
+                    <span>Home</span>
+                  </template>
+                </TabPanel>
+                <TabPanel>
+                  <template #header>
+                    <i class="pi pi-info-circle tab-icon"></i>
+                    <span>About</span>
+                  </template>
+                </TabPanel>
+              </TabView>
+              <!-- <div v-if="logined()" class="user-info-cover"></div> -->
+              <div v-if="logined()" class="clickable-gray" @click="showMenu">
+                <div class="user-info-area">
+                  <div>
+                    <Avatar image="https://i.imgur.com/VtIwKXj.jpg" class="p-mr-2" size="large" shape="circle" style="background-color:#2196F3; color: #ffffff; margin-right: 1rem;" />
+                  </div>
+                  <div class="user-info-text">
+                    <p style="display:block; margin-right: 1rem;"> Welcom, {{current_user}}! </p>
+                    <Menu :model="user_menu_items" id="user_menu_overlay" ref="user_menu" :popup="true" />
+                  </div>
+                </div>
               </div>
-              <Button class="user-info-text" @click="showMenu">
-                <p style="display:block; margin:0;"> Welcom, {{current_user}}! </p>
-                <Menu :model="user_menu_items" id="user_menu_overlay" ref="user_menu" :popup="true" />
-              </Button>
+            </div>
+            <div style="position: absolute; top: 1rem; left: 1rem; z-index: 6; height: 2rem; width: 2rem;">
+            <IconButton v-if="logined()" icon="pi-bars" @click="sidebarOpen = true" color="gray"/>
             </div>
             <div class="header-title" :class="logined() ? 'longer-title' : ''">
               <h3> <span style = "color: #a9edfe">ELBOW</span> <span style = "color: #ffaaaa">BUMPS</span> </h3>
@@ -55,10 +93,13 @@
 //import AppFrame from "./components/App-Frame.vue";
 
 import axios from "axios";
+
+import IconButton from "./components/IconButton";
+
 import router from "./router";
 
 export default {
-  components: {},
+  components: { IconButton },
   watch: {
     header_active: function (val){
       router.push(this.id_routers[val]);
@@ -70,19 +111,14 @@ export default {
       avatar: this.$store.getters.avatar,
       header_active: 0,
       show_menu: false,
+      sidebarOpen: false,
       id_routers: {
         0: "/",
         1: "/about",
-        8: "/login",
-        9: "/register"
+        2: "/login",
+        3: "/register"
       },
       routers_id: {},
-      header_items: [
-        { label: "Home", to: "/" },
-        { label: "Login", to: "login" },
-        { label: "Sign up", to: "register" },
-        { label: "About us", to: "about" },
-      ],
       footer_items: [
         { label: "Privacy Policy", to: "/privacy" },
         { label: "Terms and Conditions", to: "/terms" },
@@ -96,8 +132,40 @@ export default {
               label: "Profile",
               icon: "pi pi-user",
               to: "/profile"
+            },
+            {
+              label: "Logout",
+              icon: "pi pi-sign-out",
+              command: this.logout
             }
           ]
+        }
+      ],
+      sidebar_items: [
+        {
+          label: "Home",
+          icon: "pi pi-home",
+          to: "/"
+        },
+        {
+          label: "My Data",
+          icon: "pi pi-chart-bar",
+          to: "interest_data"
+        },
+        {
+          label: "My Matching",
+          icon: "pi pi-users",
+          to: "/matches"
+        },
+        {
+          label: "My Bumping",
+          icon: "pi pi-user-plus",
+          to: "/bumps"
+        },
+        {
+          label: "Settings",
+          icon: "pi pi-cog",
+          to: "settings"
         }
       ]
     }
@@ -105,13 +173,15 @@ export default {
   mounted: function(){
     this.routers_id = this.swapKeyValue(this.id_routers);
 
-    if ('current_user' in sessionStorage){
-      this.current_user = sessionStorage['current_user'];
-    }else if ('current_user' in localStorage){
-      this.current_user = localStorage['current_user'];
-    }
-    if(this.current_user != ""){
-      this.setLoginState();
+    if (!this.logined()){
+      if ('current_user' in sessionStorage){
+        this.current_user = sessionStorage['current_user'];
+      }else if ('current_user' in localStorage){
+        this.current_user = localStorage['current_user'];
+      }
+      if(this.current_user != ""){
+        this.setLoginState(this.current_user, true);
+      }
     }
 
 
@@ -126,21 +196,36 @@ export default {
         return false;
       }
     },
+    logout: function(){
+      this.$store.dispatch("logOut");
+      this.$root.setLogoutState();
+      this.$root.route_to('/');
+    },
     showMenu: function(event){
       this.$refs.user_menu.toggle(event);
     },
-    setLoginState: function(){
+    setLoginState: function(id, remember=false){
       
       // this.login_profile = "Profile";
       // this.register_settings = "Settings";
 
       // this.id_routers[9] = "/profile";
-      // this.id_routers[10] = "/settings";
-      this.current_user = this.$store.getters.fName;
+      // this.id_routers[10] = "/settings";            this.errors = "";
+      axios.get(this.$store.getters.URL + "user_data", {params: {user_id: id}}).then(
+        (resp) => {
+          this.$store.dispatch("logIn",{ id: id, fName: resp.data.data.fName, avatar: resp.data.data.avatar });
+          this.current_user = this.$store.getters.fName;
+          sessionStorage.setItem('current_user', id);
+          if (remember){
+            localStorage.setItem('current_user', id);
+          }
 
-      this.user_menu_items[0]['label'] = "You're now login as " + this.current_user;
-      this.routers_id = this.swapKeyValue(this.id_routers);
-      this.$forceUpdate();
+          this.user_menu_items[0]['label'] = "You're now login as " + this.current_user;
+          this.routers_id = this.swapKeyValue(this.id_routers);
+          this.$forceUpdate();
+        }).catch((e) => {
+          console.error(e);
+        });
       
     },
     setLogoutState: function(){
@@ -149,7 +234,8 @@ export default {
 
       // this.id_routers[9] = "/login";
       // this.id_routers[10] = "/register";
-
+      sessionStorage.removeItem("current_user");
+      localStorage.removeItem("current_user");
 
       this.routers_id = this.swapKeyValue(this.id_routers);
     },
@@ -165,26 +251,6 @@ export default {
       this.header_active = Number(this.routers_id[path]);
       this.$router.push(path);
     },
-    getUserData: function(userId){
-      let address = this.$store.getters.URL + "user_data";
-      let args = {
-        user_id: userId
-      }
-      let userData = null;
-      axios.get(address, {params: args}).then(
-        (response) => {
-          if (response.data.STATUS_CODE == "200"){
-            userData = response.data.data;
-          }else{
-            console.error(response.STATUS);
-            console.error(response.Message);
-          }
-        }
-      ).catch((e) => {
-        console.error(e);
-      });
-      return userData;
-    }
   }
 };
 </script>
@@ -202,6 +268,19 @@ $background-color: #80929F;
   --primary-color-text: #fffaba !important;
 }
 
+div.p-sidebar{
+  padding: 0rem;
+}
+
+// ul.p-menu-list{
+//   margin-top: 1rem !important;
+// }
+
+div.top-tab{
+  align-self: right;
+  width: 100%;
+  height: 100%;
+}
 
 body{
   margin: 0px;
@@ -225,10 +304,12 @@ body{
     
 
     .p-tabview-nav{
+        //margin-left: 60%;
+        
         li {
           text-align: center;
           margin-right: 0;
-          width: 10%;
+          width: 25%;
           background: #ffffff;
         }
 
@@ -269,7 +350,6 @@ body{
 
 div.p-avatar{
   margin-top: 5%;
-
 }
 
 .p-avatar img{
@@ -293,7 +373,15 @@ div.p-avatar{
   top: 0;
   right: 0;
   z-index: 6;
+  //width: 70%;
   //margin-right: 2%;
+}
+
+.clickable-gray{
+  cursor: pointer;
+  :hover {
+    background: lightgray;
+  }
 }
 
 button.user-info-text{
@@ -328,11 +416,12 @@ div.p-menubar{
   position: fixed;
   display: block;
   top: 0;
-  margin-left: 20%;
+  margin-left: 0;
   height: 3.3rem;
-  text-align: center;
+  margin-left: 4rem;
+  text-align: left;
   background: #ffffff; //rgba(255, 255, 255, 0.3); //rgba(169, 237, 254, 1);
-  width: 60%;
+  width: 20%;
   z-index: 4;
 }
 
@@ -342,6 +431,13 @@ div.p-menubar{
   width: 100%;
   top: 0%;
   z-index: 3;
+}
+
+.header-right-menu {
+  display: flex;
+  flex-flow: row;
+  justify-content: right;
+  margin-left: 68%;
 }
 
 .footer-menu {
@@ -357,6 +453,10 @@ div.p-menubar{
   top: 0%;
   width: 100%;
   z-index: 0;
+}
+
+.tab-icon{
+  margin-right: 0.5rem;
 }
 
 </style>

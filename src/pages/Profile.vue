@@ -5,8 +5,8 @@
     <div class="top-part">
         <div class="profile-title">
             <img src="../assets/test.jpg" class="avatar" />
-            <FileUpload mode="basic" name="image" :customUpload="true" @uploader="uploadAvatar" />
-            <div style="text-align: center;">
+            <!-- <FileUpload mode="basic" name="image" :customUpload="true" @uploader="uploadAvatar" /> -->
+            <div class="user-name">
                 <h2>
                     {{firstName}} {{lastName}}
                 </h2>
@@ -14,6 +14,7 @@
         </div>
     </div>
     <div class="bottom-part">
+        <EditableText style="position: absolute; margin-left: -6rem; margin-top: 0; width: 80%;" fullWidth="true" textID="bio" v-model:textVar="bio"></EditableText>
         <div class="info-area">
             <div class="names">
             <EditableText textID="first_name" v-model:textVar="firstName">
@@ -36,21 +37,8 @@
                 Twitter
             </EditableText>
             </div>
-            <div class="buttons">
-            <Button @click="logout">
-                Logout
-            </Button>
-            <Button @click="updateProfile">
-                Save
-            </Button>
-            <Button id="button" @click="$router.push('Matches')">
-            Matching Page
-            </Button>
-            <Button id="button" @click="$router.push('SocialMediaInfo')">
-            Twitter
-            </Button>
-            </div>
         </div>
+        <Button style="position: absolute; right: 2rem; bottom: 4rem;" icon="pi pi-save" label="Save" class="p-button-raised" @click="updateProfile" />
     </div>
 </div>
 </section>
@@ -68,6 +56,7 @@ export default {
             currentEdit: '',
             firstName: '',
             lastName: '',
+            bio: '',
             email: '',
             phoneNumber: '',
             twitter: '',
@@ -81,14 +70,6 @@ export default {
         };
     },
     methods: {
-        logout: function(){
-            sessionStorage.removeItem("current_user");
-            localStorage.removeItem("current_user");
-
-            this.$store.dispatch("logOut");
-            this.$root.setLogoutState();
-            this.$root.route_to('/');
-        },
         updateProfile: function(){
             let profileData = {
                 userId: this.$store.getters.userId,
@@ -205,7 +186,9 @@ $secondary-color: #ffaaaa;
 $background-color: #fffaba;
 
 .avatar{
-    margin-top: 30%;
+    position: absolute;
+    padding: 2rem;
+    //margin-top: 30%;
     height: 15rem;
     width: 15rem;
     border-radius: 50%;
@@ -218,29 +201,38 @@ h2{
     color: black;
 }
 
+.user-name{
+    text-align: center;
+    margin-top: 4%;
+    margin-left: 18%;
+}
+
 .top-part{
     display: flex;
     height: 30%;
     flex-flow: row;
-    justify-content: center;
+    justify-content: left;
     background: $primitive-color;
 }
 
 .profile-title{
     display: flex;
-    flex-flow: column;
-    justify-content: center;
+    flex-flow: row;
+    justify-content: left;
+    margin-top: 12%;
+    width: 100%;
 }
 
 .bottom-part{
     display: flex;
     justify-content: center;
-    align-content: center;
+    //align-content: center;
     height: 80%;
 }
 
 .info-area{
     width: 60%;
+    margin-top: 8rem;
 }
 
 .names{

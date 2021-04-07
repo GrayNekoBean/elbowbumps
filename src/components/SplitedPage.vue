@@ -1,14 +1,41 @@
 <template>
     <div class="splited-frame">
-        <div class="splited-left">
+        <div class="splited-left" :style="leftRatio()">
             <slot name="left"></slot>
         </div>
           
-        <div class="splited-right">
+        <div class="splited-right" :style="rightRatio()">
             <slot name="right"></slot>
         </div>
     </div>
 </template>
+
+<script>
+export default {
+  props: {
+    ratio: {
+      type: Number,
+      default: 0.5
+    }
+  },
+  methods: {
+    leftRatio(){
+      let r = (this.ratio * 100)
+      return `width: ${r}%`;
+    },
+    rightRatio(){
+      let r = ((1 - this.ratio) * 100)
+      return `width: ${r}%`;
+    }
+  },
+  mounted(){
+    if (this.ratio >= 1){
+      console.warn("Splited Page abnormal ratio, please make ratio a number less than 1.");
+      this.$emit("update:ratio", 0.5);
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 

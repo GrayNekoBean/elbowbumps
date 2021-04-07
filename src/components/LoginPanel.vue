@@ -22,16 +22,19 @@
                 <Password
                   id="passwd"
                   v-model="pw"
+                  :feedback="false"
                   required
                   toggleMask
                 /><br /><br />
-                <Checkbox
-                  id="agree"
-                  v-model="agree_terms"
-                  :binary="true"
-                  required
-                />
-                <router-link to="/terms"> Terms & Conditions</router-link>
+                <div class="p-field-checkbox">
+                  <Checkbox
+                    id="remember"
+                    name="remember"
+                    v-model="rememberMe"
+                    :binary="true"
+                  />
+                  <label for="remember" style="margin-left: 0.5rem;">Remember Me</label>
+                </div>
                 <br /><br />
                 <Button class="p-button-raised" type="submit"
                   ><i class="pi pi-plus-circle" style="margin-top: 0px;" />
@@ -78,7 +81,7 @@ export default {
       email: "",
       pw: "",
       keepLogin: false,
-      agree_terms: false,
+      rememberMe: false,
       error: "",
     };
   },
@@ -114,13 +117,7 @@ export default {
 
           if (responseStatus == "200") {
             //TODO: Show a notification with info like this: "Login Successful"
-            this.errors = "";
-            axios.get(this.$store.getters.URL + "user_data", {params: {user_id: response.data.id}}).then(
-              (resp) => {
-                this.$store.dispatch("logIn",{ id: response.data.id, fName: resp.data.data.fName, avatar: resp.data.data.avatar });
-                this.$root.setLoginState();
-              }
-            )
+            this.$root.setLoginState(response.data.id, this.rememberMe);
             this.$router.push("/matches");
           } else if (responseStatus == "500") {
             this.errors = responseData.Message;

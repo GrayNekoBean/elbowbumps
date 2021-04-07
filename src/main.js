@@ -22,6 +22,9 @@ import Menu from 'primevue/menu';
 import Avatar from 'primevue/avatar';
 import Accordion from 'primevue/accordion';
 import AccordionTab from 'primevue/accordiontab';
+import ScrollPanel from 'primevue/scrollpanel';
+import Tag from 'primevue/tag';
+import Sidebar from 'primevue/sidebar';
 
 import "primevue/resources/themes/saga-blue/theme.css"; // theme
 import "primevue/resources/primevue.min.css"; // core css
@@ -34,7 +37,6 @@ app.use(router);
 app.use(primevue);
 app.use(store);
 app.use(ToastService);
-
 
 app.component("Button", Button);
 app.component("Checkbox", Checkbox);
@@ -53,5 +55,8 @@ app.component("Menu", Menu);
 app.component("Avatar", Avatar);
 app.component("Accordion", Accordion);
 app.component("AccordionTab", AccordionTab);
+app.component("ScrollPanel", ScrollPanel);
+app.component("Tag", Tag);
+app.component("Sidebar", Sidebar);
 
 app.mount("#app");
