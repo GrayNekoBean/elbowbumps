@@ -66,17 +66,18 @@ export default {
     },
     methods: {
         updateProfile: function(){
-            let profileData = {
-                userId: this.$store.getters.userId,
-                data: {
-                    fName: this.firstName,
-                    sName: this.lastName,
-                    emailAdd: this.email,
-                    phone: this.phoneNumber,
-                }
-            };
 
-            axios.post(this.$store.getters.URL + "user_data", profileData).then(
+            let localURL = `${this.$store.getters.URL}/user_data`;
+
+            const form = new FormData()
+
+            form.append('id', this.$store.getters.userId)
+            form.append('phoneNum', this.phoneNumber)
+            form.append('fName', this.firstName)
+            form.append('sName', this.lastName)
+            form.append('emailAdd', this.email)
+
+            axios.post(localURL, form).then(
                 (response) => {
                     if (response.data['STATUS_CODE'] == 200){
                         console.log(this.$store.getters.userId)
@@ -85,6 +86,10 @@ export default {
                         console.log(this.phoneNumber)
                         console.log('Updating profile successful');
                     }else{
+                        console.log(this.$store.getters.userId)
+                        console.log(this.firstName)
+                        console.log(this.email)
+                        console.log(this.phoneNumber)
                         console.warn("Issues with updating profile");
                         console.log(response);
                     }
