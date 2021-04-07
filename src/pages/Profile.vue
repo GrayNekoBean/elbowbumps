@@ -33,6 +33,7 @@
             </EditableText>
             </div>
         </div>
+        <Button  style="position: absolute; right: 6rem; bottom: 4rem;" id="button" @click="this.$root.route_to('/socialmediainfo');">Change your Twitter</Button>
         <Button style="position: absolute; right: 2rem; bottom: 4rem;" icon="pi pi-save" label="Save" class="p-button-raised" @click="updateProfile" />
     </div>
 </div>
@@ -69,7 +70,7 @@ export default {
 
             let localURL = `${this.$store.getters.URL}/user_data`;
 
-            const form = new FormData()
+            const form = new FormData() 
 
             form.append('id', this.$store.getters.userId)
             form.append('phoneNum', this.phoneNumber)
