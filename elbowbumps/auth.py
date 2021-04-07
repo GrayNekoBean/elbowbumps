@@ -186,15 +186,22 @@ def getUserData():
                 "Message": "No user ID provided."
             })
     elif request.method == 'POST':
-        reg_info = request.form
-        fName = reg_info.get('fName')
-        sName = reg_info.get('sName')
-        phoneNum = reg_info.get('phoneNum')
-        emailAdd = reg_info.get('emailAdd')
-        id =reg_info.get('userId')
+        fName = request.form.get('fName')
+        sName = request.form.get('sName')
+        phoneNum = request.form.get('phoneNum')
+        emailAdd = request.form.get('emailAdd')
+        id = request.form.get('id')
         user_email_check = UserData.query.filter_by(ud_email=emailAdd).first()
         user_phone_check = UserData.query.filter_by(ud_phone=phoneNum).first() 
         user = UserData.query.filter_by(ud_id = id).first()
+
+        if not user:
+            print(id)
+            return jsonify({
+                "STATUS_CODE": "500",
+                "Message": "You don't seem to exist. Oops."
+            })
+
         if user_email_check and user.ud_email != emailAdd:
             return jsonify({
                 "STATUS": 'EMAIL_EXISTED',
@@ -214,23 +221,17 @@ def getUserData():
                 "Message": f"Can't leave fields blank"
             })
         else:
-            if not user:
-                return jsonify({
-                    "STATUS_CODE": "500",
-                    "Message": "You don't seem to exist. Oops."
-                })
-            else:
-                user.ud_email = emailAdd
-                user.ud_forename = fName
-                user.ud_phone = phoneNum
-                user.ud_surname = sName
-                db.session.commit()
-                # POST Request
-                return jsonify({
-                    'STATUS': 'SUCCESS',
-                    'STATUS_CODE': '200',
-                    'id': user.ud_id
-                })
+            user.ud_email = emailAdd
+            user.ud_forename = fName
+            user.ud_phone = phoneNum
+            user.ud_surname = sName
+            db.session.commit()
+            # POST Request
+            return jsonify({
+                'STATUS': 'SUCCESS',
+                'STATUS_CODE': '200',
+                'id': user.ud_id
+            })
     else:
         return jsonify({
             'STATUS': 'INVALID_DATA',
