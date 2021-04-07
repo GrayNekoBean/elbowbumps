@@ -7,6 +7,7 @@ from flask_cors import CORS, cross_origin
 from elbowbumps import create_app, db
 from json import loads
 from twython import Twython
+import json
 
 app = create_app()
 cors = CORS(app)
@@ -95,6 +96,23 @@ def get_bumps():
             match_ids.append(m.um_ud_id_1)
     return jsonify({
         'matches': match_ids
+    })
+
+@app.route('/get_interest_data', methods=['POST'])
+@cross_origin()
+def get_interest_data():
+    user_id = request.args.get('user_id')
+    query = f'SELECT uid_interest_type, uid_interest_weight FROM user_interest_data WHERE user_interest_data.uid_ud_id = \'{user_id}\';'
+    results = db.engine.execute(query)
+    response = []
+    for res in results:
+        response.append(dict(res))
+        
+    print(response)
+    return jsonify({
+        "STATUS_CODE": 200,
+        "Message": f"userID {user_id} interest data.",
+        "Data": json.dumps(response)
     })
 
 @app.route('/questionnaire', methods=['POST'])
