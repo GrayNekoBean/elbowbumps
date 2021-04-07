@@ -30,11 +30,11 @@ export default {
 //this styling is for the terms and conditions, privacy, and contact us page?
 #text {
   position: absolute;
-  margin: auto;
+  // margin: auto;
   margin-top: 5%;
   margin-left: 7%;
   margin-right: 8%;
-  margin-bottom: 5%;
+  margin-bottom: 20%;
   font-size: 14px;
   color: #444444;
   text-align: left;
