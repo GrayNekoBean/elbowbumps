@@ -3,17 +3,17 @@
   <div id="text">
     <h1>TERMS AND CONDITIONS</h1>
       <h2 style =" color: #444444">Introduction</h2>
-      <p style =" color: #444444">These terms and conditions apply between you, the User of this Website (including any sub-domains, unless expressly excluded by their own terms and conditions), and  W1,  the owner and operator of this Website. Please read these terms and conditions carefully, as they affect your legal rights. Your agreement to comply with and be bound by these terms and conditions is deemed to occur upon your first use of the Website. If you do not agree to be bound by these terms and conditions, you should stop using the Website immediately.</p>
-      <p style =" color: #444444">In these terms and conditions, User or Users means any third party that accesses the Website and is not either (i) employed by  W1  and acting in the course of their employment or (ii) engaged as a consultant or otherwise providing services to  W1  and accessing the Website in connection with the provision of such services.
+      <p style =" color: #444444">These terms and conditions apply between <b>you</b>, the <b>user</b> of this website (including any sub-domains, unless expressly excluded by their own terms and conditions), and  <b>W1</b>,  the <b>owner</b> and operator of this website. Please read these terms and conditions carefully, as they affect your legal rights. Your agreement to comply with and be bound by these terms and conditions is deemed to occur upon your first use of the website. If you do not agree to be bound by these terms and conditions, you should stop using the website immediately.</p>
+      <p style =" color: #444444">In these terms and conditions, <b>user or users</b> means <b>any third party</b> that accesses the website and is <b>not</b> either (i) <b>employed by  W1</b>  and acting in the course of their employment or (ii) engaged as a consultant or otherwise <b>providing services to  W1</b>  and accessing the website in connection with the provision of such services.
 
-        You must be at least 18 years of age to use this Website. By using the Website and agreeing to these terms and conditions, you represent and warrant that you are at least 18 years of age.</p>
-      <h2 style =" color: #444444">Intellectual Property and acceptable use</h2>
-      <ol style="font-family: IBM Plex Sans">
-          <li>All Content included on the Website, unless uploaded by Users, is the property of  W1,  our affiliates or other relevant third parties. In these terms and conditions, Content means any text, graphics, images, audio, video, software, data compilations, page layout, underlying code and software and any other form of information capable of being stored in a computer that appears on or forms part of this Website, including any such content uploaded by Users. By continuing to use the Website you acknowledge that such Content is protected by copyright, trademarks, database rights and other intellectual property rights. Nothing on this site shall be construed as granting, by implication, estoppel, or otherwise, any license or right to use any trademark, logo or service mark displayed on the site without the owner's prior written permission</li>
-          <Li >You may, for your own personal, non-commercial use only, do the following:</Li>
-          <li>You must not otherwise reproduce, modify, copy, distribute or use for commercial purposes any Content without the written permission of  W1.</li>
-          <li>You acknowledge that you are responsible for any Content you may submit via the Website, including the legality, reliability, appropriateness, originality and copyright of any such Content. You may not upload to, distribute or otherwise publish through the Website any Content that (i) is confidential, proprietary, false, fraudulent, libellous, defamatory, obscene, threatening, invasive of privacy or publicity rights, infringing on intellectual property rights, abusive, illegal or otherwise objectionable; (ii) may constitute or encourage a criminal offence, violate the rights of any party or otherwise give rise to liability or violate any law; or (iii) may contain software viruses, political campaigning, chain letters, mass mailings, or any form of "spam." You may not use a false email address or other identifying information, impersonate any person or entity or otherwise mislead as to the origin of any content. You may not upload commercial content onto the Website.</li>
-          <li>You represent and warrant that you own or otherwise control all the rights to the Content you post; that the Content is accurate; that use of the Content you supply does not violate any provision of these terms and conditions and will not cause injury to any person; and that you will indemnify  W1  for all claims resulting from Content you supply. Prohibited use</li>
+        <b>You must be at least 18 years of age to use this website.</b> By using the website and agreeing to these terms and conditions, you represent and warrant that you are at least 18 years of age.</p>
+      <br>
+      <h2 style =" color: #444444">Intellectual Property and Acceptable Use</h2>
+      <ol style="font-family: Montserrat">
+          <li><b>All content included on the website</b>, unless uploaded by users, <b>is the property of  W1</b>,  our affiliates or other relevant third parties. In these terms and conditions, content means any text, graphics, images, audio, video, software, data compilations, page layout, underlying code and software and any other form of information capable of being stored in a computer that appears on or forms part of this website, including any such content uploaded by users. By continuing to use the website you acknowledge that such content is protected by copyright, trademarks, database rights and other intellectual property rights. Nothing on this site shall be construed as granting, by implication, estoppel, or otherwise, any license or right to use any trademark, logo or service mark displayed on the site without the owner's prior written permission</li>
+          <br><li>You must <b>not</b> otherwise <b>reproduce, modify, copy, distribute or use for commercial purposes any content</b> without the written permission of  W1.</li>
+          <br><li>You acknowledge that <b>you are responsible for any content you may submit via the website</b>, including the legality, reliability, appropriateness, originality and copyright of any such content. You may <b>not upload</b> to, distribute or otherwise publish through the website any content that (i) is <b>confidential, proprietary, false, fraudulent, libellous, defamatory, obscene, threatening, invasive of privacy or publicity rights, infringing on intellectual property rights, abusive, illegal or otherwise objectionable</b>; (ii) may <b>constitute or encourage a criminal offence</b>, violate the rights of any party or otherwise give rise to liability or violate any law; or (iii) may contain software viruses, political campaigning, chain letters, mass mailings, or <b>any form of "spam."</b> You may <b>not use a false email address</b> or other <b>identifying information</b>, impersonate any person or entity or otherwise mislead as to the origin of any content. You may not upload commercial content onto the Website.</li>
+          <br><li>You represent and warrant that <b>you own or otherwise control all the rights to the content you post</b>; that the content is <b>accurate</b>; that use of the content you supply does not violate any provision of these terms and conditions and will not cause injury to any person; and that <b>you will indemnify  W1  for all claims resulting from content you supply.</b></li>
       </ol>
   </div>
 </template>
@@ -24,18 +24,22 @@ export default {
 }
 </script>
 
+
 <style lang="scss">
+
+//this styling is for the terms and conditions, privacy, and contact us page?
 #text {
   position: absolute;
+  margin: auto;
   margin-top: 5%;
-  left: 0px;
-  width: 100%;
-  margin-right: 4%;
-  font-size: 30px;
+  margin-left: 7%;
+  margin-right: 8%;
+  margin-bottom: 5%;
+  font-size: 14px;
   color: #444444;
   text-align: left;
-  font-family: IBM Plex Sans;
-  line-height: 35px;
+  font-family: 'Montserrat', sans-serif;;
+  line-height: 25px;
   background: #ffffff;
 }
 </style>

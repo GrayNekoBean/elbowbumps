@@ -188,7 +188,7 @@ export default {
     this.current_user = this.$store.getters.fName;
     this.avatar = "assets/test.jpg";
   },
-  methods: { 
+  methods: {
     logined: function(){
       if (this.$store.getters.userId){
         return true;
@@ -301,7 +301,7 @@ body{
         padding: 0 !important;
         height: 0%;
     }
-    
+
 
     .p-tabview-nav{
         //margin-left: 60%;
