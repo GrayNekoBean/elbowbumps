@@ -32,11 +32,6 @@
                 Phone Number
             </EditableText>
             </div>
-            <div class="social-media">
-            <EditableText textID="twitter" v-model:textVar="twitter">
-                Twitter
-            </EditableText>
-            </div>
         </div>
         <Button style="position: absolute; right: 2rem; bottom: 4rem;" icon="pi pi-save" label="Save" class="p-button-raised" @click="updateProfile" />
     </div>
@@ -78,16 +73,19 @@ export default {
                     sName: this.lastName,
                     emailAdd: this.email,
                     phone: this.phoneNumber,
-                    twitter: this.twitter,
                 }
             };
 
-            axios.post(this.$store.getters.URL + "user_info", profileData).then(
+            axios.post(this.$store.getters.URL + "user_data", profileData).then(
                 (response) => {
                     if (response.data['STATUS_CODE'] == 200){
-                        console.log('upload avatar successful!');
+                        console.log(this.$store.getters.userId)
+                        console.log(this.firstName)
+                        console.log(this.email)
+                        console.log(this.phoneNumber)
+                        console.log('Updating profile successful');
                     }else{
-                        console.warn("Issues happened when updating avatar.");
+                        console.warn("Issues with updating profile");
                         console.log(response);
                     }
                 }
