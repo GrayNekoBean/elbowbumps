@@ -3,12 +3,14 @@ import hashlib
 
 from flask import Flask, request, jsonify, Blueprint
 from flask.wrappers import Request, Response
+from flask_cors import CORS, cross_origin
 
 from elbowbumps import db, create_app
 
 from elbowbumps.models import UserData
 
 import requests as HttpRequest
+
 
 auth = Blueprint('auth', __name__)
 
@@ -151,6 +153,7 @@ def getImgurImage(imageHash):
         return ''
 
 @auth.route('/user_data', methods=['GET', 'POST'])
+#@cross_origin
 def getUserData():
     if request.method == 'GET': 
         if ('user_id' in request.args):
@@ -183,10 +186,59 @@ def getUserData():
                 "Message": "No user ID provided."
             })
     elif request.method == 'POST':
-        
-        #TODO: Update user data according to the data given in the request. If someone can do it I will be very glad.  お願いします。
+        reg_info = request.form
+        fName = reg_info.get('fName')
+        sName = reg_info.get('sName')
+        phoneNum = reg_info.get('phoneNum')
+        emailAdd = reg_info.get('emailAdd')
+        id =reg_info.get('userId')
+        user_email_check = UserData.query.filter_by(ud_email=emailAdd).first()
+        user_phone_check = UserData.query.filter_by(ud_phone=phoneNum).first() 
+        user = UserData.query.filter_by(ud_id = id).first()
+        if user_email_check and user.ud_email != emailAdd:
+            return jsonify({
+                "STATUS": 'EMAIL_EXISTED',
+                "STATUS_CODE": '500',
+                "Message": f"User with email {emailAdd} already registered"
+            })
+        elif user_phone_check and user.ud_phone != phoneNum :
+            return jsonify({
+                "STATUS": 'PHONE_EXISTED',
+                "STATUS_CODE": '500',
+                "Message": f"User with phone number {phoneNum} already registered"
+            })
+        elif fName == "" or sName == "" or phoneNum == ""  or emailAdd == "":
+            return jsonify({
+                'STATUS': 'INVALID_DATA',
+                "STATUS_CODE": '500',
+                "Message": f"Can't leave fields blank"
+            })
+        else:
+            if not user:
+                return jsonify({
+                    "STATUS_CODE": "500",
+                    "Message": "You don't seem to exist. Oops."
+                })
+            else:
+                user.ud_email = emailAdd
+                user.ud_forename = fName
+                user.ud_phone = phoneNum
+                user.ud_surname = sName
+                db.session.commit()
+                # POST Request
+                return jsonify({
+                    'STATUS': 'SUCCESS',
+                    'STATUS_CODE': '200',
+                    'id': user.ud_id
+                })
+    else:
         return jsonify({
-            "STATUS": "SUCCESS",
-            "STATUS_CODE": 200
-        })
-        
+            'STATUS': 'INVALID_DATA',
+            "STATUS_CODE": '500',
+            "Message": f"Fill in all fields"
+        },status = 'INVALID_DATA', status_code = 500)
+
+    return jsonify({
+        "STATUS": "SUCCESS",
+        "STATUS_CODE": 200
+    })

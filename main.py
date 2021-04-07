@@ -16,6 +16,7 @@ from elbowbumps.auth import auth
 
 app.register_blueprint(auth)
 
+
 # Updates interests for a given user
 @app.route('/update_interests', methods=['POST'])
 def update_interests():
