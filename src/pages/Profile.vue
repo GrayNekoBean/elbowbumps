@@ -33,7 +33,7 @@
             </EditableText>
             </div>
         </div>
-        <Button  style="position: absolute; right: 6rem; bottom: 4rem;" id="button" @click="this.$root.route_to('/socialmediainfo');">Change your Twitter</Button>
+        <Button  style="position: absolute; right: 20rem; bottom: 4rem;" id="button" @click="this.$router.push('/socialmediainfo');">Change your Twitter</Button>
         <Button style="position: absolute; right: 2rem; bottom: 4rem;" icon="pi pi-save" label="Save" class="p-button-raised" @click="updateProfile" />
     </div>
 </div>
