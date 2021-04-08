@@ -129,6 +129,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 4. Have both the front-end and the back-end in two different folders locally (you can git clone twice)
 
 ## How to do it!
+Make sure you do it in this order
 1. Navigate to `src/store.js` in the front end repository and change `isUsingRemote` to `false`
 2. Navigate to `elbowbumps/_init_.py` in the back end repositry and set `ENV` to `'dev'`
 3. Run the front end - `npm run serve` in the front end folder
