@@ -117,3 +117,29 @@ yarn lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
+--- 
+
+# How to test our website locally with both the backend and frontend 
+
+## Requirements before you carry on:
+
+1. Set up the local database and view it (eg. using dbeaver). 
+2. Be able to run the front-end locally
+3. Be able to run the back-end locally 
+4. Have both the front-end and the back-end in two different folders locally (you can git clone twice)
+
+## How to do it!
+1. Navigate to `src/store.js` in the front end repository and change `isUsingRemote` to `false`
+2. Navigate to `elbowbumps/_init_.py` in the back end repositry and set `ENV` to `'dev'`
+3. Run the front end - `npm run serve` in the front end folder
+4. Run the back end - `python 3 main.py` in your back end folder
+5. Now you can go through the site! Try registering a new user and look at the entry  in the user_data table in dbeaver
+
+## Common issues 
+- Something about the database/backend SQL being upset -> you probably need to delete the tables in dbeaver and run `main.py` again because one of us restructured the database
+- `npm run serve` saying it fails to compile -> run `npm install` in that directory and then run `npm run serve` again
+
+## NOTE 
+- DO NOT push `src/store.js` or `elbowbumps/_init_.py` unless you actually changed something in them
+- It will break the deployed version of the site
+- Faridz will not be happy with you 
