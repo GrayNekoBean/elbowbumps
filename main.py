@@ -98,7 +98,7 @@ def get_bumps():
         'matches': match_ids
     })
 
-@app.route('/get_interest_data', methods=['POST'])
+@app.route('/get_interest_data', methods=['GET'])
 @cross_origin()
 def get_interest_data():
     user_id = request.args.get('user_id')
