@@ -77,7 +77,7 @@ export default {
           console.log(err);
         });
       this.twitterUsername = "";
-      this.$router.push('/matches')
+      this.$router.push('/matches');
     },
     removeErrors() {
       this.error = ""

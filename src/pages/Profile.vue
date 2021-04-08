@@ -14,7 +14,13 @@
         </div>
     </div>
     <div class="bottom-part">
-        <EditableText style="position: absolute; margin-left: -6rem; margin-top: 0; width: 80%;" fullWidth="true" textID="bio" v-model:textVar="bio"></EditableText>
+        <div style="display: flex; justify-content: left; top: 0.2rem;">
+                                <IconButton style="margin: 0.2rem;" hint="What's this?"  @onClick="displayHint = true"/>
+                                <div> <p> Describe yourself in a sentence or two (160 character limit)</p> </div>
+                            </div>
+        
+        <EditableText style="position: absolute; margin-left: -6rem; margin-top: 0; width: 80%;" fullWidth="true" textID="intro" v-model:textVar="intro"></EditableText>
+        <Button style="position: absolute; right: 0rem; margin: 3rem;" icon="pi pi-save" label="Save" class="p-button-raised" @click="updateProfile" />
         <TabView class="profile-tab">
             <TabPanel header="Personal Info" style="margin-top: 6rem;">
                 <div class="info-area">
@@ -35,19 +41,18 @@
                     </EditableText>
                     </div>
                 </div>
-                <Button style="position: absolute; right: 0rem; bottom: -4rem;" icon="pi pi-save" label="Save" class="p-button-raised" @click="updateProfile" />
             </TabPanel>
-            <TabPanel header="Personal Document">
-                <Dialog header="About Personal Document" v-model:visible="displayHint" >
+            <TabPanel header="Bio">
+                <Dialog header="About your bio" v-model:visible="displayHint" >
                     <p>
-                        This is where you can edit & view your personal document.
+                        This is where you can edit & view your bio. 
                     </p>
                     <p>
-                         You can write your document with <a href="https://zh.wikipedia.org/wiki/Markdown">Markdown</a> language.
-                         Here's a <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">helpful cheatsheet</a> of Markdown grammar, hope it helps you.
+                         You can write your bio using <a href="https://zh.wikipedia.org/wiki/Markdown">Markdown</a> 
+                         Here's a <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">helpful Markdown cheatsheet</a>. 
                     </p>
                     <p>
-                         A nice personal document is a key to improve your first image to others.
+                         A good bio is key to making a good first impression. 
                     </p>
                 </Dialog>
                 <Card>
@@ -55,19 +60,18 @@
                         <div style="display: flex; justify-content: space-between; width: 100%;">
                             <div style="display: flex; justify-content: left;">
                                 <IconButton style="margin: 0.7rem;" hint="What's this?" icon="pi-question-circle" @onClick="displayHint = true"/>
-                                <div> <p> You can edit your personal document by Markdown below. </p> </div>
+                                <div> <p> You can edit your bio using markdown. Click on the tick to see what it looks like compiled. (2000 character limit) </p> </div>
                             </div>
                             <div style="display: flex; justify-content: right;">
                                 <IconButton style="margin: 0.7rem;" hint="compile" icon="pi-check-circle" color="green" @onClick="compileMarkdown" />
-                                <IconButton style="margin: 0.7rem;" hint="save" icon="pi-save" color="blue" @onClick="saveDoc" />
                             </div>
                         </div>
                     </template>
                 </Card>
                 <Splitter>
                     <SplitterPanel class="p-d-flex p-ai-center p-jc-center">
-                        <TextArea style="height: 36rem; width: 100%" v-model="personalDoc" placeholder="Edit markdown document here..." />
-                        <!-- <Editor v-model="personalDoc" editorStyle="height: 36rem; width: 100%">
+                        <TextArea style="height: 36rem; width: 100%" v-model="bio" placeholder="Edit markdown document here..." />
+                        <!-- <Editor v-model="bio" editorStyle="height: 36rem; width: 100%">
                             <template #toolbar>
                                 <div style="display: flex; justify-contents: left;">
                                     <IconButton hint="compile" icon="pi-check-circle" color="green" @onClick="compileMarkdown" />
@@ -86,7 +90,35 @@
                 </Splitter>
             </TabPanel>
             <TabPanel header="Twitter">
+                <div v-if="twitter != ''">
+                    <p >Current Twitter account: @{{twitter}}</p>
+                    <Button label="Refresh your sentiment scores for your current account or authorise a new Twitter account" autofocus @click="openURL()"></Button>
+                </div>
+                <div v-else>
+                    <p> You haven't registered your Twitter account with us yet!</p>
+                    <Button label="Authorise a new Twitter account" autofocus @click="openURL()"></Button>
+                </div>
 
+          
+                <h2>Enter the PIN you recieved above</h2>
+                <div id ="textbox">
+                    <form @submit.prevent="submitPIN">
+                    <label for="twitterPIN"></label>
+                    <input
+                        type="text"
+                        id="twitterPIN"
+                        name="twitterPIN"
+                        v-model="twitterPIN" 
+                        value @click="getValue"
+                    />
+                    <br /><br />
+                    <div id="button"><Button type="submit" id="button">Submit</Button></div> <br /><br />
+                    <Dialog v-model:visible="hasErrors" header="Oh no!" class="error">
+                        {{ error }} <br/><br/>
+                        <Button label="Got it!" autofocus @click="removeErrors"></Button>
+                    </Dialog>
+                    </form>
+                </div>
             </TabPanel>
         </TabView>
     </div>
@@ -110,7 +142,7 @@ export default {
             currentEdit: '',
             firstName: '',
             lastName: '',
-            bio: '',
+            intro: '',
             email: '',
             phoneNumber: '',
             twitter: '',
@@ -121,8 +153,13 @@ export default {
             personalSite: '',
             userId: "",
             avatar: "../assets/test.jpg",
-            personalDoc: "",
-            markdown: null
+            bio: "",
+            markdown: null,
+            twitterPIN: "",
+            error: "",
+            oauthToken: "",
+            oauthTokenSecret: "",
+            oauthURL: ""
         };
     },
     methods: {
@@ -137,20 +174,14 @@ export default {
             form.append('fName', this.firstName)
             form.append('sName', this.lastName)
             form.append('emailAdd', this.email)
+            form.append('bio', this.bio)
+            form.append('intro', this.intro)
 
             axios.post(localURL, form).then(
                 (response) => {
                     if (response.data['STATUS_CODE'] == 200){
-                        console.log(this.$store.getters.userId)
-                        console.log(this.firstName)
-                        console.log(this.email)
-                        console.log(this.phoneNumber)
                         console.log('Updating profile successful');
                     }else{
-                        console.log(this.$store.getters.userId)
-                        console.log(this.firstName)
-                        console.log(this.email)
-                        console.log(this.phoneNumber)
                         console.warn("Issues with updating profile");
                         console.log(response);
                     }
@@ -230,6 +261,8 @@ export default {
                     this.email = data['email'];
                     this.phoneNumber = data['phone'];
                     this.twitter = data['twitter'];
+                    this.bio = data['bio'];
+                    this.intro = data['intro'];
 
                 });
             }else{
@@ -237,27 +270,57 @@ export default {
             }
         },
         compileMarkdown(){
-          let compiled = this.markdown.render(this.personalDoc);
+          let compiled = this.markdown.render(this.bio);
           this.$refs.rendered_md.innerHTML = compiled;
         },
-        saveDoc(){
-            this.compileMarkdown();
-            let form = new FormData();
-            form.append('id', this.$getters.userId);
-            form.append('personal_doc', this.personalDoc);
-            axios.post(this.$store.getters.URL + 'user_data', form).then(
-                (response) => {
-                    if (response.data.STATUS_CODE == 200){
-                        console.log('saving successed');
-                    }else{
-                        console.warn(response.data.message);
-                    }
-                }
-            ).catch(
-                (error) => {
-                    console.error(error);
-                }
-            );
+        submitPIN() {
+        let localURL = `${this.$store.getters.URL}/social_media_info`;
+
+        const form = new FormData()
+
+        form.append('id', this.$store.getters.userId)
+        form.append('OAUTH_TOKEN', this.oauthToken)
+        form.append('OAUTH_TOKEN_SECRET', this.oauthTokenSecret)
+        form.append('pin', this.twitterPIN)
+        axios
+            .post(localURL, form)
+            .then((res) => {
+            if (res.data.STATUS_CODE == 200) {
+                this.$router.push("/matches");
+            } else {
+                this.error = res.data.Message;
+            }
+            })
+            .catch((err) => {
+            console.log(err);
+            });
+        this.twitterUsername = "";
+        this.$router.push('/profile');
+        },
+        removeErrors() {
+        this.error = ""
+        },
+        generateURL() {
+        if (this.oauthURL == ""){
+        let localURL = `${this.$store.getters.URL}/twitter_oauth_url`;
+        axios
+        .post(localURL)
+        .then((res) => {
+            if (res.data.STATUS_CODE == 200) {
+            this.oauthURL = res.data.oauthURL;
+            this.oauthToken = res.data.oauthToken;
+            this.oauthTokenSecret = res.data.oauthTokenSecret;   
+            } else {
+            this.error = res.data.Message;
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        });}
+            return this.oauthURL;
+        },
+        openURL(){
+            window.open(this.generateURL(), "_blank");
         }
     },
     mounted() {
