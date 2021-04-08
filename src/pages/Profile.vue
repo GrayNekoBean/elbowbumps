@@ -15,25 +15,80 @@
     </div>
     <div class="bottom-part">
         <EditableText style="position: absolute; margin-left: -6rem; margin-top: 0; width: 80%;" fullWidth="true" textID="bio" v-model:textVar="bio"></EditableText>
-        <div class="info-area">
-            <div class="names">
-            <EditableText textID="first_name" v-model:textVar="firstName">
-                First Name
-            </EditableText>
-            <EditableText textID="surname" v-model:textVar="lastName">
-                Surname
-            </EditableText>
-            </div>
-            <div class="contacts">
-            <EditableText textID="email" v-model:textVar="email">
-                Email
-            </EditableText>
-            <EditableText textID="telephone" v-model:textVar="phoneNumber">
-                Phone Number
-            </EditableText>
-            </div>
-        </div>
-        <Button style="position: absolute; right: 2rem; bottom: 4rem;" icon="pi pi-save" label="Save" class="p-button-raised" @click="updateProfile" />
+        <TabView class="profile-tab">
+            <TabPanel header="Personal Info" style="margin-top: 6rem;">
+                <div class="info-area">
+                    <div class="names">
+                    <EditableText textID="first_name" v-model:textVar="firstName">
+                        First Name
+                    </EditableText>
+                    <EditableText textID="surname" v-model:textVar="lastName">
+                        Surname
+                    </EditableText>
+                    </div>
+                    <div class="contacts">
+                    <EditableText textID="email" v-model:textVar="email">
+                        Email
+                    </EditableText>
+                    <EditableText textID="telephone" v-model:textVar="phoneNumber">
+                        Phone Number
+                    </EditableText>
+                    </div>
+                </div>
+                <Button style="position: absolute; right: 0rem; bottom: -4rem;" icon="pi pi-save" label="Save" class="p-button-raised" @click="updateProfile" />
+            </TabPanel>
+            <TabPanel header="Personal Document">
+                <Dialog header="About Personal Document" v-model:visible="displayHint" >
+                    <p>
+                        This is where you can edit & view your personal document.
+                    </p>
+                    <p>
+                         You can write your document with <a href="https://zh.wikipedia.org/wiki/Markdown">Markdown</a> language.
+                         Here's a <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">helpful cheatsheet</a> of Markdown grammar, hope it helps you.
+                    </p>
+                    <p>
+                         A nice personal document is a key to improve your first image to others.
+                    </p>
+                </Dialog>
+                <Card>
+                    <template #content>
+                        <div style="display: flex; justify-content: space-between; width: 100%;">
+                            <div style="display: flex; justify-content: left;">
+                                <IconButton style="margin: 0.7rem;" hint="What's this?" icon="pi-question-circle" @onClick="displayHint = true"/>
+                                <div> <p> You can edit your personal document by Markdown below. </p> </div>
+                            </div>
+                            <div style="display: flex; justify-content: right;">
+                                <IconButton style="margin: 0.7rem;" hint="compile" icon="pi-check-circle" color="green" @onClick="compileMarkdown" />
+                                <IconButton style="margin: 0.7rem;" hint="save" icon="pi-save" color="blue" @onClick="saveDoc" />
+                            </div>
+                        </div>
+                    </template>
+                </Card>
+                <Splitter>
+                    <SplitterPanel class="p-d-flex p-ai-center p-jc-center">
+                        <TextArea style="height: 36rem; width: 100%" v-model="personalDoc" placeholder="Edit markdown document here..." />
+                        <!-- <Editor v-model="personalDoc" editorStyle="height: 36rem; width: 100%">
+                            <template #toolbar>
+                                <div style="display: flex; justify-contents: left;">
+                                    <IconButton hint="compile" icon="pi-check-circle" color="green" @onClick="compileMarkdown" />
+                                    <IconButton hint="save" icon="pi-save" color="blue" @onClick="saveDoc" />
+                                </div>
+                            </template>
+                        </Editor> -->
+                    </SplitterPanel>
+                    <SplitterPanel class="p-d-flex p-ai-center p-jc-center">
+                        <ScrollPanel style="height: 36rem; width: 100%">
+                            <div class="rendered-markdown" ref="rendered_md">
+
+                            </div>
+                        </ScrollPanel>
+                    </SplitterPanel>
+                </Splitter>
+            </TabPanel>
+            <TabPanel header="Twitter">
+
+            </TabPanel>
+        </TabView>
     </div>
 </div>
 </section>
@@ -42,12 +97,16 @@
 <script>
 
 import axios from "axios";
+import MarkdownIt from "markdown-it";
+
 import EditableText from "../components/EditableText";
+import IconButton from "../components/IconButton";
 
 export default {
-    components: { EditableText },
+    components: { EditableText, IconButton },
     data(){
         return {
+            displayHint: false,
             currentEdit: '',
             firstName: '',
             lastName: '',
@@ -61,7 +120,9 @@ export default {
             telegram: '',
             personalSite: '',
             userId: "",
-            avatar: "../assets/test.jpg"
+            avatar: "../assets/test.jpg",
+            personalDoc: "",
+            markdown: null
         };
     },
     methods: {
@@ -174,9 +235,33 @@ export default {
             }else{
                 console.warn("not logged in")
             }
+        },
+        compileMarkdown(){
+          let compiled = this.markdown.render(this.personalDoc);
+          this.$refs.rendered_md.innerHTML = compiled;
+        },
+        saveDoc(){
+            this.compileMarkdown();
+            let form = new FormData();
+            form.append('id', this.$getters.userId);
+            form.append('personal_doc', this.personalDoc);
+            axios.post(this.$store.getters.URL + 'user_data', form).then(
+                (response) => {
+                    if (response.data.STATUS_CODE == 200){
+                        console.log('saving successed');
+                    }else{
+                        console.warn(response.data.message);
+                    }
+                }
+            ).catch(
+                (error) => {
+                    console.error(error);
+                }
+            );
         }
     },
     mounted() {
+        this.markdown = new MarkdownIt();
         this.getCurrentUserInfo();
     }
 }
@@ -218,6 +303,13 @@ h2{
     background: $primitive-color;
 }
 
+.profile-tab{
+    position: absolute;
+    margin-top: 6rem;
+    left: 2rem;
+    width: 85%;
+}
+
 .profile-title{
     display: flex;
     flex-flow: row;
@@ -234,8 +326,8 @@ h2{
 }
 
 .info-area{
-    width: 60%;
-    margin-top: 8rem;
+    width: 80%;
+    margin-top: 2rem;
 }
 
 .names{

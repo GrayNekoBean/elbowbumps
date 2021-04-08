@@ -126,8 +126,8 @@ export default {
 
           if (responseStatus == "200") {
             //TODO: Show a notification with info like this: "Login Successful"
-            this.$root.setLoginState(response.data.id, this.rememberMe);
-            this.$router.push("/matches");
+            this.$root.login(response.data.id, this.rememberMe);
+            this.$root.route_to("/matches");
           } else if (responseStatus == "500") {
             this.errors = responseData.Message;
             this.email = "";

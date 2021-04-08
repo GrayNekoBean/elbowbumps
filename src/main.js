@@ -25,6 +25,10 @@ import AccordionTab from 'primevue/accordiontab';
 import ScrollPanel from 'primevue/scrollpanel';
 import Tag from 'primevue/tag';
 import Sidebar from 'primevue/sidebar';
+import Splitter from 'primevue/splitter';
+import SplitterPanel from 'primevue/splitterpanel';
+import TextArea from 'primevue/textarea';
+import Dialog from 'primevue/dialog'
 
 import "primevue/resources/themes/saga-blue/theme.css"; // theme
 import "primevue/resources/primevue.min.css"; // core css
@@ -58,5 +62,9 @@ app.component("AccordionTab", AccordionTab);
 app.component("ScrollPanel", ScrollPanel);
 app.component("Tag", Tag);
 app.component("Sidebar", Sidebar);
+app.component("Splitter", Splitter);
+app.component("SplitterPanel", SplitterPanel);
+app.component("TextArea", TextArea);
+app.component("Dialog", Dialog);
 
 app.mount("#app");

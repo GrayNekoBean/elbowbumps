@@ -34,6 +34,8 @@ export default {
 }
 
 .edit-button{
+    height: 2rem;
+    width: 2rem;
     :hover{
         border-radius: 50%;
         background: rgba(0, 0, 0, 0.15);

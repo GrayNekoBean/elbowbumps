@@ -1,5 +1,6 @@
 <template id="frame">
   <section>
+    <Toast position="top-right" />
     <Sidebar v-model:visible="sidebarOpen">
       <div style="margin: 1rem">
       <h3> <span style = "color: #a9edfe">ELBOW</span> <span style = "color: #ffaaaa">BUMPS</span> </h3>
@@ -11,40 +12,40 @@
         <Card class="header-menu">
           <template #header>  <!--<h1 style="text-align: left">Welcome to Elbow Bump</h1>-->
             <div class="header-right-menu">
-              <TabView class="top-tab" v-model:activeIndex="header_active" v-if="!logined()">
-                <TabPanel>
+              <TabView class="top-tab" v-model:activeIndex="header_active" @tab-click="(event) => route_to(event.index)" v-if="!logined()">
+                <TabPanel @tab-click="route_to('/')">
                   <template #header>
                     <i class="pi pi-home tab-icon"></i>
                     <span>Home</span>
                   </template>
                 </TabPanel>
-                <TabPanel>
+                <TabPanel @tab-click="route_to('/about')">
                   <template #header>
                     <i class="pi pi-info-circle tab-icon"></i>
                     <span>About</span>
                   </template>
                 </TabPanel>
-                <TabPanel>
+                <TabPanel @tab-click="route_to('/login')">
                   <template #header>
                     <i class="pi pi-sign-in tab-icon"></i>
                     <span>Login</span>
                   </template>
                 </TabPanel>
-                <TabPanel>
+                <TabPanel @tab-click="route_to('/register')">
                   <template #header>
                     <i class="pi pi-user-plus tab-icon"></i>
                     <span>Register</span>
                   </template>
                 </TabPanel>
               </TabView>
-              <TabView class="top-tab" v-model:activeIndex="header_active" v-else>
-                <TabPanel>
+              <TabView class="top-tab" v-model:activeIndex="header_active" @tab-click="(event) => route_to(event.index)" v-else>
+                <TabPanel @tab-click="route_to('/')">
                   <template #header>
                     <i class="pi pi-home tab-icon"></i>
                     <span>Home</span>
                   </template>
                 </TabPanel>
-                <TabPanel>
+                <TabPanel @tab-click="route_to('/about')">
                   <template #header>
                     <i class="pi pi-info-circle tab-icon"></i>
                     <span>About</span>
@@ -102,7 +103,9 @@ export default {
   components: { IconButton },
   watch: {
     header_active: function (val){
-      router.push(this.id_routers[val]);
+      if (val >= 0 && val < 4){
+        router.push(this.id_routers[val]);
+      }
     }
   },
   data(){
@@ -131,7 +134,7 @@ export default {
             {
               label: "Profile",
               icon: "pi pi-user",
-              to: "/profile"
+              command: () => this.route_to('/profile')
             },
             {
               label: "Logout",
@@ -180,7 +183,7 @@ export default {
         this.current_user = localStorage['current_user'];
       }
       if(this.current_user != ""){
-        this.setLoginState(this.current_user, true);
+        this.login(this.current_user, true);
       }
     }
 
@@ -189,22 +192,7 @@ export default {
     this.avatar = "assets/test.jpg";
   },
   methods: {
-    logined: function(){
-      if (this.$store.getters.userId){
-        return true;
-      }else{
-        return false;
-      }
-    },
-    logout: function(){
-      this.$store.dispatch("logOut");
-      this.$root.setLogoutState();
-      this.$root.route_to('/');
-    },
-    showMenu: function(event){
-      this.$refs.user_menu.toggle(event);
-    },
-    setLoginState: function(id, remember=false){
+    login: function(id, remember=false){
       
       // this.login_profile = "Profile";
       // this.register_settings = "Settings";
@@ -228,16 +216,39 @@ export default {
         });
       
     },
-    setLogoutState: function(){
-      // this.login_profile = "Login";
-      // this.register_settings = "Register";
-
-      // this.id_routers[9] = "/login";
-      // this.id_routers[10] = "/register";
+    logout: function(){
+      this.$store.dispatch("logOut");
       sessionStorage.removeItem("current_user");
       localStorage.removeItem("current_user");
 
       this.routers_id = this.swapKeyValue(this.id_routers);
+      this.route_to('/');
+    },
+    displayLog: function(info, detail = '') {
+      console.log(info);
+      this.$toast.add({severity:'info', summary: info, detail: detail, life: 3000});
+    },
+    displaySuccessLog: function(info, detail = '') {
+      console.log(info);
+      this.$toast.add({severity:'success', summary: info, detail: detail, life: 3000});
+    },
+    displayWarning: function(info, detail = '') {
+      console.warn(info);
+      this.$toast.add({severity:'warning', summary: info, detail: detail, life: 3000});
+    },
+    displayError: function(info, detail = '') {
+      console.warn(info);
+      this.$toast.add({severity:'error', summary: info, detail: detail, life: 3000});
+    },
+    logined: function(){
+      if (this.$store.getters.userId){
+        return true;
+      }else{
+        return false;
+      }
+    },
+    showMenu: function(event){
+      this.$refs.user_menu.toggle(event);
     },
     swapKeyValue: function(obj){
       let res = {};
@@ -248,8 +259,23 @@ export default {
     },
     route_to: function(path){
       console.log('route');
-      this.header_active = Number(this.routers_id[path]);
-      this.$router.push(path);
+      if (typeof(path) == 'string'){
+        if (path in Object.keys(this.routers_id)){
+          this.header_active = Number(this.routers_id[path]);
+        }else{
+          //this.header_active = 5;
+        }
+        this.$router.push(path);
+      }else if(typeof(path) == 'number'){
+        if (path < Object.keys(this.id_routers).length){
+          this.header_active = path;
+          this.$router.push(this.id_routers[path]);
+        }else{
+          //this.header_active = 5;
+        }
+      }else{
+        console.error('Invalid routing argument');
+      }
     },
   }
 };
