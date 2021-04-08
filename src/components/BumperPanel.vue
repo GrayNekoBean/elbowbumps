@@ -4,11 +4,11 @@
             <div class="bumper-panel">
                 <Avatar size="xlarge" :image="require('../assets/test.jpg')" shape="circle" />
                 <h3>{{userName}}</h3>
-                <p>{{bio}}</p>
+                <p>{{intro}}</p>
                 <Tag v-for="tag in tags" :key="tag" class="p-mr-2" :severity="getTagType(tag)" :value="tag.value" rounded></Tag>
                 <Button @click="bump">Bump</Button>
                 <div style="display: flex; justify-content: space-between;">
-                    <IconButton hint="Open Page Twitter" icon="pi-twitter" color="rgb(29, 161, 242)" @click="openTwitterPage()"></IconButton>
+                    <IconButton v-if='twitter != ""' hint="Open Page Twitter" icon="pi-twitter" color="rgb(29, 161, 242)" @click="openTwitterPage()"></IconButton>
                     <IconButton hint="Block User" icon="pi-times" color="red" @click="blockUser()"></IconButton>
                 </div>
             </div>
@@ -18,7 +18,7 @@
 
 <script>
 import axios from "axios";
-
+import intro from "../pages/Profile.vue";
 import IconButton from "./IconButton";
 
 export default {
@@ -28,6 +28,9 @@ export default {
             bio: "",
             twitter: "",
             tags: [],
+            intro: "",
+            firstName: "",
+            lastName: "",
             avatar: require("../assets/test.jpg"),
         };
     },
@@ -43,19 +46,24 @@ export default {
             axios.get(address, {params: args}).then(
                 (response) => {
                     if (response.data.STATUS_CODE == "200"){
-                        dataPack = response.data.data;
-                        this.userName = `${dataPack.fName} ${dataPack.sName}`;
-                        if (dataPack.avatar != ""){
-                            this.avatar = dataPack.avatar;
-                        }else{
+                        let data = response.data['data'];
+                        this.avatar = data['avatar'];
+                        this.firstName = data['fName'];
+                        this.lastName = data['sName'];
+                        this.twitter = data['twitter'];
+                        this.bio = data['bio'];
+                        this.intro = data['intro'];
+                        this.userName = this.firstName + " " + this.lastName;
+
+                        if (this.avatar != ""){
                             this.avatar = "../assets/test.jpg";
                         }
-                        if (dataPack.bio){
-                            this.bio = dataPack.bio;
-                        }else{
-                            this.bio = "This person don't have a bio.";
+                        if (this.intro == ""){
+                            this.intro = "This person doesn't have an intro :( ";
                         }
-                        this.twitter = dataPack.twitter;
+                        if (this.bio == ""){
+                            this.bio = "This person doesn't have an bio :( ";
+                        }
                     }else{
                         console.error(response.STATUS);
                         console.error(response.Message);
@@ -76,8 +84,8 @@ export default {
             return null;
         },
         openTwitterPage(){
-            return null;
-        }
+            window.open("https://twitter.com/" + this.twitter, "_blank");
+        },
     },
     mounted: function(){
         this.FetchUserInfo();
