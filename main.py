@@ -153,7 +153,6 @@ def oauth_twitter():
         auth = twitter.get_authentication_tokens(callback_url='oob')
         OAUTH_TOKEN = auth['oauth_token']
         OAUTH_TOKEN_SECRET = auth['oauth_token_secret']
-        # display/ open this url in a new tab
         return jsonify({
                 "STATUS_CODE": 200,
                 "oauthURL": auth['auth_url'],
@@ -174,7 +173,6 @@ def callback_twitter():
     id = request.form.get('id')
     OAUTH_TOKEN = request.form.get('OAUTH_TOKEN')
     OAUTH_TOKEN_SECRET = request.form.get('OAUTH_TOKEN_SECRET')
-    # need OAUTH_TOKEN and OAUTH_TOKEN_SECRET to be global/passed between the endpoints
     try:
         twitter = Twython(APP_KEY, APP_SECRET,
                         OAUTH_TOKEN, OAUTH_TOKEN_SECRET)

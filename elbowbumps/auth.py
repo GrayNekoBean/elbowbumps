@@ -165,7 +165,9 @@ def getUserData():
             sName = userRow.ud_surname
             email = userRow.ud_email
             phone = userRow.ud_phone
-            twitter_id = userRow.ud_id_twitter
+            twitter = userRow.ud_twitter
+            intro = userRow.ud_intro
+            bio = userRow.ud_bio
             
             return jsonify({
                 "STATUS": "SUCCESS",
@@ -176,7 +178,9 @@ def getUserData():
                     "sName": sName,
                     "email": email,
                     "phone": phone,
-                    "twitter": twitter_id
+                    "twitter": twitter,
+                    "intro": intro,
+                    "bio": bio
                 }
             })
         else:
@@ -191,9 +195,13 @@ def getUserData():
         phoneNum = request.form.get('phoneNum')
         emailAdd = request.form.get('emailAdd')
         id = request.form.get('id')
+        intro = request.form.get('intro')
+        bio = request.form.get('bio')
+
         user_email_check = UserData.query.filter_by(ud_email=emailAdd).first()
         user_phone_check = UserData.query.filter_by(ud_phone=phoneNum).first() 
         user = UserData.query.filter_by(ud_id = id).first()
+
 
         if not user:
             print(id)
@@ -225,6 +233,8 @@ def getUserData():
             user.ud_forename = fName
             user.ud_phone = phoneNum
             user.ud_surname = sName
+            user.ud_bio = bio
+            user.ud_intro = intro
             db.session.commit()
             # POST Request
             return jsonify({
