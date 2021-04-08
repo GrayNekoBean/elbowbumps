@@ -120,6 +120,17 @@
                     </form>
                 </div>
             </TabPanel>
+            <TabPanel header="Questionnaire">
+          
+                <p>Fill out the questionnaire</p>
+                <div id ="textbox">
+                    <Button label="Go to the questionnaire page" autofocus @click="questionnaireRoute()"></Button>
+                    <Dialog v-model:visible="hasErrors" header="Oh no!" class="error">
+                        {{ error }} <br/><br/>
+                        <Button label="Got it!" autofocus @click="removeErrors"></Button>
+                    </Dialog>
+                </div>
+            </TabPanel>
         </TabView>
     </div>
 </div>
@@ -321,6 +332,9 @@ export default {
         },
         openURL(){
             window.open(this.generateURL(), "_blank");
+        },
+        questionnaireRoute(){
+            this.$router.push('/questionnaire');
         }
     },
     mounted() {

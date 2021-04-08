@@ -111,7 +111,7 @@ export default {
             this.enteredphoneNum = "";
             this.enteredemailAdd = "";
             this.enteredpw = "";
-            this.$router.push('/questionnaire')
+            this.$router.push('/profile')
           }
         });
     },

@@ -94,7 +94,7 @@ export default {
         (response) => {
           let jsonData = response.data;
           if (jsonData['STATUS_CODE'] == 200){
-            this.$router.push('/socialmediainfo');
+            this.$router.push('/profile');
           }
         }
       );
