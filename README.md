@@ -133,7 +133,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 2. Navigate to `elbowbumps/_init_.py` in the back end repositry and set `ENV` to `'dev'`
 3. Run the front end - `npm run serve` in the front end folder
 4. Run the back end - `python 3 main.py` in your back end folder
-5. Now you can go through the site! Try registering a new user and look at the entry  in the user_data table in dbeaver
+5. You can now go through the site with the front-end link with your local back-end. Try registering a new user and confirm there is an entry in your local user_data table in dbeaver.
 
 ## Common issues 
 - Something about the database/backend SQL being upset -> you probably need to delete the tables in dbeaver and run `main.py` again because one of us restructured the database
