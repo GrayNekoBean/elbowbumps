@@ -2,7 +2,7 @@
 
 Welcome to our first year team project, a friendship recommendation web application 
 
-View the website here: https://condescending-brattain-49a2b0.netlify.app/
+View the remote website here: https://condescending-brattain-49a2b0.netlify.app/
 
 ---
 
@@ -132,7 +132,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 1. Navigate to `src/store.js` in the front end repository and change `isUsingRemote` to `false`
 2. Navigate to `elbowbumps/_init_.py` in the back end repositry and set `ENV` to `'dev'`
 3. Run the front end - `npm run serve` in the front end folder
-4. Run the back end - `python 3 main.py` in your back end folder
+4. Run the back end - `python3 main.py` in your back end folder
 5. You can now go through the site with the front-end link with your local back-end. Try registering a new user and confirm there is an entry in your local user_data table in dbeaver.
 
 ## Common issues 
