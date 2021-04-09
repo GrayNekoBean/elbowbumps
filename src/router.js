@@ -15,6 +15,7 @@ import Matches from "./pages/Matches.vue";
 import Bumps from "./pages/Bumps.vue";
 import AccessDenied from "./pages/AccessDenied";
 import HomePageAfter from "./pages/HomePageAfter.vue"
+import InterestData from "./pages/InterestData.vue";
 
 export default createRouter({
   history: createWebHistory(),
@@ -100,6 +101,11 @@ export default createRouter({
       name: "HPA",
       path: "/hpa",
       component: HomePageAfter
+    },
+    {
+      name: "interest_data",
+      path: "/interest-data",
+      component: InterestData
     }
   ],
   linkActiveClass: "active",

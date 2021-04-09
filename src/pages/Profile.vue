@@ -15,11 +15,14 @@
     </div>
     <div class="bottom-part">
         <div style="display: flex; justify-content: left; top: 0.2rem;">
-                                <IconButton style="margin: 0.2rem;" hint="What's this?"  @onClick="displayHint = true"/>
-                                <div> <p> Describe yourself in a sentence or two (160 character limit)</p> </div>
-                            </div>
+            <IconButton style="margin: 0.2rem;" hint="What's this?"  @onClick="displayHint = true"/>
+        </div>
         
-        <EditableText style="position: absolute; margin-left: -6rem; margin-top: 0; width: 80%;" fullWidth="true" textID="intro" v-model:textVar="intro"></EditableText>
+        <EditableText 
+        style="position: absolute; margin-left: -6rem; margin-top: 0; width: 80%;" 
+        fullWidth="true" textID="intro" 
+        placeholder="Describe yourself in a sentence or two (160 character limit)" 
+        v-model:textVar="intro" />
         <Button style="position: absolute; right: 0rem; margin: 3rem;" icon="pi pi-save" label="Save" class="p-button-raised" @click="updateProfile" />
         <TabView class="profile-tab">
             <TabPanel header="Personal Info" style="margin-top: 6rem;">
@@ -176,9 +179,9 @@ export default {
     methods: {
         updateProfile: function(){
 
-            let localURL = `${this.$store.getters.URL}/user_data`;
+            let localURL = `${this.$store.getters.URL}user_data`;
 
-            const form = new FormData() 
+            const form = new FormData()
 
             form.append('id', this.$store.getters.userId)
             form.append('phoneNum', this.phoneNumber)
@@ -191,14 +194,16 @@ export default {
             axios.post(localURL, form).then(
                 (response) => {
                     if (response.data['STATUS_CODE'] == 200){
-                        console.log('Updating profile successful');
+                        this.$store.dispatch("updateUserInfo", {fName: this.firstName, avatar: this.avatar});
+                        this.$root.updateHeader();
+                        
+                        this.$root.displaySuccessLog("Save Successful!", 'Your new profile has been uploaded.');
                     }else{
-                        console.warn("Issues with updating profile");
-                        console.log(response);
+                        this.$root.displayWarn("Update Profile Failed", response.data.Message);
                     }
                 }
             ).catch(
-                (e) => console.error(e)
+                (e) => this.$root.displayError("Network Error", e)
             );
         },
         uploadAvatar: function(event){
@@ -285,49 +290,49 @@ export default {
           this.$refs.rendered_md.innerHTML = compiled;
         },
         submitPIN() {
-        let localURL = `${this.$store.getters.URL}/social_media_info`;
+            let localURL = `${this.$store.getters.URL}/social_media_info`;
 
-        const form = new FormData()
+            const form = new FormData()
 
-        form.append('id', this.$store.getters.userId)
-        form.append('OAUTH_TOKEN', this.oauthToken)
-        form.append('OAUTH_TOKEN_SECRET', this.oauthTokenSecret)
-        form.append('pin', this.twitterPIN)
-        axios
-            .post(localURL, form)
-            .then((res) => {
-            if (res.data.STATUS_CODE == 200) {
-                this.$router.push("/matches");
-            } else {
-                this.error = res.data.Message;
-            }
-            })
-            .catch((err) => {
-            console.log(err);
-            });
-        this.twitterUsername = "";
-        this.$router.push('/profile');
+            form.append('id', this.$store.getters.userId)
+            form.append('OAUTH_TOKEN', this.oauthToken)
+            form.append('OAUTH_TOKEN_SECRET', this.oauthTokenSecret)
+            form.append('pin', this.twitterPIN)
+            axios
+                .post(localURL, form)
+                .then((res) => {
+                if (res.data.STATUS_CODE == 200) {
+                    this.$router.push("/matches");
+                } else {
+                    this.error = res.data.Message;
+                }
+                })
+                .catch((err) => {
+                console.log(err);
+                });
+            this.twitterUsername = "";
+            this.$router.push('/profile');
         },
         removeErrors() {
-        this.error = ""
+            this.error = ""
         },
         generateURL() {
-        if (this.oauthURL == ""){
-        let localURL = `${this.$store.getters.URL}/twitter_oauth_url`;
-        axios
-        .post(localURL)
-        .then((res) => {
-            if (res.data.STATUS_CODE == 200) {
-            this.oauthURL = res.data.oauthURL;
-            this.oauthToken = res.data.oauthToken;
-            this.oauthTokenSecret = res.data.oauthTokenSecret;   
-            } else {
-            this.error = res.data.Message;
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-        });}
+            if (this.oauthURL == ""){
+            let localURL = `${this.$store.getters.URL}/twitter_oauth_url`;
+            axios
+            .post(localURL)
+            .then((res) => {
+                if (res.data.STATUS_CODE == 200) {
+                this.oauthURL = res.data.oauthURL;
+                this.oauthToken = res.data.oauthToken;
+                this.oauthTokenSecret = res.data.oauthTokenSecret;   
+                } else {
+                this.error = res.data.Message;
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });}
             return this.oauthURL;
         },
         openURL(){

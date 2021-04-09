@@ -13,25 +13,25 @@
           <template #header>  <!--<h1 style="text-align: left">Welcome to Elbow Bump</h1>-->
             <div class="header-right-menu">
               <TabView class="top-tab" v-model:activeIndex="header_active" @tab-click="(event) => route_to(event.index)" v-if="!logined()">
-                <TabPanel @tab-click="route_to('/')">
+                <TabPanel>
                   <template #header>
                     <i class="pi pi-home tab-icon"></i>
                     <span>Home</span>
                   </template>
                 </TabPanel>
-                <TabPanel @tab-click="route_to('/about')">
+                <TabPanel>
                   <template #header>
                     <i class="pi pi-info-circle tab-icon"></i>
                     <span>About</span>
                   </template>
                 </TabPanel>
-                <TabPanel @tab-click="route_to('/login')">
+                <TabPanel>
                   <template #header>
                     <i class="pi pi-sign-in tab-icon"></i>
                     <span>Login</span>
                   </template>
                 </TabPanel>
-                <TabPanel @tab-click="route_to('/register')">
+                <TabPanel>
                   <template #header>
                     <i class="pi pi-user-plus tab-icon"></i>
                     <span>Register</span>
@@ -39,13 +39,13 @@
                 </TabPanel>
               </TabView>
               <TabView class="top-tab" v-model:activeIndex="header_active" @tab-click="(event) => route_to(event.index)" v-else>
-                <TabPanel @tab-click="route_to('/')">
+                <TabPanel>
                   <template #header>
                     <i class="pi pi-home tab-icon"></i>
                     <span>Home</span>
                   </template>
                 </TabPanel>
-                <TabPanel @tab-click="route_to('/about')">
+                <TabPanel>
                   <template #header>
                     <i class="pi pi-info-circle tab-icon"></i>
                     <span>About</span>
@@ -59,7 +59,7 @@
                     <Avatar image="https://i.imgur.com/VtIwKXj.jpg" class="p-mr-2" size="large" shape="circle" style="background-color:#2196F3; color: #ffffff; margin-right: 1rem;" />
                   </div>
                   <div class="user-info-text">
-                    <p style="display:block; margin-right: 1rem;"> Welcom, {{current_user}}! </p>
+                    <p style="display:block; margin-right: 1rem;"> Welcome, {{current_user}}! </p>
                     <Menu :model="user_menu_items" id="user_menu_overlay" ref="user_menu" :popup="true" />
                   </div>
                 </div>
@@ -102,11 +102,11 @@ import router from "./router";
 export default {
   components: { IconButton },
   watch: {
-    header_active: function (val){
-      if (val >= 0 && val < 4){
-        router.push(this.id_routers[val]);
-      }
-    }
+    // header_active: function (val){
+    //   if (val >= 0 && val < 4){
+    //     router.push(this.id_routers[val]);
+    //   }
+    // }
   },
   data(){
     return {
@@ -129,7 +129,7 @@ export default {
       ],
       user_menu_items: [
         {
-          label: `Welcome, ${this.current_user}! `,
+          label: "",
           items: [
             {
               label: "Profile",
@@ -153,7 +153,7 @@ export default {
         {
           label: "My Data",
           icon: "pi pi-chart-bar",
-          to: "interest_data"
+          to: "interest-data"
         },
         {
           label: "My Matching",
@@ -185,11 +185,12 @@ export default {
       if(this.current_user != ""){
         this.login(this.current_user, true);
       }
+    }else{
+      this.current_user = this.$store.getters.fName;
+      this.avatar = "assets/test.jpg";
+
+      this.user_menu_items[0].label = "You're now login as " + this.current_user;
     }
-
-
-    this.current_user = this.$store.getters.fName;
-    this.avatar = "assets/test.jpg";
   },
   methods: {
     login: function(id, remember=false){
@@ -208,7 +209,7 @@ export default {
             localStorage.setItem('current_user', id);
           }
 
-          this.user_menu_items[0]['label'] = "You're now login as " + this.current_user;
+          this.user_menu_items[0].label = "You're now login as " + this.current_user;
           this.routers_id = this.swapKeyValue(this.id_routers);
           this.$forceUpdate();
         }).catch((e) => {
@@ -240,6 +241,11 @@ export default {
       console.warn(info);
       this.$toast.add({severity:'error', summary: info, detail: detail, life: 3000});
     },
+    updateHeader: function(){
+      this.current_user = this.$store.getters.fName;
+      this.user_menu_items[0].label = `You are now login as ${this.current_user}! `;
+      this.$forceUpdate();
+    },
     logined: function(){
       if (this.$store.getters.userId){
         return true;
@@ -263,6 +269,7 @@ export default {
         if (path in Object.keys(this.routers_id)){
           this.header_active = Number(this.routers_id[path]);
         }else{
+          this.header_active = 0;
           //this.header_active = 5;
         }
         this.$router.push(path);
@@ -271,6 +278,7 @@ export default {
           this.header_active = path;
           this.$router.push(this.id_routers[path]);
         }else{
+          this.header_active = 0;
           //this.header_active = 5;
         }
       }else{
