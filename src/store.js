@@ -29,10 +29,6 @@ export default createStore({
     matchesRetrieved(state) {
       state.matchesRetrieved = true;
     },
-    updateUserInfo(state, userInfo){
-      state.userFName = userInfo.fName;
-      state.userAvatar = userInfo.avatar;
-    }
   },
   actions: {
     logIn(context, id) {
@@ -44,9 +40,6 @@ export default createStore({
     matchesRetrieved(context) {
       context.commit("matchesRetrieved");
     },
-    updateUserInfo(context, dat){
-      context.commit("updateUserInfo", dat);
-    }
   },
   getters: {
     isLoggedIn: (state) => {

@@ -1,7 +1,7 @@
 <template>
     <span :id="textID" class="p-float-label info-text">        
         <div class="text-title"><slot></slot></div>
-        <InputText :placeholder="placeholder" :style="fullWidth ? 'width: 100%' : ''" :class="editable ? 'editing' : 'non-editing'" type="text" v-model="text" :disabled="!editable" />
+        <InputText :style="fullWidth ? 'width: 100%' : ''" :class="editable ? 'editing' : 'non-editing'" type="text" v-model="text" :disabled="!editable" />
         <div class="edit-button">
             <i class="pi edit-icon" :class="editable ? 'pi-check' : 'pi-pencil'" @click="switchEditable()"></i>
         </div>
@@ -30,10 +30,6 @@ export default {
         fullWidth: {
             type: Boolean,
             default: false
-        },
-        placeholder: {
-            type: String,
-            default: ""
         }
     },
     // emits: [
