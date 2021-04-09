@@ -8,8 +8,7 @@
                 <Tag v-for="tag in tags" :key="tag" class="p-mr-2" :severity="getTagType(tag)" :value="tag.value" rounded></Tag>
                 <Button @click="bump">Bump</Button>
                 <div style="display: flex; justify-content: space-between;">
-                    <IconButton v-if='twitter != ""' hint="Open Page Twitter" icon="pi-twitter" color="rgb(29, 161, 242)" @click="openTwitterPage()"></IconButton>
-                    <IconButton hint="Block User" icon="pi-times" color="red" @click="blockUser()"></IconButton>
+                    <IconButton hint="Block User" icon="pi-times" color="red" @click="reportUser()"></IconButton>
                 </div>
             </div>
         </template>
@@ -89,8 +88,9 @@ export default {
         confirmBump(){
             console.log("Send Bump message: " + this.bumpMsg);
         },
-        blockUser(){
-            return null;
+        reportUser(){
+            console.log(this.userID)
+            this.$router.push({name:'report', params: {user_id: this.userID}});
         },
         openTwitterPage(){
             window.open("https://twitter.com/" + this.twitter, "_blank");

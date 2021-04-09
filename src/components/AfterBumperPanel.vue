@@ -10,7 +10,7 @@
                 <div style="display: flex; justify-content: space-between;">
                     <IconButton v-if='twitter != ""' hint="Open Page Twitter" icon="pi-twitter" color="rgb(29, 161, 242)" @click="openTwitterPage()"></IconButton>
                     <IconButton v-if='email != ""' :hint="email" icon="pi-envelope" color="rgb(f, f, f)" @click="openEmail()">{{email}}</IconButton>
-                    <IconButton hint="Block User" icon="pi-times" color="red" @click="blockUser()"></IconButton>
+                    <IconButton hint="Report User" icon="pi-times" color="red" @click="reportUser()"></IconButton>
                 </div>
             </div>
         </template>
@@ -75,8 +75,9 @@ export default {
                 console.error(e);
             });
         },
-        blockUser(){
-            return null;
+        reportUser(){
+            console.log(this.userID)
+            this.$router.push({name:'report', params: {user_id: this.userID}});
         },
         openTwitterPage(){
             window.open("https://twitter.com/" + this.twitter, "_blank");

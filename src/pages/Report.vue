@@ -4,7 +4,6 @@
 <template>
   <form @submit.prevent="submitForm">
     <h1>Report this account</h1>
-
     <div
       @change="
         how = null;
@@ -17,7 +16,7 @@
           id="report-student"
           name="report"
           type="radio"
-          value="student"
+          value="not-student"
           v-model="report"
         />
         <label for="report-student">They are not a student</label>
@@ -51,7 +50,7 @@
           id="report-abusive"
           name="report"
           type="radio"
-          value="content"
+          value="abusive-content"
           v-model="report"
         />
         <label for="report-abusive"
@@ -64,7 +63,7 @@
           id="report-help"
           name="report"
           type="radio"
-          value="help"
+          value="needs-help"
           v-model="report"
         />
         <label for="report-help"
@@ -91,7 +90,7 @@
           id="abusive-protected"
           name="how"
           type="radio"
-          value="abusive-protected"
+          value="abusive-protected-cat"
           v-model="how"
         />
         <label for="abusive-protected"
@@ -202,6 +201,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -212,13 +212,101 @@ export default {
   },
   methods: {
     submitForm() {
-      console.log(this.report);
-      console.log(this.how);
-      console.log(this.details);
-      this.report = null;
-      this.how = null;
-      this.details = "";
+      let form = new FormData();
+      if (this.how == null){
+        this.how = this.report;
+      }
+      if (this.$store.getters.userId){
+        form.append("id_1", this.$store.getters.userId);
+      }
+      else {
+        console.error('Not logined.');
+        return;
+      }
+      if (this.$route.params.user_id){
+        form.append("id_2", this.$route.params.user_id);
+      }
+      else {
+        console.error('Cannot find who you are reporting.');
+        return;
+      }
+      form.append("report", this.how);
+      form.append("details", this.details);
+
+      axios.post(this.$store.getters.URL + "/report", form).then(
+        (response) => {
+          let jsonData = response.data;
+          if (jsonData['STATUS_CODE'] == 200){
+            this.$router.push('/bumps');
+          }
+        }
+      );
     },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+  form {
+    margin: 2rem auto;
+    max-width: 40rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    padding: 2rem;
+    background-color: #ffffff;
+  }
+
+  .form-control {
+    margin: 0.5rem 0;
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  h2 {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+  }
+
+  input,
+  select {
+    display: block;
+    width: 100%;
+    font: inherit;
+    margin-top: 0.5rem;
+  }
+
+  select {
+    width: auto;
+  }
+
+  input[type='checkbox'],
+  input[type='radio'] {
+    display: inline-block;
+    width: auto;
+    margin-right: 1rem;
+  }
+
+  input[type='checkbox'] + label,
+  input[type='radio'] + label {
+    font-weight: normal;
+  }
+
+  button {
+    font: inherit;
+    border: 1px solid #0076bb;
+    background-color: #0076bb;
+    color: white;
+    cursor: pointer;
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+  }
+
+  button:hover,
+  button:active {
+    border-color: #002350;
+    background-color: #002350;
+  }
+
+</style>

@@ -68,7 +68,8 @@ export default createRouter({
     },
     {
       name: "report",
-      path: "/report",
+      path: "/report:user_id",
+      props: true,
       component: Report,
     },
     {
