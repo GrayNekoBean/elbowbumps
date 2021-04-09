@@ -18,7 +18,6 @@
 
 <script>
 import axios from "axios";
-import intro from "../pages/Profile.vue";
 import IconButton from "./IconButton";
 
 export default {
@@ -74,8 +73,18 @@ export default {
             });
         },
         bump(){
-            this.showBumpCard = true;
-            console.log("bumped");
+            // this.showBumpCard = true;
+            // console.log("bumped");
+            const URL = `${this.$store.getters.URL}bump`;
+            console.log(`${this.$store.getters.userId} ${this.userID}`);
+            const form = new FormData();
+            form.append("userId", this.$store.getters.userId);
+            form.append("matchId", this.userID);
+            axios.post(URL, form).then((res) => {
+                if (res.data.STATUS_CODE == "200") {
+                console.log("success!");
+                }
+            });
         },
         confirmBump(){
             console.log("Send Bump message: " + this.bumpMsg);
