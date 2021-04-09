@@ -5,10 +5,11 @@
                 <Avatar size="xlarge" :image="require('../assets/test.jpg')" shape="circle" />
                 <h3>{{userName}}</h3>
                 <p>{{intro}}</p>
+                <p>{{email}}</p>
             <!-- <Tag v-for="tag in tags" :key="tag" class="p-mr-2" :severity="getTagType(tag)" :value="tag.value" rounded></Tag> -->
                 <div style="display: flex; justify-content: space-between;">
                     <IconButton v-if='twitter != ""' hint="Open Page Twitter" icon="pi-twitter" color="rgb(29, 161, 242)" @click="openTwitterPage()"></IconButton>
-                    <!-- <IconButton v-if='email != ""' hint="email" icon="pi-twitter" color="rgb(29, 161, 242)" @click="openEmail()">{{email}}</IconButton> -->
+                    <IconButton v-if='email != ""' :hint="email" icon="pi-envelope" color="rgb(f, f, f)" @click="openEmail()">{{email}}</IconButton>
                     <IconButton hint="Block User" icon="pi-times" color="red" @click="blockUser()"></IconButton>
                 </div>
             </div>

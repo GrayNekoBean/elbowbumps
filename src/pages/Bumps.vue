@@ -2,8 +2,8 @@
   <SplitedPage ratio="1">
     <template #left>
       <h2 style="text-align: center; margin-top:5rem; padding-top: 3rem;">
-        <span v-if="noMatches"> No bumps for you to see today... but at least there are plenty more fish in the sea. </span>
-        <span v-else>Here's some reciprocated bumps. Go ahead and add them on their social or pop them an email. </span>
+        <span v-if="noMatches"> No bumps for you to see today... but at least there are plenty more fish in the sea! </span>
+        <span v-else>Here's some reciprocated bumps. Go ahead and add them on their Twitter or pop them an email. </span>
       </h2>
       <div v-if="noMatches" style="text-align: center;">
         You have no matches! Click
@@ -52,7 +52,7 @@ import axios from "axios";
 import Flickity from "flickity";
 import "flickity/dist/flickity.min.css";
 
-import AfterBumperPanel from "../components/BumperPanel";
+import AfterBumperPanel from "../components/AfterBumperPanel";
 import SplitedPage from "../components/SplitedPage";
 import IconButton from "../components/IconButton";
 
