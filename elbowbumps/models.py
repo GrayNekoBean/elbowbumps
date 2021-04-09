@@ -115,3 +115,18 @@ class SquaredWeights(db.Model):
     def __init__(self, ud_id, weight):
         self.uid_ud_id = ud_id
         self.sum = weight
+
+class ReportUser(db.Model):
+    __tablename__ = 'report_user'
+
+    uid_ud_id = db.Column(db.Integer, primary_key=True)
+    ru_ud_id_1 = db.Column(db.Integer)
+    ru_ud_id_2 = db.Column(db.Integer)
+    ru_report = db.Column(db.String(200))
+    ru_details = db.Column(db.String(1000))
+
+    def __init__(self, ud_id, ud2_id, report, details):
+        self.ru_ud_id_1 = ud_id
+        self.ru_ud_id_2 = ud2_id
+        self.ru_report = report
+        self.ru_details = details

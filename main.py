@@ -11,7 +11,7 @@ import json
 
 app = create_app()
 cors = CORS(app)
-from elbowbumps.models import UserData, UserInterestData, UserMatch
+from elbowbumps.models import UserData, UserInterestData, UserMatch, ReportUser
 
 from elbowbumps.auth import auth
 
@@ -285,8 +285,22 @@ def get_recs_for():
             "Message": "Please ensure user exists in database"
         })
 
-# Test endpoint - an example of how to make a transaction
+# Adds User Report to database
+@app.route('/report', methods=['POST'])
+def report():
+    id_1 = request.form.get('id_1')
+    id_2 = request.form.get('id_2')
+    report = request.form.get('report')
+    details = request.form.get('details')
+    new_report = ReportUser(id_1, id_2, report, details)
+    db.session.add(new_report)
+    db.session.commit()
+    return jsonify({
+        'STATUS_CODE': '200',
+        "Message": 'Report added'
+    })
 
+# Test endpoint - an example of how to make a transaction
 
 @app.route('/test_user', methods=['POST'])
 def create_test_user():
