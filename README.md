@@ -93,32 +93,6 @@ instead of general "git push", but shouldn't going to use that anymore.
 
 Can be found in  `elbow-bump-frontend` branch on this repository, built with Vue.js. 
 
-## Installation
-
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
---- 
-
 # How to test our website locally with both the backend and frontend 
 
 ## Requirements before you carry on:
