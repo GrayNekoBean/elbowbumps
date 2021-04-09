@@ -15,41 +15,29 @@
               type="text"
               id="fName"
               v-model="enteredfName"
-              :class="checkName('fName', enteredfName) ? '' : 'p-invalid'"
               required
-            />
-            <small v-if="!checkName('fName', enteredfName)" id="username2-help" class="p-error">Username is not available.</small>
-            <br /><br />
+            /><br /><br />
             <label>Last Name:</label><br />
             <InputText
               type="text"
               id="sName"
               v-model="enteredsName"
-              :class="checkName('sName', enteredfName) ? '' : 'p-invalid'"
               required
-            />
-            <small v-if="!checkName('sName', enteredsName)" id="username2-help" class="p-error">Username is not available.</small>
-            <br /><br />
+            /><br /><br />
             <label>Phone Number:</label><br />
             <InputText
               type="tel"
               id="phoneNum"
               v-model="enteredphoneNum"
-              :class="checkPhone('phone', enteredphoneNum) ? '' : 'p-invalid'"
               required
-            />
-            <small v-if="!checkPhone('phone', enteredphoneNum)" id="username2-help" class="p-error">Phone Number is not available.</small>
-            <br /><br />
+            /><br /><br />
             <label>Email:</label><br />
             <InputText
               type="email"
               id="email"
               v-model="enteredemailAdd"
-              :class="checkEmail('email', enteredemailAdd) ? '' : 'p-invalid'"
               required
-            />
-            <small v-if="!checkEmail('email', enteredemailAdd)" id="username2-help" class="p-error">Email is not available. (Note that only UoM email is accepted here)</small>
-            <br /><br />
+            /><br /><br />
             <label>Password:</label><br />
             <Password id="pw" v-model="enteredpw" required /><br /><br /><br />
             <Checkbox v-model="agree_terms" :binary="true" required />
@@ -78,8 +66,6 @@
 import axios from "axios";
 import crypto from "crypto";
 
-import validation from "../tools/validation";
-
 export default {
   data() {
     return {
@@ -90,7 +76,6 @@ export default {
       enteredpw: "",
       agree_terms: false,
       errors: [],
-      inputValids: {}
     };
   },
   computed: {
@@ -98,69 +83,38 @@ export default {
   },
   methods: {
     registerUser() {
-      if (!(false in Object.values(this.inputValids))){
-        let url = `${this.$store.getters.URL}register`;
-        console.log(url)
+      let url = `${this.$store.getters.URL}register`;
+      console.log(url)
 
-        let hashedPw = crypto
-          .createHash("sha1")
-          .update(this.enteredpw)
-          .digest("hex");
-        const formData = new FormData()
-        formData.append("fName", this.enteredfName)
-        formData.append("sName", this.enteredsName)
-        formData.append("phoneNum", this.enteredphoneNum)
-        formData.append("emailAdd", this.enteredemailAdd)
-        formData.append("pw", hashedPw)
-        axios
-          .post(url, formData) 
-          .then((response) => {
-            if (response.data.STATUS_CODE != 200) {
-              this.errors.push(response.data.Message)
-            } else {
-              this.errors = []
-              this.$root.login(response.data.id);
-              console.log(response.data)
-              console.log(this.$store.getters.userId)
-              this.enteredfName = "";
-              this.enteredsName = "";
-              this.enteredphoneNum = "";
-              this.enteredemailAdd = "";
-              this.enteredpw = "";
-              this.$root.route_to('/questionnaire');
-            }
+      let hashedPw = crypto
+        .createHash("sha1")
+        .update(this.enteredpw)
+        .digest("hex");
+      const formData = new FormData()
+      formData.append("fName", this.enteredfName)
+      formData.append("sName", this.enteredsName)
+      formData.append("phoneNum", this.enteredphoneNum)
+      formData.append("emailAdd", this.enteredemailAdd)
+      formData.append("pw", hashedPw)
+      axios
+        .post(url, formData) 
+        .then((response) => {
+          if (response.data.STATUS_CODE != 200) {
+            this.errors.push(response.data.Message)
+          } else {
+            this.errors = []
+            this.$store.dispatch('logIn', { id: response.data.id, fName: this.enteredfName })
+            console.log(response.data)
+            console.log(this.$store.getters.userId)
+            this.enteredfName = "";
+            this.enteredsName = "";
+            this.enteredphoneNum = "";
+            this.enteredemailAdd = "";
+            this.enteredpw = "";
+            this.$router.push('/profile')
+          }
         });
-      }else{
-        this.$root.displayWarn("Submit Failed", "There are invalid input in your register information.")
-      }
     },
-    checkName(id, name) {
-      if (validation.checkName(name)){
-        this.inputValids[id] = true;
-        return true;
-      }else{
-        this.inputValids[id] = false;
-        return false;
-      }
-    },
-    checkPhone(id, phone) {
-      if (validation.checkPhoneNumber(phone)){
-        this.inputValids[id] = true;
-        return true;
-      }else{
-        this.inputValids[id] = false;
-        return false;
-      }
-    },
-    checkEmail(id, email) {
-      if (validation.checkEmail(email, true)){
-        this.inputValids[id] = true;
-        return true;
-      }else{
-        this.inputValids[id] = false;
-        return false;
-      }
-    }
   },
 };
 </script>

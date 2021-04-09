@@ -1,5 +1,5 @@
 <template>
-  <SplitedPage ratio="0.6">
+  <SplitedPage ratio="1">
     <template #left>
       <h2 style="text-align: center; margin-top:5rem; padding-top: 3rem;">
         Welcome to your matches!
@@ -43,27 +43,7 @@
       </div>
     </template>
     <template #right>
-      <div class="detailed-info">
-        <div class="detail-top">
-          <Avatar shape=circle :image="selectedUser.avatar" size="xlarge" />
-          <div>
-            <h3>
-              {{ selectedUser.name }}
-            </h3>
-            <p>
-              {{ selectedUser.intro }}
-            </p>
-          </div>
-        </div>
-        <br>
-        <Tag v-for="tag in selectedUser.tags" :key="tag" class="p-mr-2" :value="tag" />
-        <br>
-        <hr>
-        <div class="bio-area" ref="bio">
-          
-        </div>
-        
-      </div>
+      
     </template>
   </SplitedPage>
 </template>
@@ -72,7 +52,6 @@
 import axios from "axios";
 import Flickity from "flickity";
 import "flickity/dist/flickity.min.css";
-import Markdown from "markdown-it";
 
 import BumperPanel from "../components/BumperPanel";
 import SplitedPage from "../components/SplitedPage";
@@ -85,53 +64,25 @@ export default {
       matches: [],
       users: [],
       selectedUser: {
-        userId: 0,
         avatar: '',
         name: '',
-        intro: '',
         bio: '',
         twitter: '',
         tags: [],
         interestData: null
       },
-      // leftMoving: false,
-      // rightMoving: false,
-      // focused: 0,
-      // originalMarginLeft: 0,
-      flickity: null,
-      markdown: null
+      leftMoving: false,
+      rightMoving: false,
+      focused: 0,
+      originalMarginLeft: 0,
+      flickity: null
     };
   },
   mounted() {
-    this.markdown = new Markdown({
-      html:         true,        // Enable HTML tags in source
-      xhtmlOut:     true,        // Use '/' to close single tags (<br />).
-                                  // This is only for full CommonMark compatibility.
-      breaks:       false,        // Convert '\n' in paragraphs into <br>
-      langPrefix:   'language-',  // CSS language prefix for fenced blocks. Can be
-                                  // useful for external highlighters.
-      linkify:      true,        // Autoconvert URL-like text to links
-
-      // Enable some language-neutral replacement + quotes beautification
-      // For the full list of replacements, see https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/replacements.js
-      typographer:  true,
-
-      // Double + single quotes replacement pairs, when typographer enabled,
-      // and smartquotes on. Could be either a String or an Array.
-      //
-      // For example, you can use '«»„“' for Russian, '„“‚‘' for German,
-      // and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
-      quotes: '“”‘’',
-
-      // Highlighter function. Should return escaped HTML,
-      // or '' if the source string is not changed and should be escaped externally.
-      // If result starts with <pre... internal wrapper is skipped.
-      highlight: function (/*str, lang*/) { return ''; }
-    });
     if (!this.$store.getters.matchesRetrieved) {
       this.getMatches();
     }
-    //setInterval(this.onUpdate, 1000/40);
+    setInterval(this.onUpdate, 1000/40);
   },
   computed: {
     noMatches: function() {
@@ -215,83 +166,28 @@ export default {
       this.rightMoving = true;
       this.leftMoving = false;
     },
-    // onUpdate(){
-    //   if(this.leftMoving || this.rightMoving){
-    //       let dom = this.$refs['matches'];
-    //       let margin_left = Number(dom.style.marginLeft.substring(0,dom.style.marginLeft.length-2));
-    //       let direction = this.leftMoving ? -1 : 1;
-    //       dom.style.marginLeft = (margin_left + direction*8) + 'px';
-    //       if (Math.abs(margin_left - this.originalMarginLeft) >= 288){
-    //         dom.style.marginLeft = (this.originalMarginLeft + direction * 288) + 'px';
-    //         this.leftMoving = false;
-    //         this.rightMoving = false;
-    //         this.originalMarginLeft = margin_left;
-    //       }
-    //   }
-    // },
+    onUpdate(){
+      if(this.leftMoving || this.rightMoving){
+          let dom = this.$refs['matches'];
+          let margin_left = Number(dom.style.marginLeft.substring(0,dom.style.marginLeft.length-2));
+          let direction = this.leftMoving ? -1 : 1;
+          dom.style.marginLeft = (margin_left + direction*8) + 'px';
+          if (Math.abs(margin_left - this.originalMarginLeft) >= 288){
+            dom.style.marginLeft = (this.originalMarginLeft + direction * 288) + 'px';
+            this.leftMoving = false;
+            this.rightMoving = false;
+            this.originalMarginLeft = margin_left;
+          }
+      }
+    },
     onSelectBumper(index){
       console.log('flickity index: ' + index);
-      axios.get("user_data", {
-        params: {
-          user_id: this.users[index]
-        }
-      }).then(
-        (response) => {
-          if (response.data.STATUS_CODE == 200){
-            let dat = response.data.data;
-            this.selectedUser.userId = this.users[index];
-            this.selectedUser.avatar = dat.avatar;
-            this.selectedUser.name = dat.fName + ' ' + dat.sName;
-            this.selectedUser.intro = dat.intro;
-            this.selectedUser.bio = dat.bio;
-            this.selectedUser.twitter = dat.twitter;
-
-            this.$refs.bio.innerHTML = this.markdown.render(dat.bio);
-          }else{
-            this.$root.displayWarn('Request Failed: ' + response.data.STATUS_CODE, response.data.message);
-            return;
-          }
-        }
-      ).catch(
-        (err) => {
-          this.$root.displayError('Request Error', err);
-        }
-      );
-
-      axios.get("get_interest_data", {
-        params: {
-          user_id: this.users[index]
-        }
-      }).then(
-        (response) => {
-          if (response.data.STATUS_CODE == 200){
-            this.interestData = response.data.Data;
-          }else{
-            this.$root.displayWarn('Request Failed: ' + response.data.STATUS_CODE, response.data.message);
-            return;
-          }
-        }
-      ).catch(
-        (err) => {
-          this.$root.displayError('Request Error', err);
-        }
-      );
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-
-.detailed-info{
-  margin-top: 10%;
-  width: 100%;
-}
-
-.detail-top{
-  display: flex;
-  justify-content: left;
-}
 
 .matches-frame{
   margin-top: 10rem;

@@ -71,35 +71,33 @@ export default {
     return {
       question_bank: "../assets/questions.txt",
       questions: {},
-      answered: {},
       results: {},
       scores: []
     };
   },
   methods: {
     submitScore() {
-      if (this.calcResults()){
-        let form = new FormData();
-        // console.log(this.results)
-        
-        if (this.$store.getters.userId){
-          form.append("user_id", this.$store.getters.userId);
-        }else{
-          console.error('Not logined.');
-          return;
-        }
-        for (let res in this.results){
-          form.append(res, this.results[res]);
-        }
-        axios.post(this.$store.getters.URL + "/questionnaire", form).then(
-          (response) => {
-            let jsonData = response.data;
-            if (jsonData['STATUS_CODE'] == 200){
-              this.$router.push('/profile');
-            }
-          }
-        );
+      this.calcResults();
+      let form = new FormData();
+      // console.log(this.results)
+      
+      if (this.$store.getters.userId){
+        form.append("user_id", this.$store.getters.userId);
+      }else{
+        console.error('Not logined.');
+        return;
       }
+      for (let res in this.results){
+        form.append(res, this.results[res]);
+      }
+      axios.post(this.$store.getters.URL + "/questionnaire", form).then(
+        (response) => {
+          let jsonData = response.data;
+          if (jsonData['STATUS_CODE'] == 200){
+            this.$router.push('/profile');
+          }
+        }
+      );
     },
     updateScore(category, index, val) {
       this.scores[category][index] = val;
@@ -111,18 +109,9 @@ export default {
         }
         let sum = 0;
         let len = this.scores[cat].length;
-        let catScores = this.scores[cat];
-        for (let score in catScores) {
-          if (catScores[score] == 0){
-            this.$root.displayError("Submit Failed", "Please check if there are any unfinished question(s), you have to answer them all.");
-            return false;
-          }else{
-            sum += catScores[score];
-          }
-        }
+        this.scores[cat].forEach((score) => sum += score)
         this.results[cat] = sum/(5*len)
       }
-      return true;
     },
     LoadQuestion(){
       let text = "";
@@ -139,10 +128,9 @@ export default {
 
             if (!(cat in this.questions)){
               this.questions[cat] = [qsText];
-              this.scores[cat] = [0];
+              this.scores[cat] = [];
             }else{
               this.questions[cat].push(qsText);
-              this.scores[cat].push(0);
             }
 
             // //load all music related questions

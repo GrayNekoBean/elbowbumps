@@ -28,8 +28,7 @@ import Sidebar from 'primevue/sidebar';
 import Splitter from 'primevue/splitter';
 import SplitterPanel from 'primevue/splitterpanel';
 import TextArea from 'primevue/textarea';
-import Dialog from 'primevue/dialog';
-import Chart from 'primevue/chart';
+import Dialog from 'primevue/dialog'
 
 import "primevue/resources/themes/saga-blue/theme.css"; // theme
 import "primevue/resources/primevue.min.css"; // core css
@@ -67,6 +66,5 @@ app.component("Splitter", Splitter);
 app.component("SplitterPanel", SplitterPanel);
 app.component("TextArea", TextArea);
 app.component("Dialog", Dialog);
-app.component("Chart", Chart);
 
 app.mount("#app");

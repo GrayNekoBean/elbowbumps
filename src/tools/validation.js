@@ -9,16 +9,20 @@ var Validation = {
             pat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         }
         let re = new RegExp(pat);
-        return re.test(email);
-    },
-    checkName: (userName) => {
-        if (userName.length <= 32 && userName.length > 0){
-            let re = new RegExp(/^[0-9]+.*$/);
-            if (!re.test(userName)){
+        let res = re.exec(email);
+        if (res != null){
+            if (res.length > 0){
                 return true;
             }
         }
         return false;
+    },
+    checkName: (userName) => {
+        if (userName.length <= 32){
+            return true;
+        }else{
+            return false;
+        }
     },
     checkPhoneNumber: (number) => {
         return new RegExp('^[0-9]{8,11}$').test(number);
