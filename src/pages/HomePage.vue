@@ -14,7 +14,7 @@
     <div id="bottom-left">
       <p></p>
       <p >Is lockdown loneliness bogging you down? Do you want to find other people who are passionate in the same things you are? Elbow Bumps provides a new, innovative way for you to do just that! <br> <br>Simply register, fill in a questionnaire and give us your Twitter, and we'll find you people who love the very same things you love.</p>
-      <div  v-if="!logined() id="button2"><Button id="button" @click="$router.push('Register')">GET STARTED</Button></div>
+      <div id="button2"><Button id="button" @click="$router.push('Register')">GET STARTED</Button></div>
     </div>
     <!-- <div id="bottom-right">
       <img src="../assets/pic.png" id="pic"/>
@@ -24,15 +24,6 @@
 
 <script>
 export default {};
-methods: {
- logined: function(){
-      if (this.$store.getters.userId){
-        return true;
-      }else{
-        return false;
-      }
-    }
-  };
 </script>
 
 <style lang="scss" scoped>
