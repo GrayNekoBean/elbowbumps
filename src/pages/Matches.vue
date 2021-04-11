@@ -151,6 +151,7 @@ export default {
       axios.post(URL, form).then((res) => {
         if (res.data.STATUS_CODE == "200") {
           console.log("success!");
+          this.getMatches();
         }
       });
     },

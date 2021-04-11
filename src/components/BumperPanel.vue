@@ -18,6 +18,7 @@
 <script>
 import axios from "axios";
 import IconButton from "./IconButton";
+import Matches from "../pages/Matches"
 
 export default {
     data(){
@@ -82,6 +83,7 @@ export default {
             axios.post(URL, form).then((res) => {
                 if (res.data.STATUS_CODE == "200") {
                 console.log("success!");
+                this.$el.parentNode.removeChild(this.$el);
                 }
             });
         },
