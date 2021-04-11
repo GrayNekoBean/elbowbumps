@@ -117,8 +117,8 @@ export default {
       const formData = new FormData();
       formData.append("email", this.email);
       formData.append("pw", hashedPw);
-      axios
-        .post(url, formData)
+      axios.post(url, formData)
+
         .then((response) => {
           let responseData = response.data;
           console.log(responseData);
@@ -135,7 +135,7 @@ export default {
           }
         })
         .catch((e) => {
-          this.showNotification("Request Error", "Unexpected Error: " + e.message);
+          this.showNotification("Request Error", "Unexpected Error: " + "Invalid Email or Password");
         });
     },
     removeErrors() {
