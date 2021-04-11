@@ -83,6 +83,7 @@ def bump():
         db.session.commit()
         return jsonify({"STATUS_CODE": 200})
 
+
 @app.route('/get_bumps', methods=['GET'])
 @cross_origin()
 def get_bumps():
@@ -94,6 +95,7 @@ def get_bumps():
             match_ids.append(m.um_ud_id_2)
         else:
             match_ids.append(m.um_ud_id_1)
+    print(match_ids)
     return jsonify({
         'matches': match_ids
     })
@@ -256,9 +258,21 @@ def find_matches():
             newMatch = UserMatch(param, res.uid_ud_id)
             db.session.add(newMatch)
     db.session.commit()
+
+    matches_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) | (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_1_matched == False).all()
+    matches_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) | (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_2_matched == False).all()
+    match_ids = []
+    for m in matches_1:
+        if (m.um_ud_id_1 == int(param)):
+            match_ids.append({'uid_ud_id': m.um_ud_id_2})
+
+    for m in matches_2:
+        if (m.um_ud_id_2 == int(param)):
+            match_ids.append({'uid_ud_id': m.um_ud_id_1})
+    print(match_ids)
     return jsonify({
         'STATUS_CODE': '200',
-        'result': response
+        'result': match_ids
     })
 
 # Gets recommendations for a given user
@@ -299,6 +313,7 @@ def report():
         'STATUS_CODE': '200',
         "Message": 'Report added'
     })
+
 
 # Test endpoint - an example of how to make a transaction
 
