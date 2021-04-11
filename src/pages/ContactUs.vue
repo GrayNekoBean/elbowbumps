@@ -4,11 +4,9 @@
       <p></p>
       <p style =" color: #444444"><i>twitter:</i> <a href="https://twitter.com/elbowbumps">@elbowbumps</a></p>
       <p style =" color: #444444">Thanks for viewing our web application!</p>
-      <form action="mailto:elbowbumps@elbowbumps.com? subject=Contacting W1" method="post" enctype="text/plain">
+      <form action="mailto:elbowbumps@outlook.com?subject=Contacting W1" target = "_blank" method="post" enctype="multipart/form-data">
         <label>Name</label> <br>
         <input type="text" name="name" placeholder="Your name"> <br>
-        <label>Email Address</label> <br>
-        <input type="text" name="email" placeholder="Your email address"> <br>
         <label>What would you like to tell us?</label> <br>
         <textarea name="feedback" placeholder="Write something..." style="height:100px"></textarea> <br>
         <input type="submit" value="Submit">
