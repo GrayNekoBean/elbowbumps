@@ -97,7 +97,7 @@ export default {
       formData.append("emailAdd", this.enteredemailAdd)
       formData.append("pw", hashedPw)
       axios
-        .post(url, formData) 
+        .post(url, formData)
         .then((response) => {
           if (response.data.STATUS_CODE != 200) {
             this.errors.push(response.data.Message)
@@ -142,8 +142,8 @@ p{
     transform: translateY(-50%);
     padding-left: 1rem;
     margin-left: 5rem;
-    width: 40rem; 
-    height: 45rem; 
+    width: 40rem;
+    height: 45rem;
     z-index: 2;
     font-size: 1rem;
     font-family: 'Lato', sans-serif;
