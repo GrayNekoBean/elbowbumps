@@ -83,6 +83,53 @@ def bump():
         db.session.commit()
         return jsonify({"STATUS_CODE": 200})
 
+@app.route('/bumped_by', methods=['GET'])
+@cross_origin()
+def bumped_by():
+    user_id = request.args.get('userID')
+    usr = UserData.query.filter_by(ud_id=user_id).first()
+    if not usr:
+        return jsonify({
+            'STATUS': 'USER_NOT_EXISTS',
+            'STATUS_CODE': 500,
+            'DATA': {}
+        })
+    matches1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == user_id) & (UserMatch.um_1_matched == False) & (UserMatch.um_2_matched == True))
+    matches2 = UserMatch.query.filter((UserMatch.um_ud_id_2 == user_id) & (UserMatch.um_1_matched == True) & (UserMatch.um_2_matched == False))
+    match_ids = []
+    for m in matches1:
+        match_ids.append(m.um_ud_id_2)
+    for m in matches2:
+        match_ids.append(m.um_ud_id_1)
+    return jsonify({
+        'STATUS': 'OK',
+        'STATUS_CODE': 200,
+        'DATA': {'users': match_ids}
+    })
+
+@app.route('/bumped_with', methods=['GET'])
+@cross_origin()
+def bumped_with():
+    user_id = request.args.get('userID')
+    usr = UserData.query.filter_by(ud_id=user_id).first()
+    if not usr:
+        return jsonify({
+            'STATUS': 'USER_NOT_EXISTS',
+            'STATUS_CODE': 500,
+            'DATA': {}
+        })
+    matches1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == user_id) & (UserMatch.um_1_matched == True) & (UserMatch.um_2_matched == False))
+    matches2 = UserMatch.query.filter((UserMatch.um_ud_id_2 == user_id) & (UserMatch.um_1_matched == False) & (UserMatch.um_2_matched == True))
+    match_ids = []
+    for m in matches1:
+        match_ids.append(m.um_ud_id_2)
+    for m in matches2:
+        match_ids.append(m.um_ud_id_1)
+    return jsonify({
+        'STATUS': 'OK',
+        'STATUS_CODE': 200,
+        'DATA': {'users': match_ids}
+    })
 
 @app.route('/get_bumps', methods=['GET'])
 @cross_origin()
