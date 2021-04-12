@@ -90,6 +90,12 @@ def register():
                 "STATUS_CODE": '500',
                 "Message": f"Fill in all fields"
             })
+        elif (len(fName) > 50) or (len(sName) > 50) or (len(phoneNum) > 13) or (len(pw) > 100) or (len(emailAdd) > 50):
+            return jsonify({
+                'STATUS': 'INVALID_DATA',
+                "STATUS_CODE": '500',
+                "Message": f"There is a limited number of characters per entry box"
+            })
         else:
             # User data columns: forename, surname, birthyear, email, phone, password, gender, twitter
             newUser = UserData(fName, sName, '2000', emailAdd, phoneNum, pw, 'M', '')
@@ -227,6 +233,12 @@ def getUserData():
                 'STATUS': 'INVALID_DATA',
                 "STATUS_CODE": '500',
                 "Message": f"Can't leave fields blank"
+            })
+        elif (len(fName) > 50) or (len(sName) > 50) or (len(phoneNum) > 13) or (len(emailAdd) > 50) or (len(bio) > 2000) or (len(intro) > 160):
+            return jsonify({
+                'STATUS': 'INVALID_DATA',
+                "STATUS_CODE": '500',
+                "Message": f"There is a limited number of characters per entry box"
             })
         else:
             user.ud_email = emailAdd
