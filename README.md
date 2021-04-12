@@ -111,7 +111,7 @@ Make sure you do it in this order
 5. Using the local host front-end link, navigate through the website. Try registering a new user and confirm there is an entry in your local user_data table in dbeaver.
 
 ## Common issues 
-- Something about the database/backend SQL being upset -> you probably need to delete the tables in dbeaver and run `main.py` again because one of us restructured the database
+- Something about the database/backend SQL being upset -> you probably need to delete your *local* tables in dbeaver and run `main.py` again because one of us restructured the database
 - `npm run serve` saying it fails to compile -> run `npm install` in that directory and then run `npm run serve` again
 
 ## NOTE 
