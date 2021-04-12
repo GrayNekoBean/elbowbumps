@@ -75,18 +75,21 @@ class UserInterestData(db.Model):
 
         self.uid_squared_weight = float(self.uid_interest_weight) * float(self.uid_interest_weight)
 
+        db.session.commit()
+
         sw = SquaredWeights.query.filter_by(uid_ud_id=self.uid_ud_id).first()
 
         if sw:
             with db.engine.connect() as con:
-                new_weight = con.execute(f'select sum(uid_interest_weight * uid_interest_weight) from user_interest_data uid where uid_ud_id = {self.uid_ud_id};')
-                sw.sum = new_weight.first().sum
+                new_weight = con.execute(f'select sum(uid_interest_weight * uid_interest_weight) from user_interest_data uid where uid_ud_id = {self.uid_ud_id};').first()
+                print(new_weight['sum'])
+                sw.sum = new_weight['sum']
                 db.session.commit()
 
         else:
             with db.engine.connect() as con:
-                weight = con.execute(f'select sum(uid_interest_weight * uid_interest_weight) from user_interest_data uid where uid_ud_id = {self.uid_ud_id};').first().sum
-                sw = SquaredWeights(self.uid_ud_id, weight)
+                weight = con.execute(f'select sum(uid_squared_weight) from user_interest_data uid where uid_ud_id = {self.uid_ud_id};').first()
+                sw = SquaredWeights(self.uid_ud_id, weight['sum'])
                 db.session.add(sw)
                 db.session.commit()
 
@@ -110,7 +113,7 @@ class SquaredWeights(db.Model):
     __tablename__ = 'squared_weights'
 
     uid_ud_id = db.Column(db.Integer, primary_key=True)
-    sum = db.Column(db.Integer)
+    sum = db.Column(db.Float)
 
     def __init__(self, ud_id, weight):
         self.uid_ud_id = ud_id
