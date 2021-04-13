@@ -4,6 +4,7 @@
             <div class="bumper-panel">
                 <Avatar size="xlarge" :image="require('../assets/test.jpg')" shape="circle" />
                 <h3>{{userName}}</h3>
+                <Tag style="font-size:14px; background:#6aab4f; color: white;">{{match_percentage}}% Match</Tag>
                 <p>{{intro}}</p>
                 <!-- <p style="color:#bb2e2e; font-size:small;">Interests: {{interests}}</p> -->
                 <div class="tags-area">
@@ -36,6 +37,7 @@ export default {
             lastName: "",
             pending: false,
             avatar: require("../assets/test.jpg"),
+            match_percentage:0,
         };
     },
     components: {IconButton},
@@ -55,6 +57,30 @@ export default {
                 }
             });
         }, 
+        FetchMatchScore(){
+            let args = {
+                user_id: this.userID,
+                limit: 8,
+            };
+            axios.get(this.$store.getters.URL + "find_matches", {params: args}).then(
+            (response) => {
+                if (response.data.STATUS_CODE == 200){
+                    let match_data = response.data.result;
+                    var i;
+                    for(i=0; i < match_data.length; i++){
+                        if((match_data[i]['distance'] != null)&&(match_data[i]['uid_ud_id'] == this.$store.getters.userId)){
+                            this.match_percentage = (((8 - match_data[i]['distance'])/8)*100).toFixed(1);
+                        }
+                    }
+
+
+                }
+            })
+            .catch((err) => {
+            console.log(err);
+            });
+        },
+       
        FetchUserInterests(){
             let args = {
                 user_id: this.userID
@@ -176,6 +202,7 @@ export default {
     mounted: function(){
         this.FetchUserInfo();
         this.FetchUserInterests();
+        this.FetchMatchScore();
         this.PendingUsers();
         this.fullBump();
     }
