@@ -7,7 +7,8 @@
                 <p>{{intro}}</p>
                 <p style="color:#bb2e2e; font-size:small;">Interests: {{interests}}</p>
                 <!-- <Tag v-for="d in dat" :key="d" class="p-mr-2" :severity="getTagType(d)" :value="d.value" rounded></Tag> -->
-                <Button @click="bump">Bump</Button>
+                <Button v-if="!pending" @click="bump">Bump</Button>
+                <Button style="background:#bb2e2e;" v-else @click="unbump">Unbump</Button>
                 <div style="display: flex; justify-content: space-between;">
                     <IconButton hint="Block User" icon="pi-times" color="red" @click="reportUser()"></IconButton>
                 </div>
@@ -31,12 +32,27 @@ export default {
             intro: "",
             firstName: "",
             lastName: "",
+            pending: false,
             avatar: require("../assets/test.jpg"),
         };
     },
     components: {IconButton},
     props: [ "userID" ],
     methods: {
+      PendingUsers(){
+            const user_id = this.$store.getters.userId;
+            let args = {
+                userID_1 : user_id,
+                userID_2: this.userID
+            };
+            axios.get(this.$store.getters.URL + "pending_bumps", {params: args}).then(
+            (response) => {
+                if (response.data.STATUS_CODE == 200){
+                    this.pending = response.data.result;
+                    // this.$root.displayLog("Fetching interest data successed", dat);
+                }
+            });
+        }, 
        FetchUserInterests(){
             let args = {
                 user_id: this.userID
@@ -99,7 +115,40 @@ export default {
             axios.post(URL, form).then((res) => {
                 if (res.data.STATUS_CODE == "200") {
                 console.log("success!");
-                this.$el.parentNode.removeChild(this.$el);
+                // this.$el.parentNode.removeChild(this.$el);
+                this.pending = true;
+                }
+            });
+        },
+        unbump(){
+            // this.showBumpCard = true;
+            // console.log("bumped");
+            const URL = `${this.$store.getters.URL}unbump`;
+            console.log(`${this.$store.getters.userId} ${this.userID}`);
+            const form = new FormData();
+            form.append("userId", this.$store.getters.userId);
+            form.append("matchId", this.userID);
+            axios.post(URL, form).then((res) => {
+                if (res.data.STATUS_CODE == "200") {
+                console.log("success!");
+                // this.$el.parentNode.removeChild(this.$el);
+                this.pending = false;
+                }
+            });
+        },
+        fullBump(){
+            const user_id = this.$store.getters.userId;
+            let args = {
+                userID_1 : user_id,
+                userID_2: this.userID
+            };
+            axios.get(this.$store.getters.URL + "full_bumps", {params: args}).then(
+            (response) => {
+                if (response.data.STATUS_CODE == 200){
+                    if (response.data.result) {
+                    this.$root.displayLog(this.userName + " bumped you back!");
+                    this.$el.parentNode.removeChild(this.$el);
+                    }
                 }
             });
         },
@@ -117,6 +166,8 @@ export default {
     mounted: function(){
         this.FetchUserInfo();
         this.FetchUserInterests();
+        this.PendingUsers();
+        this.fullBump();
     }
 }
 </script>

@@ -6,9 +6,6 @@
             <TabPanel header="New Matches" style="margin-top: 0rem;">
                     <Matches> </Matches>
             </TabPanel>
-            <TabPanel header="Pending Bumps">
-                <PendingBumps></PendingBumps>
-            </TabPanel>
             <TabPanel header="Accepted Bumps">
                 <Bumps></Bumps>
             </TabPanel>
@@ -26,11 +23,10 @@ import MarkdownIt from "markdown-it";
 
 
 import Matches from "./Matches";
-import PendingBumps from "./PendingBumps";
 import Bumps from "./Bumps";
 
 export default {
-    components: { Matches, PendingBumps, Bumps },
+    components: { Matches, Bumps },
    
        
 }

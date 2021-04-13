@@ -15,7 +15,8 @@ import Matches from "./pages/Matches.vue";
 import Bumps from "./pages/Bumps.vue";
 import AccessDenied from "./pages/AccessDenied";
 import HomePageAfter from "./pages/HomePageAfter.vue";
-import PendingBumps from "./pages/PendingBumps.vue"
+import BumpingPage from "./pages/BumpingPage.vue";
+
 
 export default createRouter({
   history: createWebHistory(),
@@ -99,9 +100,9 @@ export default createRouter({
       component: AccessDenied
     },
     {
-      name: "PendingBumps",
-      path: "/pending_bumps",
-      component: PendingBumps
+      name: "BumpingPage",
+      path: "/bumping_page",
+      component: BumpingPage
     }
   ],
   linkActiveClass: "active",

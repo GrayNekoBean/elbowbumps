@@ -161,14 +161,14 @@ export default {
           to: "/matches"
         },
         {
-          label: "My Pending Bumps",
-          icon: "pi pi-cog",
-          to: "/pending_bumps"
-        },
-        {
-          label: "My Accepted Bumps",
+          label: "My Bumps",
           icon: "pi pi-user-plus",
           to: "/bumps"
+        },
+        {
+          label: "Bumping Page",
+          icon: "pi pi-user-plus",
+          to: "/bumping_page"
         },
       ]
     }
