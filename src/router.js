@@ -14,7 +14,8 @@ import Profile from "./pages/Profile.vue";
 import Matches from "./pages/Matches.vue";
 import Bumps from "./pages/Bumps.vue";
 import AccessDenied from "./pages/AccessDenied";
-import HomePageAfter from "./pages/HomePageAfter.vue"
+import HomePageAfter from "./pages/HomePageAfter.vue";
+import PendingBumps from "./pages/PendingBumps.vue"
 
 export default createRouter({
   history: createWebHistory(),
@@ -98,9 +99,9 @@ export default createRouter({
       component: AccessDenied
     },
     {
-      name: "HPA",
-      path: "/hpa",
-      component: HomePageAfter
+      name: "PendingBumps",
+      path: "/pending_bumps",
+      component: PendingBumps
     }
   ],
   linkActiveClass: "active",
