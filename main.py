@@ -156,12 +156,31 @@ def get_interest_data():
     response = []
     for res in results:
         response.append(dict(res))
-        
+    print(user_id)
     print(response)
     return jsonify({
         "STATUS_CODE": 200,
         "Message": f"userID {user_id} interest data.",
         "Data": json.dumps(response)
+    })
+
+@app.route('/get_interests', methods=['GET'])
+@cross_origin()
+def get_interests():
+    user_id = request.args.get('user_id')
+    query = f'SELECT uid_interest_type, uid_interest_weight FROM user_interest_data WHERE user_interest_data.uid_ud_id = \'{user_id}\';'
+    results = db.engine.execute(query)
+    response = []
+    for res in results:
+        if res.uid_interest_weight > 1:
+            response.append(res.uid_interest_type)
+        # response.append(dict(res))
+    print(user_id)
+    print(response)
+    return jsonify({
+        "STATUS_CODE": 200,
+        "Message": f"userID {user_id} interest data.",
+        "Data": response
     })
 
 @app.route('/questionnaire', methods=['POST'])
