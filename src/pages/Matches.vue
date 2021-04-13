@@ -5,11 +5,11 @@
         Welcome to your matches!
       </h2>
       <div v-if="noMatches" style="text-align: center;">
-        You have no matches! Click
+        You have no new matches :( Click
         <router-link to="/questionnaire">here</router-link> to do the
         questionnaire, or
-        <router-link to="/socialmediainfo">here</router-link> to update your
-        Twitter info!
+        <router-link to="/profile">here</router-link> to update your
+        Twitter info.
       </div>
       <div style="margin-left:10%; margin-top: 5%; width: 75%; overflow: hidden;" v-else>
           <!-- <h2>{{ user.forename }} {{ user.surname }}</h2>

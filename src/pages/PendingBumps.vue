@@ -2,18 +2,17 @@
   <SplitedPage ratio="1">
     <template #left>
       <h2 style="text-align: center; margin-top:5rem; padding-top: 3rem;">
-        <span v-if="noMatches"> No bumps for you to see today... but at least there are plenty more fish in the sea. </span>
-        <span v-else>You both bumped each other!</span>
+        <span v-if="noMatches"> No pending bumps. </span>
+        <span v-else> Here's the people you've bumped. </span>
       </h2>
-      <div v-if="!noMatches" style="text-align: center;"> Go ahead and add them on their Twitter if provided or pop them an email.</div>
-      <div v-if="noMatches" style="text-align: center;">
-        No-one has bumped you back (yet). Click
+      <div  style="text-align: center;">
+        Click
         <router-link to="/questionnaire">here</router-link> to do the
         questionnaire, or
         <router-link to="/profile">here</router-link> to update your
         Twitter info!
       </div>
-      <div style="margin-left:10%; margin-top: 5%; width: 75%; overflow: hidden;" v-else>
+      <div style="margin-left:10%; margin-top: 5%; width: 75%; overflow: hidden;" v-if="!noMatches">
           <div class="matches-list" ref="matches">
             <AfterBumperPanel
               class="bump-card"
@@ -75,7 +74,7 @@ export default {
   },
   methods: {
     getMatches() {
-      const URL = `${this.$store.getters.URL}get_bumps`;
+      const URL = `${this.$store.getters.URL}pending_bumps`;
       const userId = this.$store.getters.userId;
       axios
         .get(URL, {
@@ -84,7 +83,7 @@ export default {
           },
         })
         .then((res) => {
-          this.matches = res.data.matches;
+          this.matches = res.data.result;
           this.getMatchInfo();
         })
         .catch((err) => {
@@ -93,13 +92,9 @@ export default {
     },
     getMatchInfo() {
       const URL = `${this.$store.getters.URL}match_info`;
-      const jsonmatches = [];
-      for (const match in this.matches) {
-        jsonmatches.push({ uid_ud_id: this.matches[match] });
-      }
       
       const form = new FormData();
-      form.append("matches", JSON.stringify(jsonmatches));
+      form.append("matches", JSON.stringify(this.matches));
       axios
         .post(URL, form)
         .then((res) => {

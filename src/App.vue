@@ -156,20 +156,20 @@ export default {
           to: "interest_data"
         },
         {
-          label: "My Matching",
+          label: "My New Matches",
           icon: "pi pi-users",
           to: "/matches"
         },
         {
-          label: "My Bumping",
+          label: "My Pending Bumps",
+          icon: "pi pi-cog",
+          to: "/pending_bumps"
+        },
+        {
+          label: "My Accepted Bumps",
           icon: "pi pi-user-plus",
           to: "/bumps"
         },
-        {
-          label: "Settings",
-          icon: "pi pi-cog",
-          to: "settings"
-        }
       ]
     }
   },
