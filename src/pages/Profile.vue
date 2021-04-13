@@ -436,9 +436,6 @@ $background-color: #fffaba;
   border-radius: 50%;
 }
 
-.profile-page {
-}
-
 h2 {
   color: black;
 }
