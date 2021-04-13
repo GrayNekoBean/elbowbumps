@@ -15,7 +15,7 @@
       </div>
       <div style="margin-left:10%; margin-top: 5%; width: 75%; overflow: hidden;" v-else>
           <div class="matches-list" ref="matches">
-            <AfterBumperPanel
+            <AfterAfterBumperPanel
               class="bump-card"
               v-for="user in users"
               :key="user.id"
@@ -38,12 +38,12 @@ import axios from "axios";
 import Flickity from "flickity";
 import "flickity/dist/flickity.min.css";
 
-import AfterBumperPanel from "../components/AfterBumperPanel";
+import AfterAfterBumperPanel from "../components/AfterAfterBumperPanel";
 import SplitedPage from "../components/SplitedPage";
 import IconButton from "../components/IconButton";
 
 export default {
-  components: { AfterBumperPanel, SplitedPage, IconButton },
+  components: { AfterAfterBumperPanel, SplitedPage, IconButton },
   data() {
     return {
       matches: [],

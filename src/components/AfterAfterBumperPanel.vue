@@ -3,13 +3,16 @@
         <template #content>
             <div class="bumper-panel">
                 <Avatar size="xlarge" :image="require('../assets/test.jpg')" shape="circle" />
+                
                 <h3>{{userName}}</h3>
                 <p>{{intro}}</p>
                 <p style="color:#bb2e2e; font-size:small;">Interests: {{interests}}</p>
-                <!-- <Tag v-for="d in dat" :key="d" class="p-mr-2" :severity="getTagType(d)" :value="d.value" rounded></Tag> -->
-                <Button @click="bump">Bump</Button>
+                
+            <!-- <Tag v-for="tag in tags" :key="tag" class="p-mr-2" :severity="getTagType(tag)" :value="tag.value" rounded></Tag> -->
                 <div style="display: flex; justify-content: space-between;">
-                    <IconButton hint="Block User" icon="pi-times" color="red" @click="reportUser()"></IconButton>
+                    <IconButton v-if='twitter != ""' hint="Open Page Twitter" icon="pi-twitter" color="rgb(29, 161, 242)" @click="openTwitterPage()"></IconButton>
+                    <IconButton v-if='email != ""' :hint="email" icon="pi-envelope" color="rgb(f, f, f)" @click="openEmail()">{{email}}</IconButton>
+                    <IconButton hint="Report User" icon="pi-times" color="red" @click="reportUser()"></IconButton>
                 </div>
             </div>
         </template>
@@ -25,19 +28,20 @@ export default {
         return {
             userName: "",
             bio: "",
-            interests: "",
             twitter: "",
             tags: [],
             intro: "",
             firstName: "",
             lastName: "",
+            email: "",
+            interests: "",
             avatar: require("../assets/test.jpg"),
         };
     },
     components: {IconButton},
     props: [ "userID" ],
     methods: {
-       FetchUserInterests(){
+        FetchUserInterests(){
             let args = {
                 user_id: this.userID
             };
@@ -51,7 +55,7 @@ export default {
                     });
                 }
             });
-        },       
+        },
         FetchUserInfo(){
             let address = this.$store.getters.URL + "user_data";
             let args = {
@@ -69,6 +73,7 @@ export default {
                         this.bio = data['bio'];
                         this.intro = data['intro'];
                         this.userName = this.firstName + " " + this.lastName;
+                        this.email = data['email']
 
                         if (this.avatar != ""){
                             this.avatar = "../assets/test.jpg";
@@ -88,24 +93,6 @@ export default {
                 console.error(e);
             });
         },
-        bump(){
-            // this.showBumpCard = true;
-            // console.log("bumped");
-            const URL = `${this.$store.getters.URL}bump`;
-            console.log(`${this.$store.getters.userId} ${this.userID}`);
-            const form = new FormData();
-            form.append("userId", this.$store.getters.userId);
-            form.append("matchId", this.userID);
-            axios.post(URL, form).then((res) => {
-                if (res.data.STATUS_CODE == "200") {
-                console.log("success!");
-                this.$el.parentNode.removeChild(this.$el);
-                }
-            });
-        },
-        confirmBump(){
-            console.log("Send Bump message: " + this.bumpMsg);
-        },
         reportUser(){
             console.log(this.userID)
             this.$router.push({name:'report', params: {user_id: this.userID}});
@@ -113,6 +100,9 @@ export default {
         openTwitterPage(){
             window.open("https://twitter.com/" + this.twitter, "_blank");
         },
+        openEmail(){
+            window.open("mailto:" + this.email, "_blank");
+        }
     },
     mounted: function(){
         this.FetchUserInfo();
@@ -122,6 +112,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 
 .bumper-panel{
     display: flex;
