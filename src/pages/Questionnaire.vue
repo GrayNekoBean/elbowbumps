@@ -10,7 +10,7 @@
           <h3 class="agree">Pick a category of questions you would like to answer:</h3>
         </div>
       
-        <h3 style="font-size:15px; text-align:center;">Strongly Agree 1 - 2 - 3 - 4 - 5 Strongly Disagree</h3>
+        <h3 style="font-size:15px; text-align:center;">Strongly Disagree 1 - 2 - 3 - 4 - 5 Strongly Agree</h3>
       
       <Panel style="margin-top: 0rem;">
         <div style="display: flex; flex-direction: column;">
