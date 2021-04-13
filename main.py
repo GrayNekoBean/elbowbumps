@@ -288,6 +288,43 @@ def get_tweets(user_id):
             "Message": f"Updated scores for userID {user_id}"
         })
 
+@app.route('/pending_bumps', methods=['GET'])
+def pending_bumps():
+    param = request.args.get('user_id')
+    matches_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) | (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_1_matched == True).filter(UserMatch.um_2_matched == False).all()
+    matches_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) | (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_2_matched == True).filter(UserMatch.um_1_matched == False).all()
+    match_ids = []
+
+    for m in matches_1:
+        if (m.um_ud_id_1 == int(param)):
+            match_ids.append({'uid_ud_id': m.um_ud_id_2})
+
+    for m in matches_2:
+        if (m.um_ud_id_2 == int(param)):
+            match_ids.append({'uid_ud_id': m.um_ud_id_1})
+
+    print(match_ids)
+    return jsonify({
+        'STATUS_CODE': '200',
+        'result': match_ids
+    })
+
+
+def get_new_matches(param):
+    
+    matches_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) | (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_1_matched == False).all()
+    matches_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) | (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_2_matched == False).all()
+    match_ids = []
+    for m in matches_1:
+        if (m.um_ud_id_1 == int(param)):
+            match_ids.append({'uid_ud_id': m.um_ud_id_2})
+
+    for m in matches_2:
+        if (m.um_ud_id_2 == int(param)):
+            match_ids.append({'uid_ud_id': m.um_ud_id_1})
+    
+    return match_ids
+
 # finds nearest neighbours for a given user
 @app.route('/find_matches', methods=['GET'])
 @cross_origin()
@@ -306,16 +343,8 @@ def find_matches():
             db.session.add(newMatch)
     db.session.commit()
 
-    matches_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) | (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_1_matched == False).all()
-    matches_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) | (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_2_matched == False).all()
-    match_ids = []
-    for m in matches_1:
-        if (m.um_ud_id_1 == int(param)):
-            match_ids.append({'uid_ud_id': m.um_ud_id_2})
+    match_ids = get_new_matches(param)
 
-    for m in matches_2:
-        if (m.um_ud_id_2 == int(param)):
-            match_ids.append({'uid_ud_id': m.um_ud_id_1})
     print(match_ids)
     return jsonify({
         'STATUS_CODE': '200',
