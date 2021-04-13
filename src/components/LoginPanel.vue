@@ -129,9 +129,11 @@ export default {
             this.$root.login(response.data.id, this.rememberMe);
             this.$root.route_to("/matches");
           } else if (responseStatus == "500") {
-            this.errors = responseData.Message;
+            this.error = responseData.Message;
             this.email = "";
             this.pw = "";
+
+            this.showNotification("Login Failed", this.error);
           }
         })
         .catch((e) => {

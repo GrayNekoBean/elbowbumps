@@ -16,6 +16,8 @@ import Bumps from "./pages/Bumps.vue";
 import AccessDenied from "./pages/AccessDenied";
 import HomePageAfter from "./pages/HomePageAfter.vue";
 import BumpingPage from "./pages/BumpingPage.vue";
+import InterestData from "./pages/InterestData.vue";
+
 
 
 export default createRouter({
@@ -103,6 +105,11 @@ export default createRouter({
       name: "BumpingPage",
       path: "/bumping_page",
       component: BumpingPage
+    },
+    {
+      name: "interest_data",
+      path: "/interest-data",
+      component: InterestData
     }
   ],
   linkActiveClass: "active",

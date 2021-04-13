@@ -5,8 +5,10 @@
                 <Avatar size="xlarge" :image="require('../assets/test.jpg')" shape="circle" />
                 <h3>{{userName}}</h3>
                 <p>{{intro}}</p>
-                <p style="color:#bb2e2e; font-size:small;">Interests: {{interests}}</p>
-                <!-- <Tag v-for="d in dat" :key="d" class="p-mr-2" :severity="getTagType(d)" :value="d.value" rounded></Tag> -->
+                <!-- <p style="color:#bb2e2e; font-size:small;">Interests: {{interests}}</p> -->
+                <div class="tags-area">
+                    <Tag v-for="ints in interests" :key="ints" class="p-mr-2" severity="success" :value="ints"></Tag>
+                </div>
                 <Button v-if="!pending" @click="bump">Bump</Button>
                 <Button style="background:#bb2e2e;" v-else @click="unbump">Unbump</Button>
                 <div style="display: flex; justify-content: space-between;">
@@ -26,7 +28,7 @@ export default {
         return {
             userName: "",
             bio: "",
-            interests: "",
+            interests: [],
             twitter: "",
             tags: [],
             intro: "",
@@ -60,11 +62,16 @@ export default {
             axios.get(this.$store.getters.URL + "get_interests", {params: args}).then(
             (response) => {
                 if (response.data.STATUS_CODE == 200){
-                    let dat = response.data.Data;
-                    // this.$root.displayLog("Fetching interest data successed", dat);
-                    dat.forEach( interest =>{
-                        this.interests = this.interests + " " + interest
-                    });
+                    this.interests = response.data.Data;
+
+                    //only for multiple line testing
+                    this.interests.push('test1');
+                    this.interests.push('test2');
+
+                    // this.$root.displayLog("Fetching interest data successed");
+                    // dat.forEach( interest =>{
+                    //     this.interests.append(interest);
+                    // });
                 }
             });
         },       
@@ -152,6 +159,9 @@ export default {
                 }
             });
         },
+        getValidTags(limit){
+
+        },
         confirmBump(){
             console.log("Send Bump message: " + this.bumpMsg);
         },
@@ -174,6 +184,14 @@ export default {
 
 <style lang="scss" scoped>
 
+
+::v-deep{
+    .p-tag{
+        margin-right: 0.25rem;
+        margin-bottom: 0.25rem;
+    }
+}
+
 .bumper-panel{
     display: flex;
     flex-flow: column;
@@ -181,6 +199,15 @@ export default {
     align-items: center;
     height: 24rem;
     width: 16rem;
+}
+
+.tags-area{
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    overflow: auto;
+    justify-content: center;
+    width: 100%;
 }
 
 .edit-icon{
