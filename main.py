@@ -362,6 +362,8 @@ def find_matches():
             db.session.add(newMatch)
     db.session.commit()
 
+    print(response)
+
     match_ids = get_new_matches(param)
 
     print(match_ids)
