@@ -400,6 +400,10 @@ def find_furthest_matches():
             newMatch = UserMatch(param, res.uid_ud_id)
             db.session.add(newMatch)
     db.session.commit()
+    return jsonify({
+        'STATUS_CODE': '200',
+        'result': response
+    })
 
 
 # finds nearest neighbours for a given user
