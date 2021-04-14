@@ -17,6 +17,7 @@ import AccessDenied from "./pages/AccessDenied";
 import HomePageAfter from "./pages/HomePageAfter.vue";
 import BumpingPage from "./pages/BumpingPage.vue";
 import InterestData from "./pages/InterestData.vue";
+import AntiMatches from "./pages/AntiMatches.vue";
 
 
 
@@ -69,6 +70,11 @@ export default createRouter({
       name: "matches",
       path: "/matches",
       component: Matches,
+    },
+    {
+      name: "antimatches",
+      path: "/antimatches",
+      component: AntiMatches,
     },
     {
       name: "report",
