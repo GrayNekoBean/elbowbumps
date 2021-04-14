@@ -1,4 +1,4 @@
-  
+
 from flask import Flask, request, jsonify
 from flask.wrappers import Response
 from elbowbumps.twitter_scraper import getTweets
@@ -80,6 +80,22 @@ def bump():
         return jsonify({"STATUS_CODE": 200})
     else:
         m2.um_2_matched = True
+        db.session.commit()
+        return jsonify({"STATUS_CODE": 200})
+
+@app.route('/unbump', methods=['POST'])
+@cross_origin()
+def unbump():
+    user_id = request.form.get('userId')
+    match_id = request.form.get('matchId')
+    m1 = UserMatch.query.filter(UserMatch.um_ud_id_1==user_id).filter(UserMatch.um_ud_id_2==match_id).first()
+    m2 = UserMatch.query.filter(UserMatch.um_ud_id_2==user_id).filter(UserMatch.um_ud_id_1==match_id).first()
+    if m1:
+        m1.um_1_matched = False
+        db.session.commit()
+        return jsonify({"STATUS_CODE": 200})
+    else:
+        m2.um_2_matched = False
         db.session.commit()
         return jsonify({"STATUS_CODE": 200})
 
@@ -170,11 +186,24 @@ def get_interests():
     user_id = request.args.get('user_id')
     query = f'SELECT uid_interest_type, uid_interest_weight FROM user_interest_data WHERE user_interest_data.uid_ud_id = \'{user_id}\';'
     results = db.engine.execute(query)
+    print("results = ", results)
+    results = sorted(results, reverse = True)
+    print("sorted results = ", results)
     response = []
+    sorted_results = []
+    # for res in results:
+    #     if res.uid_interest_weight > 1:
+    #         response.append(res.uid_interest_type)
+        # response.append(dict(res))
     for res in results:
         if res.uid_interest_weight > 1:
-            response.append(res.uid_interest_type)
-        # response.append(dict(res))
+            sorted_results.append(res.uid_interest_weight)
+    sorted_results = sorted(sorted_results, reverse = True)
+    print("sorted results = ", sorted_results)
+    for x in range(len(sorted_results)):
+        for res in results:
+            if sorted_results[x] == res.uid_interest_weight:
+                response.append(res.uid_interest_type)
     print(user_id)
     print(response)
     return jsonify({
@@ -203,12 +232,12 @@ def get_all_interests():
 def add_questionnaire_scores():
     user_id = int(request.form.get('user_id'))
     scores = request.form
-    
+
     for cat in scores:
-        
+
         if cat == 'user_id':
             continue
-        
+
         # will end up being a list, probably, when we have multiple scores instrad of one
         score = scores[cat]
         normalisedScore = float(score) * 2
@@ -221,6 +250,9 @@ def add_questionnaire_scores():
             data = UserInterestData(user_id, cat, 0, normalisedScore)
             db.session.add(data)
             db.session.commit()
+            user_interests = UserInterestData.query.filter_by(uid_ud_id=user_id, uid_interest_type=cat).first()
+            user_interests.updateScores()
+
     return jsonify({
         "STATUS_CODE": 200,
         "Message": f"Updated userID {user_id} interest data."
@@ -308,7 +340,7 @@ def get_tweets(user_id):
         for name, score in scores.items():
             score = score + 1
             user_interests = UserInterestData.query.filter_by(uid_ud_id=user_id, uid_interest_type=name).first()
-            if user_interests: 
+            if user_interests:
                 user_interests.uid_twitter_score = score
                 user_interests.updateScores()
                 db.session.commit()
@@ -316,56 +348,90 @@ def get_tweets(user_id):
                 data = UserInterestData(user_id, name, score, 0)
                 db.session.add(data)
                 db.session.commit()
-                
+
         return jsonify({
             'status_code': '200',
             "Message": f"Updated scores for userID {user_id}"
         })
 
+
 @app.route('/pending_bumps', methods=['GET'])
 def pending_bumps():
-    param = request.args.get('user_id')
-    matches_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) | (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_1_matched == True).filter(UserMatch.um_2_matched == False).all()
-    matches_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) | (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_2_matched == True).filter(UserMatch.um_1_matched == False).all()
-    match_ids = []
+    userID_1 = request.args.get('userID_1')
+    userID_2 = request.args.get('userID_2')
 
-    for m in matches_1:
-        if (m.um_ud_id_1 == int(param)):
-            match_ids.append({'uid_ud_id': m.um_ud_id_2})
+    matches_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == userID_1) & (UserMatch.um_ud_id_2 == userID_2)).filter(UserMatch.um_1_matched == True).filter(UserMatch.um_2_matched == False).all()
+    matches_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == userID_2) & (UserMatch.um_ud_id_2 == userID_1)).filter(UserMatch.um_2_matched == True).filter(UserMatch.um_1_matched == False).all()
 
-    for m in matches_2:
-        if (m.um_ud_id_2 == int(param)):
-            match_ids.append({'uid_ud_id': m.um_ud_id_1})
+    pending = False
+    print(matches_1)
+    if len(matches_1) == 1:
+        pending = True
+    elif len(matches_2) == 1:
+        pending = True
 
-    print(match_ids)
     return jsonify({
         'STATUS_CODE': '200',
-        'result': match_ids
+        'result': pending
     })
 
+@app.route('/full_bumps', methods=['GET'])
+def full_bumps():
+    userID_1 = request.args.get('userID_1')
+    userID_2 = request.args.get('userID_2')
 
-def get_new_matches(param):
-    
-    matches_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) | (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_1_matched == False).all()
-    matches_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) | (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_2_matched == False).all()
-    match_ids = []
-    for m in matches_1:
-        if (m.um_ud_id_1 == int(param)):
-            match_ids.append({'uid_ud_id': m.um_ud_id_2})
+    matches_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == userID_1) & (UserMatch.um_ud_id_2 == userID_2)).filter(UserMatch.um_1_matched == True).filter(UserMatch.um_2_matched == True).all()
+    matches_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == userID_2) & (UserMatch.um_ud_id_2 == userID_1)).filter(UserMatch.um_2_matched == True).filter(UserMatch.um_1_matched == True).all()
 
-    for m in matches_2:
-        if (m.um_ud_id_2 == int(param)):
-            match_ids.append({'uid_ud_id': m.um_ud_id_1})
-    
-    return match_ids
+    accepted = False
+    print(matches_1)
+    if len(matches_1) == 1:
+        accepted = True
+    elif len(matches_2) == 1:
+        accepted = True
+
+    print(accepted)
+    return jsonify({
+        'STATUS_CODE': '200',
+        'result': accepted
+    })
+@app.route('/find_furthest_matches', methods=['GET'])
+@cross_origin()
+def find_furthest_matches():
+    param = request.args.get('user_id')
+    limit = int(request.args.get('limit'))
+    interest_cat = request.args.get('interestCat')
+    if interest_cat != None and interest_cat != "All interests":
+        query = f'select uid1.uid_ud_id, uid2.uid_ud_id, sqrt(sw1.sum + sw2.sum - sum(2*uid1.uid_interest_weight*uid2.uid_interest_weight)) as distance from squared_weights sw1 , squared_weights sw2 , user_interest_data uid1 , user_interest_data uid2 where sw1.uid_ud_id = uid1.uid_ud_id and sw2.uid_ud_id = uid2.uid_ud_id and uid1.uid_interest_type = uid2.uid_interest_type and uid1.uid_interest_type = \'{interest_cat}\' and uid1.uid_id <> uid2.uid_id and uid1.uid_ud_id = {param} and uid1.uid_ud_id <> uid2.uid_ud_id group by uid2.uid_ud_id, uid1.uid_ud_id, uid1.uid_squared_weight,uid2.uid_squared_weight,uid1.uid_interest_weight,uid2.uid_interest_weight,sw1.sum,sw2.sum order by distance desc limit {limit};'
+    else:
+        query = f'select uid1.uid_ud_id, uid2.uid_ud_id, sqrt(sw1.sum + sw2.sum - sum(2*uid1.uid_interest_weight*uid2.uid_interest_weight)) as distance from squared_weights sw1 , squared_weights sw2 , user_interest_data uid1 , user_interest_data uid2 where sw1.uid_ud_id = uid1.uid_ud_id and sw2.uid_ud_id = uid2.uid_ud_id and uid1.uid_interest_type = uid2.uid_interest_type and uid1.uid_id <> uid2.uid_id and uid1.uid_ud_id = {param} and uid1.uid_ud_id <> uid2.uid_ud_id group by uid2.uid_ud_id, uid1.uid_ud_id, uid1.uid_squared_weight,uid2.uid_squared_weight,uid1.uid_interest_weight,uid2.uid_interest_weight,sw1.sum,sw2.sum order by distance desc limit {limit};'
+    results = db.engine.execute(query)
+    response = []
+    for res in results:
+        response.append(dict(res))
+        m1 = UserMatch.query.filter_by(um_ud_id_1=param,um_ud_id_2=res.uid_ud_id).first()
+        m2 = UserMatch.query.filter_by(um_ud_id_2=param,um_ud_id_1=res.uid_ud_id).first()
+        if not m1 and not m2:
+            newMatch = UserMatch(param, res.uid_ud_id)
+            db.session.add(newMatch)
+    db.session.commit()
+    return jsonify({
+        'STATUS_CODE': '200',
+        'result': response
+    })
+
 
 # finds nearest neighbours for a given user
 @app.route('/find_matches', methods=['GET'])
 @cross_origin()
 def find_matches():
     param = request.args.get('user_id')
-    limit = request.args.get('limit')
-    query = f'select uid1.uid_ud_id, uid2.uid_ud_id, sqrt(sw1.sum + sw2.sum - sum(2*uid1.uid_interest_weight*uid2.uid_interest_weight)) as distance from squared_weights sw1 , squared_weights sw2 , user_interest_data uid1 , user_interest_data uid2 where sw1.uid_ud_id = uid1.uid_ud_id and sw2.uid_ud_id = uid2.uid_ud_id and uid1.uid_interest_type = uid2.uid_interest_type and uid1.uid_id <> uid2.uid_id and uid1.uid_ud_id = {param} and uid1.uid_ud_id <> uid2.uid_ud_id group by uid2.uid_ud_id, uid1.uid_ud_id, uid1.uid_squared_weight,uid2.uid_squared_weight,uid1.uid_interest_weight,uid2.uid_interest_weight,sw1.sum,sw2.sum order by distance limit {limit};'
+    limit = int(request.args.get('limit'))
+    interest_cat = request.args.get('interestCat')
+    if interest_cat != None and interest_cat != "All interests":
+        query = f'select uid1.uid_ud_id, uid2.uid_ud_id, sqrt(sw1.sum + sw2.sum - sum(2*uid1.uid_interest_weight*uid2.uid_interest_weight)) as distance from squared_weights sw1 , squared_weights sw2 , user_interest_data uid1 , user_interest_data uid2 where sw1.uid_ud_id = uid1.uid_ud_id and sw2.uid_ud_id = uid2.uid_ud_id and uid1.uid_interest_type = uid2.uid_interest_type and uid1.uid_interest_type = \'{interest_cat}\' and uid1.uid_id <> uid2.uid_id and uid1.uid_ud_id = {param} and uid1.uid_ud_id <> uid2.uid_ud_id group by uid2.uid_ud_id, uid1.uid_ud_id, uid1.uid_squared_weight,uid2.uid_squared_weight,uid1.uid_interest_weight,uid2.uid_interest_weight,sw1.sum,sw2.sum order by distance limit {limit};'
+    else:
+        query = f'select uid1.uid_ud_id, uid2.uid_ud_id, sqrt(sw1.sum + sw2.sum - sum(2*uid1.uid_interest_weight*uid2.uid_interest_weight)) as distance from squared_weights sw1 , squared_weights sw2 , user_interest_data uid1 , user_interest_data uid2 where sw1.uid_ud_id = uid1.uid_ud_id and sw2.uid_ud_id = uid2.uid_ud_id and uid1.uid_interest_type = uid2.uid_interest_type and uid1.uid_id <> uid2.uid_id and uid1.uid_ud_id = {param} and uid1.uid_ud_id <> uid2.uid_ud_id group by uid2.uid_ud_id, uid1.uid_ud_id, uid1.uid_squared_weight,uid2.uid_squared_weight,uid1.uid_interest_weight,uid2.uid_interest_weight,sw1.sum,sw2.sum order by distance limit {limit};'
     results = db.engine.execute(query)
     response = []
     for res in results:
@@ -378,13 +444,9 @@ def find_matches():
     db.session.commit()
 
     print(response)
-
-    match_ids = get_new_matches(param)
-
-    print(match_ids)
     return jsonify({
         'STATUS_CODE': '200',
-        'result': match_ids
+        'result': response
     })
 
 # Gets distances, ids and names of users for network graph
