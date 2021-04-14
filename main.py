@@ -186,11 +186,24 @@ def get_interests():
     user_id = request.args.get('user_id')
     query = f'SELECT uid_interest_type, uid_interest_weight FROM user_interest_data WHERE user_interest_data.uid_ud_id = \'{user_id}\';'
     results = db.engine.execute(query)
+    print("results = ", results)
+    results = sorted(results, reverse = True)
+    print("sorted results = ", results)
     response = []
+    sorted_results = []
+    # for res in results:
+    #     if res.uid_interest_weight > 1:
+    #         response.append(res.uid_interest_type)
+        # response.append(dict(res))
     for res in results:
         if res.uid_interest_weight > 1:
-            response.append(res.uid_interest_type)
-        # response.append(dict(res))
+            sorted_results.append(res.uid_interest_weight)
+    sorted_results = sorted(sorted_results, reverse = True)
+    print("sorted results = ", sorted_results)
+    for x in range(len(sorted_results)):
+        for res in results:
+            if sorted_results[x] == res.uid_interest_weight:
+                response.append(res.uid_interest_type)
     print(user_id)
     print(response)
     return jsonify({
