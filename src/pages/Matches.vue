@@ -45,9 +45,6 @@
           <option v-for="interestCat in interestCats" :value="interestCat.id" :key="interestCat.id">{{ interestCat.name }}</option>
         </select>
       </div>
-      <div style="display: flex;width: 100%;height: 2rem;margin-top: 4rem;justify-content: center;">
-        <ToggleButton v-model="checked2" onLabel="Get Matches" offLabel="AntiMatches" onIcon="pi pi-check" offIcon="pi pi-times" style="width: 10em" />
-      </div>
     </template>
     <template #right>
 
@@ -70,7 +67,6 @@ export default {
     return {
       matches: [],
       users: [],
-      checked2: true,
       selectedUser: {
         avatar: '',
         name: '',
@@ -111,7 +107,6 @@ export default {
       this.getMatches();
    },
     getMatches() {
-    if (this.checked2 == true){
       const URL = `${this.$store.getters.URL}find_matches`;
       const userId = this.$store.getters.userId;
       axios
@@ -128,28 +123,9 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-        });}
-
-    else{
-    this.getAntiMatches;
-    }},
-    getAntiMatches() {
-      const URL = `${this.$store.getters.URL}find_furthest_matches`;
-      const userId = this.$store.getters.userId;
-      axios
-        .get(URL, {
-          params: {
-            user_id: userId,
-            limit: 8,
-          },
-        })
-        .then((res) => {
-          this.matches = res.data.result;
-          this.getMatchInfo();
-        })
-        .catch((err) => {
-          console.log(err);
         });
+
+
     },
     getMatchInfo() {
       const URL = `${this.$store.getters.URL}match_info`;
