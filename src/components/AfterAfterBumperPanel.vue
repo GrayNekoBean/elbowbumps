@@ -3,11 +3,15 @@
         <template #content>
             <div class="bumper-panel">
                 <Avatar size="xlarge" :image="require('../assets/test.jpg')" shape="circle" />
+                
                 <h3>{{userName}}</h3>
                 <p>{{intro}}</p>
                 <p style="color:#bb2e2e; font-size:small;">Interests: {{interests}}</p>
+                
             <!-- <Tag v-for="tag in tags" :key="tag" class="p-mr-2" :severity="getTagType(tag)" :value="tag.value" rounded></Tag> -->
                 <div style="display: flex; justify-content: space-between;">
+                    <IconButton v-if='twitter != ""' hint="Open Page Twitter" icon="pi-twitter" color="rgb(29, 161, 242)" @click="openTwitterPage()"></IconButton>
+                    <IconButton v-if='email != ""' :hint="email" icon="pi-envelope" color="rgb(f, f, f)" @click="openEmail()">{{email}}</IconButton>
                     <IconButton hint="Report User" icon="pi-times" color="red" @click="reportUser()"></IconButton>
                 </div>
             </div>
@@ -23,7 +27,6 @@ export default {
     data(){
         return {
             userName: "",
-            interests: "",
             bio: "",
             twitter: "",
             tags: [],
@@ -31,6 +34,7 @@ export default {
             firstName: "",
             lastName: "",
             email: "",
+            interests: "",
             avatar: require("../assets/test.jpg"),
         };
     },
@@ -108,6 +112,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 
 .bumper-panel{
     display: flex;

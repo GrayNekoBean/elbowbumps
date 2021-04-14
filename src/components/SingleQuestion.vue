@@ -29,7 +29,7 @@ export default {
         return {
             marks: [1, 2, 3, 4, 5],
             select: -1,
-            scale: ["Strongly Agree","Agree","No opinion", "Disagree", "Strongly Disagree"]
+            scale: ["Strongly Disagree","Disagree","No opinion", "Agree", "Strongly Agree"]
         }
     }
 }

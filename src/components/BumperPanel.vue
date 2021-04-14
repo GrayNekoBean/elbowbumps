@@ -4,9 +4,14 @@
             <div class="bumper-panel">
                 <Avatar size="xlarge" :image="require('../assets/test.jpg')" shape="circle" />
                 <h3>{{userName}}</h3>
+                <Tag style="font-size:14px; background:#6aab4f; color: white;">{{match_percentage}}% Match</Tag>
                 <p>{{intro}}</p>
-                <Tag v-for="tag in tags" :key="tag" class="p-mr-2" :severity="getTagType(tag)" :value="tag.value" rounded></Tag>
-                <Button @click="bump">Bump</Button>
+                <!-- <p style="color:#bb2e2e; font-size:small;">Interests: {{interests}}</p> -->
+                <div class="tags-area">
+                    <Tag v-for="ints in interests" :key="ints" class="p-mr-2" severity="success" :value="ints"></Tag>
+                </div>
+                <Button v-if="!pending" @click="bump">Bump</Button>
+                <Button style="background:#bb2e2e;" v-else @click="unbump">Unbump</Button>
                 <div style="display: flex; justify-content: space-between;">
                     <IconButton hint="Block User" icon="pi-times" color="red" @click="reportUser()"></IconButton>
                 </div>
@@ -24,17 +29,78 @@ export default {
         return {
             userName: "",
             bio: "",
+            interests: [],
             twitter: "",
             tags: [],
             intro: "",
             firstName: "",
             lastName: "",
+            pending: false,
             avatar: require("../assets/test.jpg"),
+            match_percentage:0,
         };
     },
     components: {IconButton},
     props: [ "userID" ],
     methods: {
+      PendingUsers(){
+            const user_id = this.$store.getters.userId;
+            let args = {
+                userID_1 : user_id,
+                userID_2: this.userID
+            };
+            axios.get(this.$store.getters.URL + "pending_bumps", {params: args}).then(
+            (response) => {
+                if (response.data.STATUS_CODE == 200){
+                    this.pending = response.data.result;
+                    // this.$root.displayLog("Fetching interest data successed", dat);
+                }
+            });
+        }, 
+        FetchMatchScore(){
+            let args = {
+                user_id: this.userID,
+                limit: 8,
+            };
+            axios.get(this.$store.getters.URL + "find_matches", {params: args}).then(
+            (response) => {
+                if (response.data.STATUS_CODE == 200){
+                    let match_data = response.data.result;
+                    var i;
+                    for(i=0; i < match_data.length; i++){
+                        if((match_data[i]['distance'] != null)&&(match_data[i]['uid_ud_id'] == this.$store.getters.userId)){
+                            this.match_percentage = (((8 - match_data[i]['distance'])/8)*100).toFixed(1);
+                        }
+                    }
+
+
+                }
+            })
+            .catch((err) => {
+            console.log(err);
+            });
+        },
+       
+       FetchUserInterests(){
+            let args = {
+                user_id: this.userID
+            };
+            axios.get(this.$store.getters.URL + "get_interests", {params: args}).then(
+            (response) => {
+                if (response.data.STATUS_CODE == 200){
+                    this.interests = response.data.Data;
+
+                    //only for multiple line testing
+                    this.interests.push('test1');
+                    this.interests.push('test2');
+
+                    // this.$root.displayLog("Fetching interest data successed");
+                    // dat.forEach( interest =>{
+                    //     this.interests.append(interest);
+                    // });
+                }
+            });
+        },       
         FetchUserInfo(){
             let address = this.$store.getters.URL + "user_data";
             let args = {
@@ -82,8 +148,45 @@ export default {
             axios.post(URL, form).then((res) => {
                 if (res.data.STATUS_CODE == "200") {
                 console.log("success!");
+                // this.$el.parentNode.removeChild(this.$el);
+                this.pending = true;
                 }
             });
+        },
+        unbump(){
+            // this.showBumpCard = true;
+            // console.log("bumped");
+            const URL = `${this.$store.getters.URL}unbump`;
+            console.log(`${this.$store.getters.userId} ${this.userID}`);
+            const form = new FormData();
+            form.append("userId", this.$store.getters.userId);
+            form.append("matchId", this.userID);
+            axios.post(URL, form).then((res) => {
+                if (res.data.STATUS_CODE == "200") {
+                console.log("success!");
+                // this.$el.parentNode.removeChild(this.$el);
+                this.pending = false;
+                }
+            });
+        },
+        fullBump(){
+            const user_id = this.$store.getters.userId;
+            let args = {
+                userID_1 : user_id,
+                userID_2: this.userID
+            };
+            axios.get(this.$store.getters.URL + "full_bumps", {params: args}).then(
+            (response) => {
+                if (response.data.STATUS_CODE == 200){
+                    if (response.data.result) {
+                    this.$root.displayLog(this.userName + " bumped you back!");
+                    this.$el.parentNode.removeChild(this.$el);
+                    }
+                }
+            });
+        },
+        getValidTags(limit){
+
         },
         confirmBump(){
             console.log("Send Bump message: " + this.bumpMsg);
@@ -98,11 +201,23 @@ export default {
     },
     mounted: function(){
         this.FetchUserInfo();
+        this.FetchUserInterests();
+        this.FetchMatchScore();
+        this.PendingUsers();
+        this.fullBump();
     }
 }
 </script>
 
 <style lang="scss" scoped>
+
+
+::v-deep{
+    .p-tag{
+        margin-right: 0.25rem;
+        margin-bottom: 0.25rem;
+    }
+}
 
 .bumper-panel{
     display: flex;
@@ -111,6 +226,15 @@ export default {
     align-items: center;
     height: 24rem;
     width: 16rem;
+}
+
+.tags-area{
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    overflow: auto;
+    justify-content: center;
+    width: 100%;
 }
 
 .edit-icon{

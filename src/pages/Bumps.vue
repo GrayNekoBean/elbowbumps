@@ -2,19 +2,20 @@
   <SplitedPage ratio="1">
     <template #left>
       <h2 style="text-align: center; margin-top:5rem; padding-top: 3rem;">
-        <span v-if="noMatches"> No bumps for you to see today... but at least there are plenty more fish in the sea! </span>
-        <span v-else>Here's some reciprocated bumps. Go ahead and add them on their Twitter or pop them an email. </span>
+        <span v-if="noMatches"> No bumps for you to see today... but at least there are plenty more fish in the sea. </span>
+        <span v-else>You both bumped each other!</span>
       </h2>
+      <div v-if="!noMatches" style="text-align: center;"> Go ahead and add them on their Twitter if provided or pop them an email.</div>
       <div v-if="noMatches" style="text-align: center;">
-        You have no matches! Click
+        No-one has bumped you back (yet). Click
         <router-link to="/questionnaire">here</router-link> to do the
         questionnaire, or
-        <router-link to="/socialmediainfo">here</router-link> to update your
+        <router-link to="/profile">here</router-link> to update your
         Twitter info!
       </div>
       <div style="margin-left:10%; margin-top: 5%; width: 75%; overflow: hidden;" v-else>
           <div class="matches-list" ref="matches">
-            <AfterBumperPanel
+            <AfterAfterBumperPanel
               class="bump-card"
               v-for="user in users"
               :key="user.id"
@@ -22,21 +23,6 @@
             />
           </div>
       </div>
-      <!-- <div style="">
-        <Button @click="moveLeft">《-</Button>
-        <Button @click="logout" style="display:inline-block;">
-          Logout
-        </Button>
-        <Button @click="getMatches" style="display:inline-block;">
-          Refresh Matches
-        </Button>
-        <router-link to="/bumps"
-          ><Button style="display:inline-block"
-            >See bumps</Button
-          ></router-link
-        >
-      <Button @click="moveRight"> -》</Button>
-      </div> -->
       <div style="display: flex;width: 100%;height: 2rem;margin-top: 4rem;justify-content: center;">
         <IconButton icon="pi-undo" hint="Refresh Matches" @onClick="getMatches" />
       </div>
@@ -52,12 +38,12 @@ import axios from "axios";
 import Flickity from "flickity";
 import "flickity/dist/flickity.min.css";
 
-import AfterBumperPanel from "../components/AfterBumperPanel";
+import AfterAfterBumperPanel from "../components/AfterAfterBumperPanel";
 import SplitedPage from "../components/SplitedPage";
 import IconButton from "../components/IconButton";
 
 export default {
-  components: { AfterBumperPanel, SplitedPage, IconButton },
+  components: { AfterAfterBumperPanel, SplitedPage, IconButton },
   data() {
     return {
       matches: [],

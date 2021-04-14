@@ -2,20 +2,19 @@
   <SplitedPage ratio="1">
     <template #left>
       <h2 style="text-align: center; margin-top:5rem; padding-top: 3rem;">
-        Welcome to your matches!
+        <span v-if="noMatches"> No pending bumps. </span>
+        <span v-else> Here's the people you've bumped. </span>
       </h2>
-      <div v-if="noMatches" style="text-align: center;">
-        You have no new matches :( Click
+      <div  style="text-align: center;">
+        Click
         <router-link to="/questionnaire">here</router-link> to do the
         questionnaire, or
         <router-link to="/profile">here</router-link> to update your
-        Twitter info.
+        Twitter info!
       </div>
-      <div style="margin-left:10%; margin-top: 5%; width: 75%; overflow: hidden;" v-else>
-          <!-- <h2>{{ user.forename }} {{ user.surname }}</h2>
-          <Button @click="bump(user.id)">Bump {{ user.forename }}!</Button> -->
+      <div style="margin-left:10%; margin-top: 5%; width: 75%; overflow: hidden;" v-if="!noMatches">
           <div class="matches-list" ref="matches">
-            <BumperPanel
+            <AfterBumperPanel
               class="bump-card"
               v-for="user in users"
               :key="user.id"
@@ -23,21 +22,6 @@
             />
           </div>
       </div>
-      <!-- <div style="">
-        <Button @click="moveLeft">《-</Button>
-        <Button @click="logout" style="display:inline-block;">
-          Logout
-        </Button>
-        <Button @click="getMatches" style="display:inline-block;">
-          Refresh Matches
-        </Button>
-        <router-link to="/bumps"
-          ><Button style="display:inline-block"
-            >See bumps</Button
-          ></router-link
-        >
-      <Button @click="moveRight"> -》</Button>
-      </div> -->
       <div style="display: flex;width: 100%;height: 2rem;margin-top: 4rem;justify-content: center;">
         <IconButton icon="pi-undo" hint="Refresh Matches" @onClick="getMatches" />
       </div>
@@ -53,12 +37,12 @@ import axios from "axios";
 import Flickity from "flickity";
 import "flickity/dist/flickity.min.css";
 
-import BumperPanel from "../components/BumperPanel";
+import AfterBumperPanel from "../components/AfterBumperPanel";
 import SplitedPage from "../components/SplitedPage";
 import IconButton from "../components/IconButton";
 
 export default {
-  components: { BumperPanel, SplitedPage, IconButton },
+  components: { AfterBumperPanel, SplitedPage, IconButton },
   data() {
     return {
       matches: [],
@@ -68,6 +52,7 @@ export default {
         name: '',
         bio: '',
         twitter: '',
+        email: '',
         tags: [],
         interestData: null
       },
@@ -79,9 +64,7 @@ export default {
     };
   },
   mounted() {
-    if (!this.$store.getters.matchesRetrieved) {
-      this.getMatches();
-    }
+    this.getMatches();
     setInterval(this.onUpdate, 1000/40);
   },
   computed: {
@@ -91,13 +74,12 @@ export default {
   },
   methods: {
     getMatches() {
-      const URL = `${this.$store.getters.URL}find_matches`;
+      const URL = `${this.$store.getters.URL}pending_bumps`;
       const userId = this.$store.getters.userId;
       axios
         .get(URL, {
           params: {
             user_id: userId,
-            limit: 8,
           },
         })
         .then((res) => {
@@ -110,7 +92,7 @@ export default {
     },
     getMatchInfo() {
       const URL = `${this.$store.getters.URL}match_info`;
-
+      
       const form = new FormData();
       form.append("matches", JSON.stringify(this.matches));
       axios
@@ -141,23 +123,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    bump(id) {
-      const URL = `${this.$store.getters.URL}bump`;
-      console.log(`${this.$store.getters.userId} ${id}`);
-      const form = new FormData();
-      form.append("userId", this.$store.getters.userId);
-      form.append("matchId", id);
-      axios.post(URL, form).then((res) => {
-        if (res.data.STATUS_CODE == "200") {
-          console.log("success!");
-          this.getMatches();
-        }
-      });
-    },
-    logout() {
-      this.$store.dispatch("logOut");
-      this.$router.push("/");
     },
     moveLeft(){
       this.leftMoving = true;
