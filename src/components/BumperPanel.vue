@@ -1,0 +1,262 @@
+<template>
+    <Card style="width: 16rem; height: 24rem;">
+        <template #content>
+            <div class="bumper-panel">
+                <Avatar size="xlarge" :image="require('../assets/test.jpg')" shape="circle" />
+                <h3>{{userName}}</h3>
+                <Tag style="font-size:14px; background:#6aab4f; color: white;">{{match_percentage}}% Match</Tag>
+                <p>{{intro}}</p>
+                <!-- <p style="color:#bb2e2e; font-size:small;">Interests: {{interests}}</p> -->
+                <div class="tags-area">
+                    <Tag v-for="ints in interests" :key="ints" class="p-mr-2" severity="success" :value="ints"></Tag>
+                </div>
+                <Button v-if="!pending" @click="bump">Bump</Button>
+                <Button style="background:#bb2e2e;" v-else @click="unbump">Unbump</Button>
+                <div style="display: flex; justify-content: space-between;">
+                    <IconButton hint="Block User" icon="pi-times" color="red" @click="reportUser()"></IconButton>
+                </div>
+            </div>
+        </template>
+    </Card>
+</template>
+
+<script>
+import axios from "axios";
+import IconButton from "./IconButton";
+
+export default {
+    data(){
+        return {
+            userName: "",
+            bio: "",
+            interests: [],
+            twitter: "",
+            tags: [],
+            intro: "",
+            firstName: "",
+            lastName: "",
+            pending: false,
+            avatar: require("../assets/test.jpg"),
+            match_percentage:0,
+        };
+    },
+    components: {IconButton},
+    props: [ "userID" ],
+    methods: {
+      PendingUsers(){
+            const user_id = this.$store.getters.userId;
+            let args = {
+                userID_1 : user_id,
+                userID_2: this.userID
+            };
+            axios.get(this.$store.getters.URL + "pending_bumps", {params: args}).then(
+            (response) => {
+                if (response.data.STATUS_CODE == 200){
+                    this.pending = response.data.result;
+                    // this.$root.displayLog("Fetching interest data successed", dat);
+                }
+            });
+        }, 
+        FetchMatchScore(){
+            let args = {
+                user_id: this.userID,
+                limit: 8,
+            };
+            axios.get(this.$store.getters.URL + "find_matches", {params: args}).then(
+            (response) => {
+                if (response.data.STATUS_CODE == 200){
+                    let match_data = response.data.result;
+                    var i;
+                    for(i=0; i < match_data.length; i++){
+                        if((match_data[i]['distance'] != null)&&(match_data[i]['uid_ud_id'] == this.$store.getters.userId)){
+                            this.match_percentage = (((8 - match_data[i]['distance'])/8)*100).toFixed(1);
+                        }
+                    }
+
+
+                }
+            })
+            .catch((err) => {
+            console.log(err);
+            });
+        },
+       
+       FetchUserInterests(){
+            let args = {
+                user_id: this.userID
+            };
+            axios.get(this.$store.getters.URL + "get_interests", {params: args}).then(
+            (response) => {
+                if (response.data.STATUS_CODE == 200){
+                    this.interests = response.data.Data;
+
+                    //only for multiple line testing
+                    this.interests.push('test1');
+                    this.interests.push('test2');
+
+                    // this.$root.displayLog("Fetching interest data successed");
+                    // dat.forEach( interest =>{
+                    //     this.interests.append(interest);
+                    // });
+                }
+            });
+        },       
+        FetchUserInfo(){
+            let address = this.$store.getters.URL + "user_data";
+            let args = {
+                user_id: this.userID
+            };
+            let dataPack = null;
+            axios.get(address, {params: args}).then(
+                (response) => {
+                    if (response.data.STATUS_CODE == "200"){
+                        let data = response.data['data'];
+                        this.avatar = data['avatar'];
+                        this.firstName = data['fName'];
+                        this.lastName = data['sName'];
+                        this.twitter = data['twitter'];
+                        this.bio = data['bio'];
+                        this.intro = data['intro'];
+                        this.userName = this.firstName + " " + this.lastName;
+
+                        if (this.avatar != ""){
+                            this.avatar = "../assets/test.jpg";
+                        }
+                        if (this.intro == ""){
+                            this.intro = "This person doesn't have an intro :( ";
+                        }
+                        if (this.bio == ""){
+                            this.bio = "This person doesn't have an bio :( ";
+                        }
+                    }else{
+                        console.error(response.STATUS);
+                        console.error(response.Message);
+                    }
+                }
+            ).catch((e) => {
+                console.error(e);
+            });
+        },
+        bump(){
+            // this.showBumpCard = true;
+            // console.log("bumped");
+            const URL = `${this.$store.getters.URL}bump`;
+            console.log(`${this.$store.getters.userId} ${this.userID}`);
+            const form = new FormData();
+            form.append("userId", this.$store.getters.userId);
+            form.append("matchId", this.userID);
+            axios.post(URL, form).then((res) => {
+                if (res.data.STATUS_CODE == "200") {
+                console.log("success!");
+                // this.$el.parentNode.removeChild(this.$el);
+                this.pending = true;
+                }
+            });
+        },
+        unbump(){
+            // this.showBumpCard = true;
+            // console.log("bumped");
+            const URL = `${this.$store.getters.URL}unbump`;
+            console.log(`${this.$store.getters.userId} ${this.userID}`);
+            const form = new FormData();
+            form.append("userId", this.$store.getters.userId);
+            form.append("matchId", this.userID);
+            axios.post(URL, form).then((res) => {
+                if (res.data.STATUS_CODE == "200") {
+                console.log("success!");
+                // this.$el.parentNode.removeChild(this.$el);
+                this.pending = false;
+                }
+            });
+        },
+        fullBump(){
+            const user_id = this.$store.getters.userId;
+            let args = {
+                userID_1 : user_id,
+                userID_2: this.userID
+            };
+            axios.get(this.$store.getters.URL + "full_bumps", {params: args}).then(
+            (response) => {
+                if (response.data.STATUS_CODE == 200){
+                    if (response.data.result) {
+                    this.$root.displayLog(this.userName + " bumped you back!");
+                    this.$el.parentNode.removeChild(this.$el);
+                    }
+                }
+            });
+        },
+        getValidTags(limit){
+
+        },
+        confirmBump(){
+            console.log("Send Bump message: " + this.bumpMsg);
+        },
+        reportUser(){
+            console.log(this.userID)
+            this.$router.push({name:'report', params: {user_id: this.userID}});
+        },
+        openTwitterPage(){
+            window.open("https://twitter.com/" + this.twitter, "_blank");
+        },
+    },
+    mounted: function(){
+        this.FetchUserInfo();
+        this.FetchUserInterests();
+        this.FetchMatchScore();
+        this.PendingUsers();
+        this.fullBump();
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+
+
+::v-deep{
+    .p-tag{
+        margin-right: 0.25rem;
+        margin-bottom: 0.25rem;
+    }
+}
+
+.bumper-panel{
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 24rem;
+    width: 16rem;
+}
+
+.tags-area{
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    overflow: auto;
+    justify-content: center;
+    width: 100%;
+}
+
+.edit-icon{
+    height: 2rem;
+    width: 2rem;
+    padding: 25%;
+    cursor: pointer;
+}
+
+.edit-button-blue{
+    color: rgb(29, 161, 242);
+    :hover{
+        border-radius: 50%;
+        background: rgba(29, 161, 242, 0.3);
+    }
+}
+
+.edit-button-red{
+    color: rgb(128, 16, 16);
+    :hover{
+        border-radius: 50%;
+        background: rgba(128, 16, 16, 0.3);
+    }
+}
+</style>

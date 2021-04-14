@@ -1,9 +1,23 @@
-venv
-venv_win
-*.pyc
-staticfiles
-*.env
-db.sqlite3
-getting-started/*
+.DS_Store
+node_modules
+/dist
+
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
 .vscode
-info.txt
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
