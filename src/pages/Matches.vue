@@ -111,7 +111,7 @@ export default {
       this.getMatches();
    },
     getMatches() {
-    if (this.checked == true){
+    if (this.checked2 == true){
       const URL = `${this.$store.getters.URL}find_matches`;
       const userId = this.$store.getters.userId;
       axios
