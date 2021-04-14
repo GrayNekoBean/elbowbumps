@@ -90,9 +90,9 @@ export default {
                 if (response.data.STATUS_CODE == 200){
                     this.interests = response.data.Data;
 
-                    //only for multiple line testing
-                    this.interests.push('test1');
-                    this.interests.push('test2');
+                    // //only for multiple line testing
+                    // this.interests.push('test1');
+                    // this.interests.push('test2');
 
                     // this.$root.displayLog("Fetching interest data successed");
                     // dat.forEach( interest =>{
