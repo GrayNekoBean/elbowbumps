@@ -40,6 +40,10 @@
       </div> -->
       <div style="display: flex;width: 100%;height: 2rem;margin-top: 4rem;justify-content: center;">
         <IconButton icon="pi-undo" hint="Refresh Matches" @onClick="getMatches" />
+        <select class="form-control" @change="changeInterestCat($event)">
+          <option value="All interests" >All interests</option>
+          <option v-for="interestCat in interestCats" :value="interestCat.id" :key="interestCat.id">{{ interestCat.name }}</option>
+        </select>
       </div>
     </template>
     <template #right>
@@ -75,7 +79,15 @@ export default {
       rightMoving: false,
       focused: 0,
       originalMarginLeft: 0,
-      flickity: null
+      flickity: null,
+       interestCats: [
+          { name: "music", id: 1 },
+          { name: "film/tv", id: 2 },
+          { name: "sports", id: 3 },
+          { name: "video games", id: 4 }
+        ],
+      selectedInterestCat: "All interests"
+
     };
   },
   mounted() {
@@ -90,6 +102,10 @@ export default {
     },
   },
   methods: {
+    changeInterestCat (event) {
+      this.selectedInterestCat = event.target.options[event.target.options.selectedIndex].text
+      this.getMatches();
+   },
     getMatches() {
       const URL = `${this.$store.getters.URL}find_matches`;
       const userId = this.$store.getters.userId;
@@ -98,6 +114,7 @@ export default {
           params: {
             user_id: userId,
             limit: 8,
+            interestCat: this.selectedInterestCat
           },
         })
         .then((res) => {
