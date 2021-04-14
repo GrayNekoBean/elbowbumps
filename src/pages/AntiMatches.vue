@@ -2,7 +2,7 @@
   <SplitedPage ratio="1">
     <template #left>
       <h2 style="text-align: center; margin-top:5rem; padding-top: 3rem;">
-        Welcome to your matches!
+        Welcome to your Antimatches!
       </h2>
       <div v-if="noMatches" style="text-align: center;">
         You have no new matches :( Click
@@ -40,6 +40,15 @@
       </div> -->
       <div style="display: flex;width: 100%;height: 2rem;margin-top: 4rem;justify-content: center;">
         <IconButton icon="pi-undo" hint="Refresh Matches" @onClick="getMatches" />
+        <select class="form-control" @change="changeInterestCat($event)">
+          <option value="All interests" >All interests</option>
+          <option v-for="interestCat in interestCats" :value="interestCat.id" :key="interestCat.id">{{ interestCat.name }}</option>
+        </select>
+        <select class="form-control" @change="changeLimit($event)">
+          <option value="8" selected disabled>Default Matches 8</option>
+          <option v-for="limit in limits" :value="limit.id" :key="limit.id">{{ limit.name }}</option>
+        </select>
+        <Button><router-link to="/matches"  style="text-decoration: none; color: inherit;">Matches</router-link></Button>
       </div>
     </template>
     <template #right>
@@ -75,10 +84,17 @@ export default {
       rightMoving: false,
       focused: 0,
       originalMarginLeft: 0,
-      flickity: null
+      flickity: null,
+      interestCats: [],
+      selectedInterestCat: "All interests",
+      limits: [],
+      selectedLimit: "8",
+      getmatch: "1",
     };
   },
   mounted() {
+    this.FetchCurrentUserInterests();
+    this.setLimits();
     if (!this.$store.getters.matchesRetrieved) {
       this.getMatches();
     }
@@ -90,6 +106,42 @@ export default {
     },
   },
   methods: {
+    setLimits(){
+      for (let i = 1; i < 50; i++){
+        this.limits.push({name: String(i), id: i})
+      }
+    },
+    FetchCurrentUserInterests(){
+        const userId = this.$store.getters.userId;
+        let args = {
+            user_id: userId
+        };
+        axios.get(this.$store.getters.URL + "get_interests", {params: args}).then(
+        (response) => {
+            if (response.data.STATUS_CODE == 200){
+                let interests = response.data.Data;
+                for (let i = 0; i < interests.length; i++){
+                  this.interestCats.push({name: interests[i], id: 1+i});
+                }
+            }
+            this.$root.displayLog(this.interestCats);
+        });
+    },
+    changeInterestCat (event) {
+      this.selectedInterestCat = event.target.options[event.target.options.selectedIndex].text
+      this.getMatches();
+      // TO-DO Needs a forced flickity update or something with flickity
+   },
+   changeLimit(event) {
+     this.selectedLimit = event.target.options[event.target.options.selectedIndex].text
+     this.getMatches();
+    // TO-DO Needs a forced flickity update or something with flickity
+   },
+   getMatchesNum(event) {
+     this.getmatch = event.target.options[event.target.options.selectedIndex].text
+     this.getMatches();
+    // TO-DO Needs a forced flickity update or something with flickity
+   },
     getMatches() {
       const URL = `${this.$store.getters.URL}find_furthest_matches`;
       const userId = this.$store.getters.userId;
@@ -97,16 +149,22 @@ export default {
         .get(URL, {
           params: {
             user_id: userId,
-            limit: 8,
+            limit: this.selectedLimit,
+            interestCat: this.selectedInterestCat
           },
         })
         .then((res) => {
           this.matches = res.data.result;
+          if (this.matches == null){
+            this.matches = [];
+          }
           this.getMatchInfo();
         })
         .catch((err) => {
           console.log(err);
         });
+
+
     },
     getMatchInfo() {
       const URL = `${this.$store.getters.URL}match_info`;
