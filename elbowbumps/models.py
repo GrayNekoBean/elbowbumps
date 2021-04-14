@@ -90,8 +90,8 @@ class UserInterestData(db.Model):
             with db.engine.connect() as con:
                 weight = con.execute(f'select sum(uid_interest_weight * uid_interest_weight) from user_interest_data uid where uid_ud_id = {self.uid_ud_id};').first()
                 print(weight['sum'])
-                new_sw = SquaredWeights(self.uid_ud_id, weight['sum'])
-                db.session.add(new_sw)
+                sw = SquaredWeights(self.uid_ud_id, weight['sum'])
+                db.session.add(sw)
                 db.session.commit()
 
 class UserMatch(db.Model):
