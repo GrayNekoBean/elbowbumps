@@ -183,6 +183,21 @@ def get_interests():
         "Data": response
     })
 
+@app.route('/get_all_interests', methods=['GET'])
+@cross_origin()
+def get_all_interests():
+    user_id = request.args.get('user_id')
+    query = f'SELECT uid_interest_type as cat, uid_interest_weight * 50 as weight FROM user_interest_data WHERE user_interest_data.uid_ud_id = \'{user_id}\';'
+    results = db.engine.execute(query)
+    response = []
+    for res in results:
+        response.append(dict(res))
+    return jsonify({
+        "STATUS_CODE": 200,
+        "Message": f"userID {user_id} interest data.",
+        "Data": response
+    })
+
 @app.route('/questionnaire', methods=['POST'])
 @cross_origin()
 def add_questionnaire_scores():
