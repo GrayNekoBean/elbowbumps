@@ -46,7 +46,7 @@
         </div>
         <div style="margin-left: 2rem">
           <p>
-            Forgottten your password? Click
+            Forgotten your password? Click
             <router-link to="/forgot_password">here</router-link> to fix that.
           </p>
           <p>Don't already have an account? Register here:</p>
