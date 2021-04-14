@@ -387,6 +387,22 @@ def find_matches():
         'result': match_ids
     })
 
+# Gets distances, ids and names of users for network graph
+@app.route('/get_names', methods=['GET'])
+@cross_origin()
+def get_names():
+    user_id = request.form.get('user_id')
+    query = f'select uid2.uid_ud_id as id, sqrt(sw1.sum + sw2.sum - sum(2*uid1.uid_interest_weight*uid2.uid_interest_weight)) as distance from squared_weights sw1 , squared_weights sw2 , user_interest_data uid1 , user_interest_data uid2 where sw1.uid_ud_id = uid1.uid_ud_id and sw2.uid_ud_id = uid2.uid_ud_id and uid1.uid_interest_type = uid2.uid_interest_type and uid1.uid_id <> uid2.uid_id and uid1.uid_ud_id = {user_id} and uid1.uid_ud_id <> uid2.uid_ud_id  group by uid2.uid_ud_id, uid1.uid_ud_id, uid1.uid_squared_weight,uid2.uid_squared_weight,uid1.uid_interest_weight,uid2.uid_interest_weight,sw1.sum,sw2.sum order by distance limit 5;'
+    results = db.engine.execute(query)
+    data = []
+    for res in results:
+        name = UserData.query.filter_by(ud_id=res['id']).first().ud_forename
+        data.append({'id' : res['id'], 'name': name, 'distance': res['distance']})
+    print(data)
+    return jsonify({
+        'result': data
+    })
+
 # Gets recommendations for a given user
 
 
