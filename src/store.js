@@ -12,7 +12,7 @@ export default createStore({
     userAvatar: null,
     remoteURL: "https://secret-crag-87848.herokuapp.com/",
     localURL: "http://localhost:5000/",
-    isUsingRemote: true,
+    isUsingRemote: false,
     matchesRetrieved: false,
   },
   mutations: {
