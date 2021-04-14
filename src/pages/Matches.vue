@@ -44,6 +44,10 @@
           <option value="All interests" >All interests</option>
           <option v-for="interestCat in interestCats" :value="interestCat.id" :key="interestCat.id">{{ interestCat.name }}</option>
         </select>
+        <select class="form-control" @change="changeLimit($event)">
+          <option value="8" selected disabled>Default Matches 8</option>
+          <option v-for="limit in limits" :value="limit.id" :key="limit.id">{{ limit.name }}</option>
+        </select>
       </div>
     </template>
     <template #right>
@@ -80,17 +84,15 @@ export default {
       focused: 0,
       originalMarginLeft: 0,
       flickity: null,
-       interestCats: [
-          { name: "music", id: 1 },
-          { name: "film/tv", id: 2 },
-          { name: "sports", id: 3 },
-          { name: "video games", id: 4 }
-        ],
-      selectedInterestCat: "All interests"
-
+      interestCats: [],
+      selectedInterestCat: "All interests",
+      limits: [],
+      selectedLimit: "8",
     };
   },
   mounted() {
+    this.FetchCurrentUserInterests();
+    this.setLimits();
     if (!this.$store.getters.matchesRetrieved) {
       this.getMatches();
     }
@@ -102,9 +104,36 @@ export default {
     },
   },
   methods: {
+    setLimits(){
+      for (let i = 1; i < 50; i++){
+        this.limits.push({name: String(i), id: i})
+      }
+    },
+    FetchCurrentUserInterests(){
+        const userId = this.$store.getters.userId;
+        let args = {
+            user_id: userId
+        };
+        axios.get(this.$store.getters.URL + "get_interests", {params: args}).then(
+        (response) => {
+            if (response.data.STATUS_CODE == 200){
+                let interests = response.data.Data;
+                for (let i = 0; i < interests.length; i++){
+                  this.interestCats.push({name: interests[i], id: 1+i});
+                }
+            }
+            this.$root.displayLog(this.interestCats);
+        });
+    }, 
     changeInterestCat (event) {
       this.selectedInterestCat = event.target.options[event.target.options.selectedIndex].text
       this.getMatches();
+      // TO-DO Needs a forced flickity update or something with flickity
+   },
+   changeLimit(event) {
+     this.selectedLimit = event.target.options[event.target.options.selectedIndex].text
+     this.getMatches();
+    // TO-DO Needs a forced flickity update or something with flickity
    },
     getMatches() {
       const URL = `${this.$store.getters.URL}find_matches`;
@@ -113,12 +142,15 @@ export default {
         .get(URL, {
           params: {
             user_id: userId,
-            limit: 8,
+            limit: this.selectedLimit,
             interestCat: this.selectedInterestCat
           },
         })
         .then((res) => {
           this.matches = res.data.result;
+          if (this.matches == null){
+            this.matches = [];
+          } 
           this.getMatchInfo();
         })
         .catch((err) => {
