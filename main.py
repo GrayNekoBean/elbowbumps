@@ -222,6 +222,9 @@ def add_questionnaire_scores():
             data = UserInterestData(user_id, cat, 0, normalisedScore)
             db.session.add(data)
             db.session.commit()
+            user_interests = UserInterestData.query.filter_by(uid_ud_id=user_id, uid_interest_type=cat).first()
+            user_interests.updateScores()
+            
     return jsonify({
         "STATUS_CODE": 200,
         "Message": f"Updated userID {user_id} interest data."
