@@ -8,10 +8,9 @@
 
 <script>
 import Graphs from '../components/Graphs.vue'
-import InterestDataTable from '../components/InterestDataTable.vue'
 
 export default {
-    components: { Graphs, InterestDataTable },
+    components: { Graphs },
 }
 </script> 
 
