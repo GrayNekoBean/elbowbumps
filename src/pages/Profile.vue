@@ -40,6 +40,15 @@
         />
         <TabView class="profile-tab">
           <TabPanel header="Personal Info" style="margin-top: 6rem">
+            <Dialog header="Welcome to Elbow Bumps!" v-model:visible='firstRegister'>
+              <p>
+                If you would like to get more accurate results, go to the Twitter tab on this page and log into your Twitter!
+              </p>
+              <p>
+                Once you're ready to see your matches, open the hamburger menu on the top right and select "My Matches"!
+              </p>
+              <Button @click='toggleIt'>Okay!</Button>
+            </Dialog>
             <div class="info-area">
               <div class="names">
                 <EditableText textID="first_name" v-model:textVar="firstName" @onSave="updateProfile">
@@ -242,7 +251,15 @@ export default {
       oauthURL: "",
     };
   },
+  computed: {
+    firstRegister() {
+      return this.$store.getters.firstRegister
+    }
+  },
   methods: {
+    toggleIt() {
+      this.$store.dispatch('toggleFirstRegister')
+    },
     updateProfile: function () {
       let localURL = `${this.$store.getters.URL}user_data`;
 

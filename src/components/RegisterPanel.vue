@@ -120,6 +120,7 @@ export default {
               this.$root.login(response.data.id);
               console.log(response.data)
               console.log(this.$store.getters.userId)
+              this.$store.dispatch('toggleFirstRegister')
               this.enteredfName = "";
               this.enteredsName = "";
               this.enteredphoneNum = "";
