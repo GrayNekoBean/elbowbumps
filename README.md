@@ -118,3 +118,5 @@ Make sure you do it in this order
 - DO NOT push `src/store.js` or `elbowbumps/_init_.py` unless you actually changed something in them
 - It will break the deployed version of the site
 - Faridz will not be happy with you 
+
+i
