@@ -1,6 +1,6 @@
 import uuid as UUID
 import hashlib
-import urllib
+import urllib.parse
 
 from flask import Flask, request, jsonify, Blueprint
 from flask.wrappers import Request, Response
@@ -153,11 +153,11 @@ def getGravatarImage(email):
     
     # Set your variables here
     default = 'retro'
-    size = 40
+    size = 256
     
     # construct the url
-    gravatar_url = "https://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
-    gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
+    gravatar_url = "https://www.gravatar.com/avatar/" + hashlib.md5(email.lower().encode()).hexdigest() + "?"
+    gravatar_url += urllib.parse.urlencode({'d':default, 's':str(size)})
     return gravatar_url
 
 @auth.route('/user_data', methods=['GET', 'POST'])
