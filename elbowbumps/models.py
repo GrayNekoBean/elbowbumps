@@ -101,14 +101,12 @@ class UserMatch(db.Model):
     um_ud_id_2 = db.Column(db.Integer)
     um_1_matched = db.Column(db.Boolean)
     um_2_matched = db.Column(db.Boolean)
-    um_blocked = db.Column(db.Boolean)
     
     def __init__(self, id_1, id_2):
         self.um_ud_id_1 = id_1
         self.um_ud_id_2 = id_2
         self.um_1_matched = False
         self.um_2_matched = False
-        self.um_blocked = False
     
 
 class SquaredWeights(db.Model):
