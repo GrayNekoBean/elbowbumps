@@ -323,6 +323,11 @@ def callback_twitter():
 
     return add_twitter_db(id, response['user_id'], response['screen_name'])
 
+@app.route('/refresh_twitter_score', methods=['POST'])
+def refresh_twitter_score():
+    id = request.form.get('id')
+    return get_tweets(id)
+
 def add_twitter_db(id, twitter_id, twitter_name):
     user = UserData.query.filter_by(ud_id = id).first()
     if not user:
@@ -340,6 +345,10 @@ def add_twitter_db(id, twitter_id, twitter_name):
             response = get_tweets(user.ud_id)
             return response
         else:
+            for res in results:
+                print(res)
+                if res[0] == int(id):
+                    return get_tweets(id)
             return jsonify ({
             "STATUS_CODE": "500",
             "Message": "Please provide a unique twitter username"
@@ -354,7 +363,7 @@ def get_tweets(user_id):
             "Message": "Please ensure the user exists!"
             })
     elif user.ud_twitter == "":
-          return jsonify({
+        return jsonify({
             "STATUS_CODE": "500",
             "Message": "Please ensure the user has a social media account registered"
             })
@@ -373,10 +382,14 @@ def get_tweets(user_id):
                 db.session.commit()
 
         return jsonify({
-            'status_code': '200',
-            "Message": f"Updated scores for userID {user_id}"
+            'STATUS_CODE': '200',
+            "Message": f"Updated scores for "
         })
-
+    return jsonify({
+        'STATUS_CODE': '500',
+        "Message": f"Hmm error"
+            })
+    
 
 @app.route('/pending_bumps', methods=['GET'])
 def pending_bumps():
