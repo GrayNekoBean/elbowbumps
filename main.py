@@ -60,8 +60,10 @@ def match_info():
     print(matches)
     match_info = []
     for match in matches:
+        print(match)
         user = UserData.query.filter_by(ud_id=match['uid_ud_id']).first()
-        match_info.append(user.serialise())
+        if user:
+            match_info.append(user.serialise())
     return jsonify({
         "STATUS_CODE": 200,
         'match_info': match_info
@@ -244,10 +246,16 @@ def get_all_interests():
     twitter_results = []
     for res in results2:
         twitter_results.append(dict(res))
+    query3 = f'SELECT uid_interest_type as cat, uid_twitter_score * 50 as twitter, uid_questionnaire_score * 50 as questionnaire, uid_interest_weight * 50 as weight FROM user_interest_data WHERE user_interest_data.uid_ud_id = {user_id}'
+    results3 = db.engine.execute(query3)
+    overall_results = []
+    for res in results3:
+        overall_results.append(dict(res))
+    print(overall_results)
     return jsonify({
         "STATUS_CODE": 200,
         "Message": f"userID {user_id} interest data.",
-        "Data": {'overall': response, 'twitter': twitter_results}
+        "Data": {'overall': response, 'twitter': twitter_results, 'all': overall_results}
     })
 
 @app.route('/questionnaire', methods=['POST'])
