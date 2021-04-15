@@ -221,10 +221,15 @@ def get_all_interests():
     response = []
     for res in results:
         response.append(dict(res))
+    query2 = f'SELECT uid_interest_type as cat, uid_twitter_score * 50 as weight FROM user_interest_data WHERE user_interest_data.uid_ud_id = \'{user_id}\';'
+    results2 = db.engine.execute(query2)
+    twitter_results = []
+    for res in results2:
+        twitter_results.append(dict(res))
     return jsonify({
         "STATUS_CODE": 200,
         "Message": f"userID {user_id} interest data.",
-        "Data": response
+        "Data": {'overall': response, 'twitter': twitter_results}
     })
 
 @app.route('/questionnaire', methods=['POST'])
@@ -453,7 +458,7 @@ def find_matches():
 @app.route('/get_names', methods=['GET'])
 @cross_origin()
 def get_names():
-    user_id = request.form.get('user_id')
+    user_id = request.args.get('user_id')
     query = f'select uid2.uid_ud_id as id, sqrt(sw1.sum + sw2.sum - sum(2*uid1.uid_interest_weight*uid2.uid_interest_weight)) as distance from squared_weights sw1 , squared_weights sw2 , user_interest_data uid1 , user_interest_data uid2 where sw1.uid_ud_id = uid1.uid_ud_id and sw2.uid_ud_id = uid2.uid_ud_id and uid1.uid_interest_type = uid2.uid_interest_type and uid1.uid_id <> uid2.uid_id and uid1.uid_ud_id = {user_id} and uid1.uid_ud_id <> uid2.uid_ud_id  group by uid2.uid_ud_id, uid1.uid_ud_id, uid1.uid_squared_weight,uid2.uid_squared_weight,uid1.uid_interest_weight,uid2.uid_interest_weight,sw1.sum,sw2.sum order by distance limit 5;'
     results = db.engine.execute(query)
     data = []
