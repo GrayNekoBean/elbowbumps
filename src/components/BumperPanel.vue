@@ -40,7 +40,7 @@ export default {
                     command: this.blockUser
                 },
                 {
-                    label: 'Block User',
+                    label: 'Report User',
                     icon: 'pi pi-times',
                     command: this.reportUser
                 }

@@ -68,8 +68,10 @@
         Interests in: <Tag v-for="tag in selectedUser.tags" severity="success" :key="tag" class="p-mr-2" :value="tag" />
         <br>
         <hr>
-        <ScrollPanel class="bio-area" ref="bio">
-          (No Bio)
+        <ScrollPanel>
+          <div class="bio-area" ref="bio">
+            (No Bio)
+          </div>
         </ScrollPanel>
 
       </ScrollPanel>
