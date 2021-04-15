@@ -2,6 +2,7 @@
   <div>
     <Chart class="chart" type="radar" :data="chartData" />
     <Chart
+    v-if=hasTwitter
       class="chart"
       type="radar"
       :data="twitterChartData"
@@ -17,6 +18,7 @@ export default {
     return {
       chartData: {},
       twitterChartData: {},
+      hasTwitter: false
     };
   },
   mounted() {
@@ -39,22 +41,13 @@ export default {
             pointBorderColor: "#fff",
             pointHoverBackgroundColor: "#fff",
             pointHoverBorderColor: "rgba(179,181,198,1)",
+            pointLabelFontColor: '#000',
             data: weights,
           },
         ];
-        that.$forceUpdate();
         var twitterData = res.data.Data.twitter;
-        console.log(twitterData)
-        if (twitterData.length > 0) {
-          that.hasTwitter = true;
-        } else {
-          return;
-        }
-        var twitterLabels = twitterData.map((i) => i["cat"]);
-        that.twitterChartData["labels"] = twitterLabels;
-        var twitterWeights = twitterData.map((i) => i["weight"]);
-        that.twitterChartData["datasets"] = [
-          {
+        if (twitterData.length > 0) { 
+            that.chartData['datasets'].push( {
             label: "Twitter Sentiment Analysis",
             backgroundColor: "rgba(255,99,132,0.2)",
             borderColor: "rgba(255,99,132,1)",
@@ -62,10 +55,10 @@ export default {
             pointBorderColor: "#fff",
             pointHoverBackgroundColor: "#fff",
             pointHoverBorderColor: "rgba(255,99,132,1)",
-            data: twitterWeights,
-          },
-        ];
-        this.$forceUpdate();
+            data: twitterData.map((i) => i['weight']),
+          })
+        }
+        that.$forceUpdate();
       });
   },
 };
@@ -73,6 +66,5 @@ export default {
 
 <style scoped>
 .chart {
-  margin-top: 10%;
 }
 </style>
