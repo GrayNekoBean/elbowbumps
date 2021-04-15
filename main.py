@@ -99,6 +99,36 @@ def unbump():
         db.session.commit()
         return jsonify({"STATUS_CODE": 200})
 
+@app.route('/blockUser', methods=['POST'])
+@cross_origin()
+def blockUser():
+    # user_id = request.form.get('userId')
+    # match_id = request.form.get('matchId')
+    # m1 = UserMatch.query.filter(UserMatch.um_ud_id_1==user_id).filter(UserMatch.um_ud_id_2==match_id).first()
+    # m2 = UserMatch.query.filter(UserMatch.um_ud_id_2==user_id).filter(UserMatch.um_ud_id_1==match_id).first()
+    # if m1:
+    #     m1.um_1_matched = False
+    #     db.session.commit()
+    #     return jsonify({"STATUS_CODE": 200})
+    # else:
+    #     m2.um_2_matched = False
+    #     db.session.commit()
+    #     return jsonify({"STATUS_CODE": 200})
+    user_id = request.form.get('userId')
+    match_id = request.form.get('matchId')
+    print(user_id)
+    print(match_id)
+    m1 = UserMatch.query.filter(UserMatch.um_ud_id_1==user_id).filter(UserMatch.um_ud_id_2==match_id).first()
+    m2 = UserMatch.query.filter(UserMatch.um_ud_id_2==user_id).filter(UserMatch.um_ud_id_1==match_id).first()
+    if m1:
+        m1.um_blocked = True
+        db.session.commit()
+        return jsonify({"STATUS_CODE": 200})
+    else:
+        m2.um_blocked = True
+        db.session.commit()
+        return jsonify({"STATUS_CODE": 200})
+
 @app.route('/bumped_by', methods=['GET'])
 @cross_origin()
 def bumped_by():
@@ -414,7 +444,6 @@ def find_furthest_matches():
         m1 = UserMatch.query.filter_by(um_ud_id_1=param,um_ud_id_2=res.uid_ud_id).first()
         m2 = UserMatch.query.filter_by(um_ud_id_2=param,um_ud_id_1=res.uid_ud_id).first()
         if not m1 and not m2:
-            print("false")
             newMatch = UserMatch(param, res.uid_ud_id)
             db.session.add(newMatch)
             response.append(dict(res))
@@ -424,8 +453,11 @@ def find_furthest_matches():
             accepted_check_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) & (UserMatch.um_ud_id_2 == res.uid_ud_id)).filter(UserMatch.um_1_matched == True).filter(UserMatch.um_2_matched == True).all()
             accepted_check_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == res.uid_ud_id) & (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_2_matched == True).filter(UserMatch.um_1_matched == True).all()
             if not accepted_check_1 and not accepted_check_2:
-                response.append(dict(res))
-                index = index + 1
+                blocked_check_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) & (UserMatch.um_ud_id_2 == res.uid_ud_id)).filter(UserMatch.um_blocked == True).all()
+                blocked_check_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == res.uid_ud_id) & (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_blocked == True).all()
+                if not blocked_check_1 and not blocked_check_2:
+                    response.append(dict(res))
+                    index = index + 1
         if index >= limit:
             break
 
@@ -452,7 +484,6 @@ def find_matches():
         m1 = UserMatch.query.filter_by(um_ud_id_1=param,um_ud_id_2=res.uid_ud_id).first()
         m2 = UserMatch.query.filter_by(um_ud_id_2=param,um_ud_id_1=res.uid_ud_id).first()
         if not m1 and not m2:
-            print("false")
             newMatch = UserMatch(param, res.uid_ud_id)
             db.session.add(newMatch)
             response.append(dict(res))
@@ -462,8 +493,11 @@ def find_matches():
             accepted_check_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) & (UserMatch.um_ud_id_2 == res.uid_ud_id)).filter(UserMatch.um_1_matched == True).filter(UserMatch.um_2_matched == True).all()
             accepted_check_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == res.uid_ud_id) & (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_2_matched == True).filter(UserMatch.um_1_matched == True).all()
             if not accepted_check_1 and not accepted_check_2:
-                response.append(dict(res))
-                index = index + 1
+                blocked_check_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) & (UserMatch.um_ud_id_2 == res.uid_ud_id)).filter(UserMatch.um_blocked == True).all()
+                blocked_check_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == res.uid_ud_id) & (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_blocked == True).all()
+                if not blocked_check_1 and not blocked_check_2:
+                    response.append(dict(res))
+                    index = index + 1
         if index >= limit:
             break
 
