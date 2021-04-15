@@ -4,6 +4,9 @@
       <h2 style="text-align: center; margin-top:5rem; padding-top: 3rem;">
         Welcome to your matches!
       </h2>
+      <div v-if="selectedMatchType!='Matches'" style="text-align: center;">
+        Opposites attract, or maybe you just want to find someone you can elbow bump in the face. We get it! 
+      </div>
       <div v-if="noMatches" style="text-align: center;">
         You have no new matches :( Click
         <router-link to="/questionnaire">here</router-link> to do the
@@ -48,7 +51,12 @@
           <option value="8" selected disabled>Default Matches 8</option>
           <option v-for="limit in limits" :value="limit.id" :key="limit.id">{{ limit.name }}</option>
         </select>
-        <Button><router-link to="/antimatches"  style="text-decoration: none; color: inherit;">AntiMatches</router-link></Button>
+        <select class="form-control" @change="changeMatchOrder($event)">
+          <option value="True">Matches</option>
+          <option value="False">Anti-matches</option>
+          <!-- <option v-for="interestCat in interestCats" :value="interestCat.id" :key="interestCat.id">{{ interestCat.name }}</option> -->
+        </select>
+        <!-- <Button><router-link to="/antimatches"  style="text-decoration: none; color: inherit;">AntiMatches</router-link></Button> -->
       </div>
     </template>
     <template #right>
@@ -116,8 +124,7 @@ export default {
       selectedInterestCat: "All interests",
       limits: [],
       selectedLimit: "8",
-      getmatch: "1",
-      markdown: null
+      selectedMatchType: "Matches"
     };
   },
   mounted() {
@@ -178,6 +185,17 @@ export default {
             }
             //this.$root.displayLog(this.interestCats);
         });
+    },
+
+    changeMatchOrder(event) {
+      this.selectedMatchType = event.target.options[event.target.options.selectedIndex].text
+      this.$root.displayLog("Changed matching type: " + this.selectedMatchType);
+      if (this.selectedMatchType == 'Matches'){
+        this.getMatches();
+      }
+      else {
+        this.getAntiMatches();
+      }
     },
     changeInterestCat (event) {
       this.selectedInterestCat = event.target.options[event.target.options.selectedIndex].text
