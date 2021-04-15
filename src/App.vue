@@ -56,7 +56,7 @@
               <div v-if="logined()" class="clickable-gray" @click="showMenu">
                 <div class="user-info-area">
                   <div>
-                    <Avatar image="https://i.imgur.com/VtIwKXj.jpg" class="p-mr-2" size="large" shape="circle" style="background-color:#2196F3; color: #ffffff; margin-right: 1rem;" />
+                    <Avatar :image="avatar" class="p-mr-2" size="large" shape="circle" style="background-color:#2196F3; color: #ffffff; margin-right: 1rem;" />
                   </div>
                   <div class="user-info-text">
                     <p style="display:block; margin-right: 1rem;"> Welcome, {{current_user}}! </p>
@@ -182,7 +182,7 @@ export default {
       }
     }else{
       this.current_user = this.$store.getters.fName;
-      this.avatar = "assets/test.jpg";
+      this.avatar = this.$store.getters.avatar;
       this.user_menu_items[0].label = "You're now login as " + this.current_user;
     }
   },
@@ -197,6 +197,7 @@ export default {
         (resp) => {
           this.$store.dispatch("logIn",{ id: id, fName: resp.data.data.fName, avatar: resp.data.data.avatar });
           this.current_user = this.$store.getters.fName;
+          this.avatar = this.$store.getters.avatar;
           sessionStorage.setItem('current_user', id);
           if (remember){
             localStorage.setItem('current_user', id);
