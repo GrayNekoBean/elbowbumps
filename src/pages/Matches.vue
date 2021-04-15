@@ -23,6 +23,7 @@
               v-for="user in users"
               :key="user.id"
               :userID="user.id"
+              :distance="user.distance"
             />
           </div>
       </div>
@@ -271,6 +272,10 @@ export default {
         .post(URL, form)
         .then((res) => {
           this.users = res.data.match_info;
+          this.users.forEach((user) => {
+            const distance = this.matches.filter((match) => match.uid_ud_id == user.id)[0].distance
+            user['distance'] = distance
+          })
           this.$nextTick(() => {
             if (!this.flickity) {
               this.flickity = new Flickity(this.$refs.matches, {

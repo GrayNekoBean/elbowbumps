@@ -58,7 +58,7 @@ export default {
             match_percentage:0
         };
     },
-    props: [ "userID" ],
+    props: [ "userID", "distance" ],
     methods: {
       PendingUsers(){
             const user_id = this.$store.getters.userId;
@@ -75,29 +75,31 @@ export default {
             });
         }, 
         FetchMatchScore(){
-            let args = {
-                user_id: this.userID,
-                limit: 8,
-            };
-            axios.get(this.$store.getters.URL + "find_matches", {params: args}).then(
-            (response) => {
-                if (response.data.STATUS_CODE == 200){
-                    let match_data = response.data.result;
-                    this.$root.displayLog("Fetching interest data successed", match_dat);
-                    var i;
-                    for(i=0; i < match_data.length; i++){
-                        if((match_data[i]['distance'] != null)&&(match_data[i]['uid_ud_id'] == this.$store.getters.userId)){
-                            this.match_percentage = (((8 - match_data[i]['distance'])/8)*100).toFixed(1);
-                        }
-                    }
-                    console.log(this.match_percentage)
+            this.match_percentage = (((8 - this.distance)/8)*100).toFixed(1);
+            // let args = {
+            //     user_id: this.userID,
+            //     limit: 8,
+            // };
+
+            // axios.get(this.$store.getters.URL + "find_matches", {params: args}).then(
+            // (response) => {
+            //     if (response.data.STATUS_CODE == 200){
+            //         let match_data = response.data.result;
+            //         this.$root.displayLog("Fetching interest data successed", match_data);
+            //         var i;
+            //         for(i=0; i < match_data.length; i++){
+            //             if((match_data[i]['distance'] != null)&&(match_data[i]['uid_ud_id'] == this.$store.getters.userId)){
+            //                 this.match_percentage = (((8 - match_data[i]['distance'])/8)*100).toFixed(1);
+            //             }
+            //         }
+            //         console.log(this.match_percentage)
 
 
-                }
-            })
-            .catch((err) => {
-            console.log(err);
-            });
+            //     }
+            // })
+            // .catch((err) => {
+            // console.log(err);
+            // });
         },
        
        FetchUserInterests(){
