@@ -2,8 +2,11 @@
   <SplitedPage ratio="1">
     <template #left>
       <h2 style="text-align: center; margin-top:5rem; padding-top: 3rem;">
-        Welcome to your Antimatches!
+        Welcome to your Antimatches
       </h2>
+       <div style="text-align: center;">
+        Opposites attract, or maybe you just want to find someone you can elbow bump in the face. We get it! 
+      </div>
       <div v-if="noMatches" style="text-align: center;">
         You have no new matches :( Click
         <router-link to="/questionnaire">here</router-link> to do the
@@ -124,21 +127,23 @@ export default {
                   this.interestCats.push({name: interests[i], id: 1+i});
                 }
             }
-            this.$root.displayLog(this.interestCats);
+           // this.$root.displayLog(this.interestCats);
         });
     },
     changeInterestCat (event) {
-      this.selectedInterestCat = event.target.options[event.target.options.selectedIndex].text
+      this.selectedInterestCat = event.target.options[event.target.options.selectedIndex].text;
+      this.$root.displayLog("Weighted matching based on: " + this.selectedInterestCat);
       this.getMatches();
       // TO-DO Needs a forced flickity update or something with flickity
    },
    changeLimit(event) {
-     this.selectedLimit = event.target.options[event.target.options.selectedIndex].text
+     this.selectedLimit = event.target.options[event.target.options.selectedIndex].text;
+     this.$root.displayLog("Limited number of matches to: " + this.selectedLimit);
      this.getMatches();
     // TO-DO Needs a forced flickity update or something with flickity
    },
    getMatchesNum(event) {
-     this.getmatch = event.target.options[event.target.options.selectedIndex].text
+     this.getmatch = event.target.options[event.target.options.selectedIndex].text;
      this.getMatches();
     // TO-DO Needs a forced flickity update or something with flickity
    },

@@ -13,7 +13,8 @@
                 <Button v-if="!pending" @click="bump">Bump</Button>
                 <Button style="background:#bb2e2e;" v-else @click="unbump">Unbump</Button>
                 <div style="display: flex; justify-content: space-between;">
-                    <IconButton hint="Block User" icon="pi-times" color="red" @click="reportUser()"></IconButton>
+                    <IconButton hint="Block User" icon="pi-ban" color="black" @click="blockUser()"></IconButton>
+                    <IconButton hint="Report User" icon="pi-times" color="red" @click="reportUser()"></IconButton>
                 </div>
             </div>
         </template>
@@ -138,8 +139,6 @@ export default {
             });
         },
         bump(){
-            // this.showBumpCard = true;
-            // console.log("bumped");
             const URL = `${this.$store.getters.URL}bump`;
             console.log(`${this.$store.getters.userId} ${this.userID}`);
             const form = new FormData();
@@ -148,14 +147,11 @@ export default {
             axios.post(URL, form).then((res) => {
                 if (res.data.STATUS_CODE == "200") {
                 console.log("success!");
-                // this.$el.parentNode.removeChild(this.$el);
                 this.pending = true;
                 }
             });
         },
         unbump(){
-            // this.showBumpCard = true;
-            // console.log("bumped");
             const URL = `${this.$store.getters.URL}unbump`;
             console.log(`${this.$store.getters.userId} ${this.userID}`);
             const form = new FormData();
@@ -164,8 +160,22 @@ export default {
             axios.post(URL, form).then((res) => {
                 if (res.data.STATUS_CODE == "200") {
                 console.log("success!");
-                // this.$el.parentNode.removeChild(this.$el);
                 this.pending = false;
+                }
+            });
+        },
+        blockUser(){
+            //this.showBumpCard = false;
+            const URL = `${this.$store.getters.URL}blockUser`;
+            console.log(`${this.$store.getters.userId} ${this.userID}`);
+            const form = new FormData();
+            form.append("userId", this.$store.getters.userId);
+            form.append("matchId", this.userID);
+            axios.post(URL, form).then((res) => {
+                if (res.data.STATUS_CODE == "200") {
+                console.log("success!");
+                this.$el.parentNode.removeChild(this.$el);
+                // TODO Flickity update
                 }
             });
         },
