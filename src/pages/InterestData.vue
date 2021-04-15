@@ -11,12 +11,15 @@ import Graphs from '../components/Graphs.vue'
 
 export default {
     components: { Graphs },
+    mounted(){
+        axios.get(this.$store.getters.URL + "get_interest_data", {params: {user_id: this.$store.getters.userId}}).then(
+            (response) => {
+                if (response.data.STATUS_CODE == 200){
+                    // let dat = response.data.Data;
+                    // this.$root.displayLog("Fetching interest data successed", dat);
+                }
+            }
+        )
+    }
 }
 </script> 
-
-<style scoped>
-* {
-    margin-top: 4%;
-    background-color: #80929F;
-}
-</style>
