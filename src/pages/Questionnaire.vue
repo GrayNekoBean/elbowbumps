@@ -14,6 +14,7 @@
         <h3 style="font-size:15px; text-align:center;">Strongly Agree 1 - 2 - 3 - 4 - 5 Strongly Disagree</h3>
       
       <Panel style="margin-top: 0rem;">
+        
         <div style="display: flex; flex-direction: column;">
           <!-- Buttons to display questions from the questions.txt bank based on their category -->
           <!-- <div class="topic-buttons">
@@ -26,7 +27,7 @@
             <div class ="divider"/>
             <Button @click = "LoadQuestion('video games')" style="background-color: #75c9deff;">Video Games</Button>
           </div> -->
-
+          <Button class="skip-button" icon="pi pi-fast-forward" label="Skip" @click="skip" />
           <Accordion>
             <AccordionTab v-for="(qsList, cate) in questions" :key="cate" :header="cate">
               <SingleQuestion v-for="i in qsList.length"
@@ -57,8 +58,10 @@
 <script>
 import SplitedPage from "../components/SplitedPage";
 import SingleQuestion from "../components/SingleQuestion";
-import axios from "axios";
+
 import question_bank from "raw-loader!../assets/questions.txt";
+
+import axios from "axios";
 //!!!! You may have to run npm i -D raw-loader before this page
 export default {
   components: { SingleQuestion, SplitedPage },
@@ -100,6 +103,9 @@ export default {
           }
         );
       }
+    },
+    skip(){
+      this.$root.route_to('/profile');
     },
     updateScore(category, index, val) {
       this.scores[category][index] = val;
@@ -205,6 +211,11 @@ h3.agree{
   text-align:center;
   font-size: 12px;
   padding: 10px 10px;
+}
+.skip-button{
+  position: absolute;
+  right: 2rem;
+  top: 4rem;
 }
 .divider{
   width:5px;

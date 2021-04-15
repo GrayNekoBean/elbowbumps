@@ -21,9 +21,10 @@
             <BumperPanel
               class="bump-card"
               v-for="user in users"
-              :key="user.id"
+              :key="user"
               :userID="user.id"
               :distance="user.distance"
+              @onRemove="removeUser"
             />
           </div>
       </div>
@@ -77,7 +78,7 @@
         Interests in: <Tag v-for="tag in selectedUser.tags" severity="success" :key="tag" class="p-mr-2" :value="tag" />
         <br>
         <hr>
-        <ScrollPanel>
+        <ScrollPanel style="height: 32rem;">
           <div class="bio-area" ref="bio">
             (No Bio)
           </div>
@@ -269,6 +270,7 @@ export default {
           this.$nextTick(() => {
             if (this.flickity) {
               this.flickity.destroy();
+              this.$forceUpdate();
             }
             this.flickity = new Flickity(this.$refs.matches, {
               accessbility: true,
@@ -307,6 +309,11 @@ export default {
           this.getMatches();
         }
       });
+    },
+    removeUser(element){
+      if(this.flickity){
+        this.flickity.remove(element);
+      }
     },
     logout() {
       this.$store.dispatch("logOut");

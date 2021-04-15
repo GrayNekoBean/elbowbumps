@@ -86,6 +86,7 @@ export default {
     }
   },
   props: ["userID", "distance"],
+  emits: ["onRemove"],
   methods: {
     PendingUsers() {
       const user_id = this.$store.getters.userId;
@@ -230,7 +231,8 @@ export default {
       axios.post(URL, form).then((res) => {
         if (res.data.STATUS_CODE == "200") {
           console.log("success!");
-          this.$el.parentNode.removeChild(this.$el);
+          //this.$el.parentNode.removeChild(this.$el);
+          this.$emit("onRemove", this.$el);
           // TODO Flickity update
         }
       });
