@@ -1,4 +1,4 @@
-# Elbow Bumps 
+# Elbow Bumps p
 
 Welcome to our first year team project, a friendship recommendation web application.
 
