@@ -108,6 +108,13 @@
                       color="green"
                       @onClick="updateProfile"
                     />
+                    <IconButton
+                      style="margin: 0.7rem"
+                      hint="save"
+                      icon="pi-pencil"
+                      color="green"
+                      @onSave="save"
+                    />
                   </div>
                 </div>
               </template>
@@ -138,10 +145,17 @@
           <TabPanel header="Twitter">
             <div v-if="twitter != ''">
               <p>Current Twitter account: @{{ twitter }}</p>
-              <Button
-                label="Refresh your sentiment scores for your current account or authorise a new Twitter account"
+               <Button
+                label="Authorise a new Twitter account"
                 autofocus
                 @click="openURL()"
+                style="margin-right:3rem;"
+              ></Button>
+                <Button
+                label="Refresh your sentiment scores for your current account"
+                autofocus
+                @click="refreshTwitter()"
+                style="margin-left:30%;"
               ></Button>
             </div>
             <div v-else>
@@ -153,37 +167,40 @@
               ></Button>
             </div>
 
-            <h2>Enter the PIN you recieved above</h2>
-            <div id="textbox">
-              <form @submit.prevent="submitPIN">
-                <label for="twitterPIN"></label>
-                <input
-                  type="text"
-                  id="twitterPIN"
-                  name="twitterPIN"
-                  v-model="twitterPIN"
-                  value
-                  @click="getValue"
-                />
-                <br /><br />
-                <div id="button">
-                  <Button type="submit" id="button">Submit</Button>
-                </div>
-                <br /><br />
-                <Dialog
-                  v-model:visible="hasErrors"
-                  header="Oh no!"
-                  class="error"
-                >
-                  {{ error }} <br /><br />
-                  <Button
-                    label="Got it!"
-                    autofocus
-                    @click="removeErrors"
-                  ></Button>
-                </Dialog>
-              </form>
-            </div>
+            <h2 v-if="userAuthoriseTwitter != false">Enter the PIN you recieved above</h2>
+
+         
+              <div v-if="userAuthoriseTwitter != false" id="textbox">
+                <form @submit.prevent="submitPIN">
+                  <label for="twitterPIN"></label>
+                  <input
+                    type="text"
+                    id="twitterPIN"
+                    name="twitterPIN"
+                    v-model="twitterPIN"
+                    value
+                    @click="getValue"
+                  />
+                  <br /><br />
+                  <div id="button">
+                    <Button type="submit" id="button">Submit</Button>
+                  </div>
+                  <br /><br />
+                  <Dialog
+                    v-model:visible="hasErrors"
+                    header="Oh no!"
+                    class="error"
+                  >
+                    {{ error }} <br /><br />
+                    <Button
+                      label="Got it!"
+                      autofocus
+                      @click="removeErrors"
+                    ></Button>
+                  </Dialog>
+                </form>
+              </div>
+
           </TabPanel>
           <TabPanel header="Questionnaire">
             <p>Fill out the questionnaire</p>
@@ -243,6 +260,7 @@ export default {
       oauthToken: "",
       oauthTokenSecret: "",
       oauthURL: "",
+      userAuthoriseTwitter: false
     };
   },
   watch: {
@@ -340,6 +358,25 @@ export default {
       let compiled = this.markdown.render(this.bio);
       this.$refs.rendered_md.innerHTML = compiled;
     },
+    refreshTwitter(){
+      let localURL = `${this.$store.getters.URL}refresh_twitter_score`;
+      const form = new FormData();
+      form.append("id", this.$store.getters.userId);
+      axios
+        .post(localURL, form)
+        .then((res) => {
+          if (res.data.STATUS_CODE == 200) {
+            this.getCurrentUserInfo()
+            this.$root.displayLog(res.data.Message + this.twitter);
+          } else {
+            this.error = res.data.Message;
+            this.$root.displayLog("That wasn't right, please try again!");
+          }
+        })
+      .catch((err) => {
+        console.log(err);
+      });   
+    },
     submitPIN() {
       let localURL = `${this.$store.getters.URL}social_media_info`;
 
@@ -353,16 +390,18 @@ export default {
         .post(localURL, form)
         .then((res) => {
           if (res.data.STATUS_CODE == 200) {
-            this.$router.push("/matches");
+            this.getCurrentUserInfo()
+            this.$root.displayLog(res.data.Message + this.twitter);
           } else {
             this.error = res.data.Message;
+            this.$root.displayLog("That wasn't right, please try again!");
           }
         })
         .catch((err) => {
           console.log(err);
-        });
-      this.twitterUsername = "";
-      this.$router.push("/profile");
+        }); 
+        this.userAuthoriseTwitter = false;
+        this.oauthURL="";     
     },
     removeErrors() {
       this.error = "";
@@ -388,7 +427,9 @@ export default {
       return this.oauthURL;
     },
     openURL() {
-      window.open(this.generateURL(), "_blank");
+      this.userAuthoriseTwitter = true;
+      this.generateURL();
+      window.open(this.oauthURL, "_blank");
     },
     questionnaireRoute() {
       this.$router.push("/questionnaire");
