@@ -14,6 +14,7 @@ export default createStore({
     localURL: "http://localhost:5000/",
     isUsingRemote: true,
     matchesRetrieved: false,
+    firstRegister: false,
   },
   mutations: {
     logIn(state, userInfo) {
@@ -33,6 +34,9 @@ export default createStore({
     matchesRetrieved(state) {
       state.matchesRetrieved = true;
     },
+    toggleFirstRegister(state) {
+      state.firstRegister = !state.firstRegister
+    }
   },
   actions: {
     logIn(context, id) {
@@ -47,6 +51,9 @@ export default createStore({
     matchesRetrieved(context) {
       context.commit("matchesRetrieved");
     },
+    toggleFirstRegister(context) {
+      context.commit('toggleFirstRegister')
+    }
   },
   getters: {
     isLoggedIn: (state) => {
@@ -66,6 +73,9 @@ export default createStore({
     },
     avatar: (state) => {
       return state.userAvatar;
+    },
+    firstRegister: (state) => {
+      return state.firstRegister;
     }
   },
 });
