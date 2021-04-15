@@ -202,7 +202,7 @@ def get_interests():
     print("sorted results = ", sorted_results)
     for x in range(len(sorted_results)):
         for res in results:
-            if sorted_results[x] == res.uid_interest_weight:
+            if sorted_results[x] == res.uid_interest_weight and res.uid_interest_type not in response:
                 response.append(res.uid_interest_type)
     print(user_id)
     print(response)
