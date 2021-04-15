@@ -1,16 +1,17 @@
 <template>
     <div>
         <graphs></graphs>
+        <interest-data-table/>
     </div>
 </template>
 
 
 <script>
-import axios from "axios";
 import Graphs from '../components/Graphs.vue'
+import InterestDataTable from '../components/InterestDataTable.vue'
 
 export default {
-    components: { Graphs },
+    components: { Graphs, InterestDataTable },
 }
 </script> 
 

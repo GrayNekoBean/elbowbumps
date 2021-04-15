@@ -89,6 +89,7 @@ export default {
                             this.match_percentage = (((8 - match_data[i]['distance'])/8)*100).toFixed(1);
                         }
                     }
+                    console.log(this.match_percentage)
 
 
                 }
