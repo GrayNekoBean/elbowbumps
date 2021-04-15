@@ -196,13 +196,24 @@ export default {
     changeInterestCat (event) {
       this.selectedInterestCat = event.target.options[event.target.options.selectedIndex].text
       this.$root.displayLog("Weighted matching based on: " + this.selectedInterestCat);
-      this.getMatches();
+      if (this.selectedMatchType == 'Matches'){
+        this.getMatches();
+      }
+      else {
+        this.getAntiMatches();
+      }
       // TO-DO Needs a forced flickity update or something with flickity
    },
    changeLimit(event) {
      this.selectedLimit = event.target.options[event.target.options.selectedIndex].text
      this.$root.displayLog("Limited number of matches to: " + this.selectedLimit);
-     this.getMatches();
+     this.$root.displayLog("Changed matching type: " + this.selectedMatchType);
+      if (this.selectedMatchType == 'Matches'){
+        this.getMatches();
+      }
+      else {
+        this.getAntiMatches();
+      }
     // TO-DO Needs a forced flickity update or something with flickity
    },
    getMatchesNum(event) {
