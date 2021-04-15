@@ -83,6 +83,7 @@ export default {
             (response) => {
                 if (response.data.STATUS_CODE == 200){
                     let match_data = response.data.result;
+                    this.$root.displayLog("Fetching interest data successed", match_dat);
                     var i;
                     for(i=0; i < match_data.length; i++){
                         if((match_data[i]['distance'] != null)&&(match_data[i]['uid_ud_id'] == this.$store.getters.userId)){

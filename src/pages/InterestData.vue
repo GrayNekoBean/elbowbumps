@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h2 style="text-align: center; margin-top:5rem; padding-top: 3rem;"> Want to know more about your interests? You are in the right place!</h2>
         <graphs></graphs>
         <interest-data-table/>
     </div>
@@ -8,15 +9,17 @@
 
 <script>
 import Graphs from '../components/Graphs.vue'
-import InterestDataTable from '../components/InterestDataTable.vue'
 
 export default {
-    components: { Graphs, InterestDataTable },
+    components: { Graphs },
 }
 </script> 
 
 <style scoped>
 * {
     margin-top: 4%;
+    margin-bottom: 4%;
 }
+
+
 </style>

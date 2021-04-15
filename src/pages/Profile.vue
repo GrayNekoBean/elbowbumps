@@ -31,13 +31,6 @@
           placeholder="Describe yourself in a sentence or two (160 character limit)"
           v-model:textVar="intro"
         />
-        <Button
-          style="position: absolute; right: 0rem; margin: 3rem"
-          icon="pi pi-save"
-          label="Save"
-          class="p-button-raised"
-          @click="updateProfile"
-        />
         <TabView class="profile-tab">
           <TabPanel header="Personal Info" style="margin-top: 6rem">
             <Dialog header="Welcome to Elbow Bumps!" v-model:visible='firstRegister'>
@@ -69,7 +62,7 @@
             </div>
           </TabPanel>
           <TabPanel header="Bio">
-            <Dialog header="About your bio" v-model:visible="displayHint">
+            <Dialog header="About your bio" v-model:visible="displayHint" @onSave="updateProfile">
               <p>This is where you can edit & view your bio.</p>
               <p>
                 You can write your bio using
