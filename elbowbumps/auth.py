@@ -1,5 +1,6 @@
 import uuid as UUID
 import hashlib
+import urllib
 
 from flask import Flask, request, jsonify, Blueprint
 from flask.wrappers import Request, Response
@@ -147,16 +148,16 @@ def loginUser():
         SetSessionCookie(response, userID)
     return response
 
-def getImgurImage(imageHash):
-    if imageHash != '':
-        clientId = '7a7f16c6427fe66'        
-        header = {'Authorization': f'Client-ID {clientId}'}
-        
-        imageInfo = HttpRequest.get(url=f"https://api.imgur.com/3/image/{imageHash}", headers=header).json()
-        srcLink = imageInfo['link']
-        return srcLink
-    else:
-        return ''
+def getGravatarImage(email):
+    # import code for encoding urls and generating md5 hashes
+    
+    # Set your variables here
+    default = 'retro'
+    size = 40
+    
+    # construct the url
+    gravatar_url = "https://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+    gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
 
 @auth.route('/user_data', methods=['GET', 'POST'])
 #@cross_origin
@@ -166,7 +167,7 @@ def getUserData():
             userId = request.args['user_id']
             userRow = UserData.query.filter_by(ud_id=userId).first()
             
-            avatar = getImgurImage(userRow.ud_avatar)
+            avatar = getGravatarImage(userRow.ud_email)
             fName = userRow.ud_forename
             sName = userRow.ud_surname
             email = userRow.ud_email
