@@ -48,6 +48,7 @@
           <option value="8" selected disabled>Default Matches 8</option>
           <option v-for="limit in limits" :value="limit.id" :key="limit.id">{{ limit.name }}</option>
         </select>
+        <Button><router-link to="/antimatches"  style="text-decoration: none; color: inherit;">AntiMatches</router-link></Button>
       </div>
     </template>
     <template #right>
@@ -88,6 +89,7 @@ export default {
       selectedInterestCat: "All interests",
       limits: [],
       selectedLimit: "8",
+      getmatch: "1",
     };
   },
   mounted() {
@@ -124,7 +126,7 @@ export default {
             }
             this.$root.displayLog(this.interestCats);
         });
-    }, 
+    },
     changeInterestCat (event) {
       this.selectedInterestCat = event.target.options[event.target.options.selectedIndex].text
       this.getMatches();
@@ -132,6 +134,11 @@ export default {
    },
    changeLimit(event) {
      this.selectedLimit = event.target.options[event.target.options.selectedIndex].text
+     this.getMatches();
+    // TO-DO Needs a forced flickity update or something with flickity
+   },
+   getMatchesNum(event) {
+     this.getmatch = event.target.options[event.target.options.selectedIndex].text
      this.getMatches();
     // TO-DO Needs a forced flickity update or something with flickity
    },
@@ -150,7 +157,31 @@ export default {
           this.matches = res.data.result;
           if (this.matches == null){
             this.matches = [];
-          } 
+          }
+          this.getMatchInfo();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+
+    },
+    getAntiMatches() {
+      const URL = `${this.$store.getters.URL}find_furthest_matches`;
+      const userId = this.$store.getters.userId;
+      axios
+        .get(URL, {
+          params: {
+            user_id: userId,
+            limit: this.selectedLimit,
+            interestCat: this.selectedInterestCat
+          },
+        })
+        .then((res) => {
+          this.matches = res.data.result;
+          if (this.matches == null){
+            this.matches = [];
+          }
           this.getMatchInfo();
         })
         .catch((err) => {
