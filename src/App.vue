@@ -3,7 +3,7 @@
     <Toast position="top-right" />
     <Sidebar v-model:visible="sidebarOpen">
       <div style="margin: 1rem">
-      <h3> <span style = "color: #a9edfe">ELBOW</span> <span style = "color: #ffaaaa">BUMPS</span> </h3>
+      <h3 style="cursor: pointer;" @click="route_to('/')"> <span style = "color: #a9edfe">ELBOW</span> <span style = "color: #ffaaaa">BUMPS</span> </h3>
       </div>
       <Menu style="width: 100%" :model="sidebar_items" />
     </Sidebar>
@@ -68,7 +68,7 @@
             <div style="position: absolute; top: 1rem; left: 1rem; z-index: 6; height: 2rem; width: 2rem;">
             <IconButton v-if="logined()" icon="pi-bars" @click="sidebarOpen = true" color="gray"/>
             </div>
-            <div class="header-title" :class="logined() ? 'longer-title' : ''">
+            <div class="header-title" :class="logined() ? 'longer-title' : ''" @click="route_to('/')">
               <h3> <span style = "color: #a9edfe">ELBOW</span> <span style = "color: #ffaaaa">BUMPS</span> </h3>
             </div>
           </template>
@@ -401,6 +401,7 @@ div.p-menubar{
   height: 100%;
   z-index: 0;
 }
+
 .user-info-cover{
   position: absolute;
   display: block;
@@ -422,6 +423,7 @@ div.p-menubar{
   background: #ffffff; //rgba(255, 255, 255, 0.3); //rgba(169, 237, 254, 1);
   width: 20%;
   z-index: 4;
+  cursor: pointer;
 }
 .header-menu {
   position: fixed;

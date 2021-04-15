@@ -103,7 +103,7 @@ export default {
         });
     },
     FetchMatchScore() {
-      this.match_percentage = (((8 - this.distance) / 8) * 100).toFixed(1);
+      this.match_percentage = Number((((8 - Number(this.distance)) / 8) * 100).toFixed(1));
       // let args = {
       //     user_id: this.userID,
       //     limit: 8,
@@ -307,10 +307,10 @@ export default {
 }
 
 .intro {
-  height: 6rem;
+  height: 2.8rem;
   display: -webkit-box;
   overflow: hidden;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
 }

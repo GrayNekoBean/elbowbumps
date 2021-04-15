@@ -30,6 +30,7 @@
           textID="intro"
           placeholder="Describe yourself in a sentence or two (160 character limit)"
           v-model:textVar="intro"
+          @onSave="updateProfile"
         />
         <TabView class="profile-tab">
           <TabPanel header="Personal Info" style="margin-top: 6rem">
@@ -102,10 +103,10 @@
                   <div style="display: flex; justify-content: right">
                     <IconButton
                       style="margin: 0.7rem"
-                      hint="compile"
-                      icon="pi-check-circle"
+                      hint="Save"
+                      icon="pi-save"
                       color="green"
-                      @onClick="compileMarkdown"
+                      @onClick="updateProfile"
                     />
                   </div>
                 </div>
@@ -244,6 +245,11 @@ export default {
       oauthURL: "",
     };
   },
+  watch: {
+    bio(value) {
+      this.compileMarkdown();
+    }
+  },
   computed: {
     firstRegister() {
       return this.$store.getters.firstRegister
@@ -323,6 +329,8 @@ export default {
             this.twitter = data["twitter"];
             this.bio = data["bio"];
             this.intro = data["intro"];
+
+            this.compileMarkdown();
           });
       } else {
         console.warn("not logged in");

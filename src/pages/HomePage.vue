@@ -1,6 +1,6 @@
 <template>
 
-  <div id="frame">
+  <div id="frame" v-if="!$root.logined()">
     <div id="top-right">
       <div >
         <img src="../assets/eb_logo.svg" id="elb-poster" />
@@ -12,18 +12,24 @@
       <!-- <h1 style = "color: #ffaaaa">BUMPS</h1> -->
     </div>
     <div id="bottom-left">
-      <p></p>
       <p >Is lockdown loneliness bogging you down? Do you want to find other people who are passionate in the same things you are? Elbow Bumps provides a new, innovative way for you to do just that! <br> <br>Simply register, fill in a questionnaire and give us your Twitter, and we'll find you people who love the very same things you love.</p>
       <div id="button2"><Button id="button" @click="$router.push('Register')">GET STARTED</Button></div>
     </div>
     <!-- <div id="bottom-right">
       <img src="../assets/pic.png" id="pic"/>
     </div> -->
-  </div> 
+  </div>
+  <LoginHome v-else />
 </template> 
 
 <script>
-export default {};
+import LoginHome from "../components/LoginHome";
+
+export default {
+  components: {
+    LoginHome
+  }
+};
 </script>
 
 <style lang="scss" scoped>
