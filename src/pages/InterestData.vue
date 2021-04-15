@@ -17,6 +17,5 @@ export default {
 <style scoped>
 * {
     margin-top: 4%;
-    background-color: #80929F;
 }
 </style>

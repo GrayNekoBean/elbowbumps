@@ -1,12 +1,6 @@
 <template>
   <div>
     <Chart class="chart" type="radar" :data="chartData" />
-    <Chart
-    v-if=hasTwitter
-      class="chart"
-      type="radar"
-      :data="twitterChartData"
-    />
   </div>
 </template>
 
@@ -17,8 +11,6 @@ export default {
   data() {
     return {
       chartData: {},
-      twitterChartData: {},
-      hasTwitter: false
     };
   },
   mounted() {
@@ -30,11 +22,23 @@ export default {
       .then((res) => {
         var data = res.data.Data.overall;
         var labels = data.map((i) => i["cat"]);
+        let zeros = 0;
+        if (labels.length < 4) {
+          var main_cats = ['films/tv', 'sports', 'music', 'video games']
+          for (const label of labels) {
+            if (main_cats.includes(label)) {
+              main_cats = main_cats.filter((i) => i != label)
+            }
+          }
+          zeros = main_cats.length
+          labels = labels.concat(main_cats)
+        }
         that.chartData["labels"] = labels;
         var weights = data.map((i) => i["weight"]);
+        weights = weights.concat(Array(zeros).fill(0))
         that.chartData["datasets"] = [
           {
-            label: "Interest Scores",
+            label: "Questionnaire Scores",
             backgroundColor: "rgba(179,181,198,0.2)",
             borderColor: "rgba(179,181,198,1)",
             pointBackgroundColor: "rgba(179,181,198,1)",
@@ -45,7 +49,9 @@ export default {
             data: weights,
           },
         ];
+        that.$forceUpdate();
         var twitterData = res.data.Data.twitter;
+        console.log(twitterData)
         if (twitterData.length > 0) { 
             that.chartData['datasets'].push( {
             label: "Twitter Sentiment Analysis",
