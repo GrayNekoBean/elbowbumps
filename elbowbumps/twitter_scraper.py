@@ -92,7 +92,7 @@ def categoryScore(data):
                     "score": 0,
                     "genre_id": [84],
                     "genre_scores": {}},
-                "video_games": 
+                "video games": 
                     {"ids": [71, 78, 79, 136, 137, 138, 115, 116],
                     "total_sen": 0,
                     "score": 0,
