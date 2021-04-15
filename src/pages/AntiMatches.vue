@@ -4,7 +4,7 @@
       <h2 style="text-align: center; margin-top:5rem; padding-top: 3rem;">
         Welcome to your Antimatches
       </h2>
-       <div v-if="!noMatches" style="text-align: center;">
+       <div style="text-align: center;">
         Opposites attract, or maybe you just want to find someone you can elbow bump in the face. We get it! 
       </div>
       <div v-if="noMatches" style="text-align: center;">
