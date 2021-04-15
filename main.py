@@ -429,11 +429,13 @@ def find_furthest_matches():
     if interest_cat != None and interest_cat != "All interests":
         query = f'select uid1.uid_ud_id, uid2.uid_ud_id, sqrt(sw1.sum + sw2.sum - sum(2*uid1.uid_interest_weight*uid2.uid_interest_weight)) as distance from squared_weights sw1 , squared_weights sw2 , user_interest_data uid1 , user_interest_data uid2 where sw1.uid_ud_id = uid1.uid_ud_id and sw2.uid_ud_id = uid2.uid_ud_id and uid1.uid_interest_type = uid2.uid_interest_type and uid1.uid_interest_type = \'{interest_cat}\' and uid1.uid_id <> uid2.uid_id and uid1.uid_ud_id = {param} and uid1.uid_ud_id <> uid2.uid_ud_id group by uid2.uid_ud_id, uid1.uid_ud_id, uid1.uid_squared_weight,uid2.uid_squared_weight,uid1.uid_interest_weight,uid2.uid_interest_weight,sw1.sum,sw2.sum order by distance desc limit 50;'
     else:
+        print("True")
         query = f'select uid1.uid_ud_id, uid2.uid_ud_id, sqrt(sw1.sum + sw2.sum - sum(2*uid1.uid_interest_weight*uid2.uid_interest_weight)) as distance from squared_weights sw1 , squared_weights sw2 , user_interest_data uid1 , user_interest_data uid2 where sw1.uid_ud_id = uid1.uid_ud_id and sw2.uid_ud_id = uid2.uid_ud_id and uid1.uid_interest_type = uid2.uid_interest_type and uid1.uid_id <> uid2.uid_id and uid1.uid_ud_id = {param} and uid1.uid_ud_id <> uid2.uid_ud_id group by uid2.uid_ud_id, uid1.uid_ud_id, uid1.uid_squared_weight,uid2.uid_squared_weight,uid1.uid_interest_weight,uid2.uid_interest_weight,sw1.sum,sw2.sum order by distance desc limit 50;'
     results = db.engine.execute(query)
     response = []
     index = 0
     for res in results:
+        print(res)
         m1 = UserMatch.query.filter_by(um_ud_id_1=param,um_ud_id_2=res.uid_ud_id).first()
         m2 = UserMatch.query.filter_by(um_ud_id_2=param,um_ud_id_1=res.uid_ud_id).first()
         if not m1 and not m2:
@@ -452,11 +454,12 @@ def find_furthest_matches():
                     for item in response:
                         if item['uid_ud_id'] == res.uid_ud_id:
                             break
-                        else:
-                            response.append(dict(res))
-                            index = index + 1
+                    else:
+                        response.append(dict(res))
+                        index = index + 1
         if index >= limit:
             break
+    print(response)
 
     return jsonify({
         'STATUS_CODE': '200',
@@ -478,6 +481,7 @@ def find_matches():
     response = []
     index = 0
     for res in results:
+        print(res)
         m1 = UserMatch.query.filter_by(um_ud_id_1=param,um_ud_id_2=res.uid_ud_id).first()
         m2 = UserMatch.query.filter_by(um_ud_id_2=param,um_ud_id_1=res.uid_ud_id).first()
         if not m1 and not m2:
