@@ -67,8 +67,7 @@
           v-model="report"
         />
         <label for="report-help"
-          >They're expressing intentions of self-harm or suicide on the
-          messaging service</label
+          >They're expressing intentions of self-harm or suicide</label
         >
       </div>
       <div>
@@ -237,7 +236,8 @@ export default {
         (response) => {
           let jsonData = response.data;
           if (jsonData['STATUS_CODE'] == 200){
-            this.$router.push('/bumps');
+            this.$router.push('/matches');
+            this.$root.displayLog("Reported user. Remember you can block them if you need to.");
           }
         }
       );
