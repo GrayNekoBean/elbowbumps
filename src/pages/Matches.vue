@@ -124,16 +124,18 @@ export default {
                   this.interestCats.push({name: interests[i], id: 1+i});
                 }
             }
-            this.$root.displayLog(this.interestCats);
+            //this.$root.displayLog(this.interestCats);
         });
     },
     changeInterestCat (event) {
       this.selectedInterestCat = event.target.options[event.target.options.selectedIndex].text
+      this.$root.displayLog("Weighted matching based on: " + this.selectedInterestCat);
       this.getMatches();
       // TO-DO Needs a forced flickity update or something with flickity
    },
    changeLimit(event) {
      this.selectedLimit = event.target.options[event.target.options.selectedIndex].text
+     this.$root.displayLog("Limited number of matches to: " + this.selectedLimit);
      this.getMatches();
     // TO-DO Needs a forced flickity update or something with flickity
    },
