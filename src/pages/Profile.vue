@@ -3,7 +3,7 @@
     <div class="profile-page">
       <div class="top-part">
         <div class="profile-title">
-          <img src="../assets/test.jpg" class="avatar" />
+          <img :src="avatar" class="avatar" />
           <!-- <FileUpload mode="basic" name="image" :customUpload="true" @uploader="uploadAvatar" /> -->
           <div class="user-name">
             <h2>{{ firstName }} {{ lastName }}</h2>
@@ -109,7 +109,7 @@
                 </div>
               </template>
             </Card>
-            <Splitter>
+            <Splitter style="margin-bottom: 6rem;">
               <SplitterPanel class="p-d-flex p-ai-center p-jc-center">
                 <TextArea
                   style="height: 36rem; width: 100%"
@@ -126,7 +126,7 @@
                         </Editor> -->
               </SplitterPanel>
               <SplitterPanel class="p-d-flex p-ai-center p-jc-center">
-                <ScrollPanel style="height: 36rem; width: 100%">
+                <ScrollPanel style="height: 36rem; width: 42rem;">
                   <div class="rendered-markdown" ref="rendered_md"></div>
                 </ScrollPanel>
               </SplitterPanel>
@@ -208,7 +208,8 @@
 
 <script>
 import axios from "axios";
-import MarkdownIt from "markdown-it";
+import Markdown from "markdown-it";
+import emoji from "markdown-it-emoji";
 
 import EditableText from "../components/EditableText";
 import IconButton from "../components/IconButton";
@@ -277,46 +278,6 @@ export default {
           }
         })
         .catch((e) => this.$root.displayError("Network Error", e));
-    },
-    uploadAvatar: function (event) {
-      let header = { Authorization: "Client-ID 7a7f16c6427fe66" };
-      let postData = {
-        image: event.files[0],
-        name: "elbowbumps_avatar_" + this.$store.getters.userId,
-        //album: "X1mK7aP",
-        type: "file",
-      };
-
-      let formData = new FormData();
-      for (let dat in postData) {
-        formData.append(dat, postData[dat]);
-      }
-
-      axios
-        .post("https://api.imgur.com/3/image", formData, { headers: header })
-        .then((response) => {
-          this.avatar = response.data.id;
-          let updateAvatarData = {
-            userId: this.$store.getters.userId,
-            data: { avatar: this.avatar },
-          };
-          axios
-            .post(this.$store.getters.URL + "/user_info", updateAvatarData)
-            .then((response) => {
-              if (response.data["STATUS_CODE"] == 200) {
-                console.log("upload avatar successful!");
-              } else {
-                console.warn("Issues happened when updating avatar.");
-                console.log(response);
-              }
-            })
-            .catch((e) => {
-              console.error(e);
-            });
-        })
-        .catch((e) => {
-          console.error(e);
-        });
     },
     switchEditable: function (target) {
       let inputText = target.getAttribute("id");
@@ -416,7 +377,29 @@ export default {
     },
   },
   mounted() {
-    this.markdown = new MarkdownIt();
+    this.markdown = new Markdown({
+      html:         true,        // Enable HTML tags in source
+      xhtmlOut:     true,        // Use '/' to close single tags (<br />).
+                                  // This is only for full CommonMark compatibility.
+      breaks:       false,        // Convert '\n' in paragraphs into <br>
+      langPrefix:   'language-',  // CSS language prefix for fenced blocks. Can be
+                                  // useful for external highlighters.
+      linkify:      true,        // Autoconvert URL-like text to links
+      // Enable some language-neutral replacement + quotes beautification
+      // For the full list of replacements, see https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/replacements.js
+      typographer:  true,
+      // Double + single quotes replacement pairs, when typographer enabled,
+      // and smartquotes on. Could be either a String or an Array.
+      //
+      // For example, you can use '«»„“' for Russian, '„“‚‘' for German,
+      // and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
+      quotes: '“”‘’',
+      // Highlighter function. Should return escaped HTML,
+      // or '' if the source string is not changed and should be escaped externally.
+      // If result starts with <pre... internal wrapper is skipped.
+      highlight: function (/*str, lang*/) { return ''; }
+    });
+    this.markdown.use(emoji);
     this.getCurrentUserInfo();
   },
 };

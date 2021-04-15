@@ -2,20 +2,27 @@
     <Card style="width: 16rem; height: 24rem;">
         <template #content>
             <div class="bumper-panel">
-                <Avatar size="xlarge" :image="require('../assets/test.jpg')" shape="circle" />
+                <div style="display: flex; flex-flow: column; justify-content: space-between; align-items: center;">
+                <Avatar size="xlarge" :image="avatar" shape="circle" />
                 <h3>{{userName}}</h3>
+                </div>
                 <Tag style="font-size:14px; background:#6aab4f; color: white;">{{match_percentage}}% Match</Tag>
-                <p>{{intro}}</p>
+                <div class="intro">
+                    {{intro}}
+                </div>
                 <!-- <p style="color:#bb2e2e; font-size:small;">Interests: {{interests}}</p> -->
                 <div class="tags-area">
                     <Tag v-for="ints in interests" :key="ints" class="p-mr-2" severity="success" :value="ints"></Tag>
                 </div>
-                <Button v-if="!pending" @click="bump">Bump</Button>
+                <!-- <Button v-if="!pending" @click="bump">Bump</Button>
+                <Button style="background:#bb2e2e;" v-else @click="unbump">Unbump</Button> -->
+                <SplitButton class="p-mb-2" :class="pending ? 'p-button-danger' : ''" :label="pending ? 'Unbump' : 'Bump'" :icon="pending ? 'pi pi-minus' : 'pi pi-plus'" :model="buttonItem" @click="onBump" />
+                <!-- <Button v-if="!pending" @click="bump">Bump</Button>
                 <Button style="background:#bb2e2e;" v-else @click="unbump">Unbump</Button>
                 <div style="display: flex; justify-content: space-between;">
                     <IconButton hint="Block User" icon="pi-ban" color="black" @click="blockUser()"></IconButton>
                     <IconButton hint="Report User" icon="pi-times" color="red" @click="reportUser()"></IconButton>
-                </div>
+                </div> -->
             </div>
         </template>
     </Card>
@@ -23,11 +30,21 @@
 
 <script>
 import axios from "axios";
-import IconButton from "./IconButton";
-
 export default {
     data(){
         return {
+            buttonItem:[
+                {
+                    label: 'Block User',
+                    icon: 'pi pi-ban',
+                    command: this.blockUser
+                },
+                {
+                    label: 'Block User',
+                    icon: 'pi pi-times',
+                    command: this.reportUser
+                }
+            ],
             userName: "",
             bio: "",
             interests: [],
@@ -37,11 +54,10 @@ export default {
             firstName: "",
             lastName: "",
             pending: false,
-            avatar: require("../assets/test.jpg"),
-            match_percentage:0,
+            avatar: "",
+            match_percentage:0
         };
     },
-    components: {IconButton},
     props: [ "userID" ],
     methods: {
       PendingUsers(){
@@ -120,8 +136,8 @@ export default {
                         this.intro = data['intro'];
                         this.userName = this.firstName + " " + this.lastName;
 
-                        if (this.avatar != ""){
-                            this.avatar = "../assets/test.jpg";
+                        if (this.avatar == ""){
+                            this.avatar = require("../assets/test.jpg");
                         }
                         if (this.intro == ""){
                             this.intro = "This person doesn't have an intro :( ";
@@ -137,6 +153,13 @@ export default {
             ).catch((e) => {
                 console.error(e);
             });
+        },
+        onBump(){
+            if (this.pending){
+                this.unbump();
+            }else{
+                this.bump();
+            }
         },
         bump(){
             const URL = `${this.$store.getters.URL}bump`;
@@ -221,9 +244,9 @@ export default {
 
 <style lang="scss" scoped>
 
-
 ::v-deep{
     .p-tag{
+        height: 1.5rem;
         margin-right: 0.25rem;
         margin-bottom: 0.25rem;
     }
@@ -236,6 +259,8 @@ export default {
     align-items: center;
     height: 24rem;
     width: 16rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 
 .tags-area{
@@ -244,7 +269,19 @@ export default {
     flex-wrap: wrap;
     overflow: auto;
     justify-content: center;
+    align-items: center;
     width: 100%;
+    height: 3.5rem;
+    overflow: hidden;
+}
+
+.intro{
+    height: 6rem;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
 }
 
 .edit-icon{

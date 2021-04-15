@@ -64,7 +64,7 @@ $background-color: 	#80929F;
   height: 100%;
   left: 0px;
   width: 50%;
-  background: $primitive-color;
+  background: $background-color;
 }
 
 </style>

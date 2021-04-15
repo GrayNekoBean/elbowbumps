@@ -1,5 +1,5 @@
 <template>
-  <SplitedPage ratio="1">
+  <SplitedPage ratio="0.6">
     <template #left>
       <h2 style="text-align: center; margin-top:5rem; padding-top: 3rem;">
         Welcome to your matches!
@@ -52,7 +52,27 @@
       </div>
     </template>
     <template #right>
+      <ScrollPanel class="detailed-info">
+        <div class="detail-top">
+          <Avatar shape=circle :image="selectedUser.avatar" size="xlarge" style="margin-right: 2rem;" />
+          <div style="width: 60%;">
+            <h3>
+              {{ selectedUser.name }}
+            </h3>
+            <p>
+              {{ selectedUser.intro }}
+            </p>
+          </div>
+        </div>
+        <br>
+        Interests in: <Tag v-for="tag in selectedUser.tags" severity="success" :key="tag" class="p-mr-2" :value="tag" />
+        <br>
+        <hr>
+        <ScrollPanel class="bio-area" ref="bio">
+          (No Bio)
+        </ScrollPanel>
 
+      </ScrollPanel>
     </template>
   </SplitedPage>
 </template>
@@ -61,6 +81,9 @@
 import axios from "axios";
 import Flickity from "flickity";
 import "flickity/dist/flickity.min.css";
+
+import Markdown from "markdown-it";
+import emoji from "markdown-it-emoji";
 
 import BumperPanel from "../components/BumperPanel";
 import SplitedPage from "../components/SplitedPage";
@@ -73,8 +96,10 @@ export default {
       matches: [],
       users: [],
       selectedUser: {
+        userId: 0,
         avatar: '',
         name: '',
+        intro: '',
         bio: '',
         twitter: '',
         tags: [],
@@ -90,9 +115,34 @@ export default {
       limits: [],
       selectedLimit: "8",
       getmatch: "1",
+      markdown: null
     };
   },
   mounted() {
+
+    this.markdown = new Markdown({
+      html:         true,        // Enable HTML tags in source
+      xhtmlOut:     true,        // Use '/' to close single tags (<br />).
+                                  // This is only for full CommonMark compatibility.
+      breaks:       false,        // Convert '\n' in paragraphs into <br>
+      langPrefix:   'language-',  // CSS language prefix for fenced blocks. Can be
+                                  // useful for external highlighters.
+      linkify:      true,        // Autoconvert URL-like text to links
+      // Enable some language-neutral replacement + quotes beautification
+      // For the full list of replacements, see https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/replacements.js
+      typographer:  true,
+      // Double + single quotes replacement pairs, when typographer enabled,
+      // and smartquotes on. Could be either a String or an Array.
+      //
+      // For example, you can use '«»„“' for Russian, '„“‚‘' for German,
+      // and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
+      quotes: '“”‘’',
+      // Highlighter function. Should return escaped HTML,
+      // or '' if the source string is not changed and should be escaped externally.
+      // If result starts with <pre... internal wrapper is skipped.
+      highlight: function (/*str, lang*/) { return ''; }
+    });
+    this.markdown.use(emoji);
     this.FetchCurrentUserInterests();
     this.setLimits();
     if (!this.$store.getters.matchesRetrieved) {
@@ -221,6 +271,9 @@ export default {
               this.flickity.on('change', this.onSelectBumper)
             }
           });
+          if (this.users.length > 0) {
+            this.onSelectBumper(0);
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -266,6 +319,41 @@ export default {
       }
     },
     onSelectBumper(index){
+      axios.get(this.$store.getters.URL + "user_data", {
+        params: {
+          user_id: this.users[index].id
+        }
+      }).then(
+        (response) => {
+          if (response.data.STATUS_CODE == 200){
+            let dat = response.data.data;
+            this.selectedUser.userId = this.users[index];
+            this.selectedUser.avatar = dat.avatar;
+            this.selectedUser.name = dat.fName + ' ' + dat.sName;
+            this.selectedUser.intro = dat.intro;
+            this.selectedUser.bio = dat.bio;
+            this.selectedUser.twitter = dat.twitter;
+            this.$refs.bio.innerHTML = this.markdown.render(dat.bio);
+          }else{
+            this.$root.displayWarn('Request Failed: ' + response.data.STATUS_CODE, response.data.message);
+            return;
+          }
+        }
+      ).catch(
+        (err) => {
+          this.$root.displayError('Request Error', err);
+        }
+      );
+
+      let args = {
+          user_id: this.users[index].id
+      };
+      axios.get(this.$store.getters.URL + "get_interests", {params: args}).then(
+      (response) => {
+          if (response.data.STATUS_CODE == 200){
+              this.selectedUser.tags = response.data.Data;
+          }
+      });
       console.log('flickity index: ' + index);
     }
   }
@@ -295,6 +383,17 @@ export default {
   margin: 1rem;
 }
 
+.detailed-info{
+  display: block;
+  margin: 10%;
+}
+
+.detail-top{
+  display: flex;
+  flex-flow: row;
+  justify-content: left;
+}
+
 ::v-deep {
   .flickity-viewport {
     width: 100%;
@@ -302,6 +401,11 @@ export default {
 
   .flickity-page-dots {
     bottom: inherit;
+  }
+
+  .p-tag{
+        margin-right: 0.25rem;
+        margin-bottom: 0.25rem;
   }
 }
 
