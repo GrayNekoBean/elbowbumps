@@ -35,6 +35,9 @@ export default {
   margin-left: 7%;
   margin-right: 8%;
   margin-bottom: 20%;
+
+  padding-bottom: 5%;
+  border-bottom: 5%;
   font-size: 14px;
   color: #444444;
   text-align: left;
