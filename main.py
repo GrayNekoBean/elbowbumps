@@ -102,6 +102,18 @@ def unbump():
 @app.route('/blockUser', methods=['POST'])
 @cross_origin()
 def blockUser():
+    # user_id = request.form.get('userId')
+    # match_id = request.form.get('matchId')
+    # m1 = UserMatch.query.filter(UserMatch.um_ud_id_1==user_id).filter(UserMatch.um_ud_id_2==match_id).first()
+    # m2 = UserMatch.query.filter(UserMatch.um_ud_id_2==user_id).filter(UserMatch.um_ud_id_1==match_id).first()
+    # if m1:
+    #     m1.um_1_matched = False
+    #     db.session.commit()
+    #     return jsonify({"STATUS_CODE": 200})
+    # else:
+    #     m2.um_2_matched = False
+    #     db.session.commit()
+    #     return jsonify({"STATUS_CODE": 200})
     user_id = request.form.get('userId')
     match_id = request.form.get('matchId')
     print(user_id)
@@ -444,9 +456,8 @@ def find_furthest_matches():
                 blocked_check_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) & (UserMatch.um_ud_id_2 == res.uid_ud_id)).filter(UserMatch.um_blocked == True).all()
                 blocked_check_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == res.uid_ud_id) & (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_blocked == True).all()
                 if not blocked_check_1 and not blocked_check_2:
-                    if not (dict(res) in response):
-                        response.append(dict(res))
-                        index = index + 1
+                    response.append(dict(res))
+                    index = index + 1
         if index >= limit:
             break
 
@@ -485,9 +496,8 @@ def find_matches():
                 blocked_check_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) & (UserMatch.um_ud_id_2 == res.uid_ud_id)).filter(UserMatch.um_blocked == True).all()
                 blocked_check_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == res.uid_ud_id) & (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_blocked == True).all()
                 if not blocked_check_1 and not blocked_check_2:
-                    if not (dict(res) in response):
-                        response.append(dict(res))
-                        index = index + 1
+                    response.append(dict(res))
+                    index = index + 1
         if index >= limit:
             break
 
