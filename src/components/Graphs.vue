@@ -1,6 +1,12 @@
 <template>
   <div>
     <Chart class="chart" type="radar" :data="chartData" />
+    <DataTable class="p-datatable-sm" stripedRows :value="tableVals" responsiveLayout="scroll">
+      <Column field="cat" :sortable="true" header="Category"></Column>
+      <Column field="twitter" :sortable="true" header="Twitter Score"></Column>
+      <Column field="questionnaire" :sortable="true" header="Questionnaire Score"></Column>
+      <Column field="weight" :sortable="true" header="Overall Score"></Column>
+    </DataTable>
   </div>
 </template>
 
@@ -11,6 +17,7 @@ export default {
   data() {
     return {
       chartData: {},
+      tableVals: [],
     };
   },
   mounted() {
@@ -65,12 +72,10 @@ export default {
           })
         }
         that.$forceUpdate();
+        that.tableVals = res.data.Data.all;
+        console.log(that.tableVals)
+        that.$forceUpdate();
       });
   },
 };
 </script>
-
-<style scoped>
-.chart {
-}
-</style>

@@ -32,6 +32,8 @@ import Dialog from 'primevue/dialog';
 import Chart from 'primevue/chart';
 import ToggleButton from 'primevue/togglebutton';
 import SplitButton from 'primevue/splitbutton';
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
 
 import "primevue/resources/themes/saga-blue/theme.css"; // theme
 import "primevue/resources/primevue.min.css"; // core css
@@ -72,5 +74,7 @@ app.component("Dialog", Dialog);
 app.component("Chart", Chart);
 app.component("ToggleButton", ToggleButton);
 app.component("SplitButton", SplitButton);
+app.component('DataTable', DataTable);
+app.component("Column", Column)
 
 app.mount("#app");
