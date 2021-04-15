@@ -444,9 +444,12 @@ def find_furthest_matches():
                 blocked_check_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) & (UserMatch.um_ud_id_2 == res.uid_ud_id)).filter(UserMatch.um_blocked == True).all()
                 blocked_check_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == res.uid_ud_id) & (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_blocked == True).all()
                 if not blocked_check_1 and not blocked_check_2:
-                    if not (dict(res) in response):
-                        response.append(dict(res))
-                        index = index + 1
+                    for item in response:
+                        if item['uid_ud_id'] == res.uid_ud_id:
+                            break
+                        else:
+                            response.append(dict(res))
+                            index = index + 1
         if index >= limit:
             break
 
@@ -485,11 +488,15 @@ def find_matches():
                 blocked_check_1 = UserMatch.query.filter((UserMatch.um_ud_id_1 == param) & (UserMatch.um_ud_id_2 == res.uid_ud_id)).filter(UserMatch.um_blocked == True).all()
                 blocked_check_2 = UserMatch.query.filter((UserMatch.um_ud_id_1 == res.uid_ud_id) & (UserMatch.um_ud_id_2 == param)).filter(UserMatch.um_blocked == True).all()
                 if not blocked_check_1 and not blocked_check_2:
-                    if not (dict(res) in response):
+                    for item in response:
+                        if item['uid_ud_id'] == res.uid_ud_id:
+                            break
+                    else:
                         response.append(dict(res))
                         index = index + 1
         if index >= limit:
             break
+    print(response)
 
     return jsonify({
         'STATUS_CODE': '200',
