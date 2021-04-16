@@ -111,8 +111,9 @@ export default {
     margin-bottom: 4%;
 } */
 
-#container{
-    height:100%;
+.container{
+    height:120%;
+    margin-bottom: 6rem;
 }
 ::v-deep {
   .p-tag {
