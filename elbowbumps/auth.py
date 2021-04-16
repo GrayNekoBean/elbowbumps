@@ -158,6 +158,20 @@ def getGravatarImage(email):
     gravatar_url += urllib.parse.urlencode({'d':default, 's':str(size)})
     return gravatar_url
 
+@auth.route('twitter_timeline', methods=['GET'])
+@cross_origin()
+def getTwitterTimeline():
+    if request.args.get('twitter'):
+        twitter = request.args.get('twitter')
+        response = HttpRequest.get(f'https://publish.twitter.com/oembed?url=https://twitter.com/{twitter}')
+        if response.ok:
+            return response.json()
+    return jsonify({
+        "STATUS": "SUCCESS",
+        "STATUS_CODE": "200",
+        "Message": "failed to call Twitter API"
+    })
+
 @auth.route('/user_data', methods=['GET', 'POST'])
 #@cross_origin
 def getUserData():
