@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Chart class="chart" type="radar" :data="chartData" />
+    <Chart class="chart" type="radar" :data="chartData" ref="chart" />
     <DataTable class="p-datatable-sm" stripedRows :value="tableVals" responsiveLayout="scroll" v-if="showTable">
       <Column field="cat" :sortable="true" header="Category"></Column>
       <Column field="twitter" :sortable="true" header="Twitter Score"></Column>
@@ -17,6 +17,11 @@ export default {
   props: ["userId", "showTable"],
   data() {
     return {
+      chartOptions: {
+        responsive: true,
+        hoverMode: 'index',
+        stacked: false,
+      },
       chartData: {},
       tableVals: [],
     };
@@ -75,6 +80,7 @@ export default {
           }
           that.$forceUpdate();
           that.tableVals = res.data.Data.all;
+          that.$refs.chart.refresh();
           console.log(that.tableVals)
           that.$forceUpdate();
         });
