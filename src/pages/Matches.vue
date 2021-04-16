@@ -242,7 +242,7 @@ export default {
       this.$root.displayLog(
         "Weighted matching based on: " + this.selectedInterestCat
       );
-      this.getMatches();
+      this.refresh()
       // TO-DO Needs a forced flickity update or something with flickity
     },
     changeLimit(event) {
@@ -251,13 +251,13 @@ export default {
       this.$root.displayLog(
         "Limited number of matches to: " + this.selectedLimit
       );
-      this.getMatches();
+      this.refresh();
       // TO-DO Needs a forced flickity update or something with flickity
     },
     getMatchesNum(event) {
       this.getmatch =
         event.target.options[event.target.options.selectedIndex].text;
-      this.getMatches();
+      this.refresh();
       // TO-DO Needs a forced flickity update or something with flickity
     },
     refresh() {
@@ -371,6 +371,7 @@ export default {
     removeUser(element) {
       if (this.flickity) {
         this.flickity.remove(element);
+        this.refresh();
       }
     },
     logout() {
