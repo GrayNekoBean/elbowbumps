@@ -142,8 +142,6 @@ def loginUser():
                 status = "INVALID_DATA"
                 status_code = 500
     response: Response = jsonify({'STATUS': status, "STATUS_CODE": status_code, "Message": msg, "id": userID  })
-    response.status = status
-    response.status_code = status_code
     if (status == 'SUCCESS'):
         SetSessionCookie(response, userID)
     return response
@@ -174,6 +172,7 @@ def getUserData():
             email = userRow.ud_email
             phone = userRow.ud_phone
             twitter = userRow.ud_twitter
+            twitter_id = userRow.ud_id_twitter
             intro = userRow.ud_intro
             bio = userRow.ud_bio
             
@@ -187,6 +186,7 @@ def getUserData():
                     "email": email,
                     "phone": phone,
                     "twitter": twitter,
+                    "twitterID": twitter_id,
                     "intro": intro,
                     "bio": bio
                 }
