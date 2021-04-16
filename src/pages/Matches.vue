@@ -1,32 +1,35 @@
 <template>
   <SplitedPage ratio="0.6">
     <template #left>
-      <h2 style="text-align: center; margin-top:5rem; padding-top: 3rem;">
+      <h2 style="text-align: center; margin-top: 5rem; padding-top: 3rem">
         Welcome to your matches!
       </h2>
-      <div v-if="selectedMatchType!='Matches'" style="text-align: center;">
-        Opposites attract, or maybe you just want to find someone you can elbow bump in the face. We get it! 
+      <div v-if="selectedMatchType != 'Matches'" style="text-align: center">
+        Opposites attract, or maybe you just want to find someone you can elbow
+        bump in the face. We get it!
       </div>
-      <div v-if="noMatches" style="text-align: center;">
+      <div v-if="noMatches" style="text-align: center">
         You have no new matches :( Click
         <router-link to="/questionnaire">here</router-link> to do the
-        questionnaire, or
-        <router-link to="/profile">here</router-link> to update your
-        Twitter info.
+        questionnaire, or <router-link to="/profile">here</router-link> to
+        update your Twitter info.
       </div>
-      <div style="margin-left:10%; margin-top: 5%; width: 75%; overflow: hidden;" v-else>
-          <!-- <h2>{{ user.forename }} {{ user.surname }}</h2>
+      <div
+        style="margin-left: 10%; margin-top: 5%; width: 75%; overflow: hidden"
+        v-else
+      >
+        <!-- <h2>{{ user.forename }} {{ user.surname }}</h2>
           <Button @click="bump(user.id)">Bump {{ user.forename }}!</Button> -->
-          <div class="matches-list" ref="matches">
-            <BumperPanel
-              class="bump-card"
-              v-for="user in users"
-              :key="user"
-              :userID="user.id"
-              :distance="user.distance"
-              @onRemove="removeUser"
-            />
-          </div>
+        <div class="matches-list" ref="matches">
+          <BumperPanel
+            class="bump-card"
+            v-for="user in users"
+            :key="user"
+            :userID="user.id"
+            :distance="user.distance"
+            @onRemove="removeUser"
+          />
+        </div>
       </div>
       <!-- <div style="">
         <Button @click="moveLeft">《-</Button>
@@ -43,15 +46,31 @@
         >
       <Button @click="moveRight"> -》</Button>
       </div> -->
-      <div style="display: flex;width: 100%;height: 2rem;margin-top: 4rem;justify-content: center;">
-        <IconButton icon="pi-undo" hint="Refresh Matches" @onClick="getMatches" />
+      <div
+        style="
+          display: flex;
+          width: 100%;
+          height: 2rem;
+          margin-top: 4rem;
+          justify-content: center;
+        "
+      >
+        <IconButton icon="pi-refresh" hint="Refresh Matches" @onClick="refresh" />
         <select class="form-control" @change="changeInterestCat($event)">
-          <option value="All interests" >All interests</option>
-          <option v-for="interestCat in interestCats" :value="interestCat.id" :key="interestCat.id">{{ interestCat.name }}</option>
+          <option value="All interests">All interests</option>
+          <option
+            v-for="interestCat in interestCats"
+            :value="interestCat.id"
+            :key="interestCat.id"
+          >
+            {{ interestCat.name }}
+          </option>
         </select>
         <select class="form-control" @change="changeLimit($event)">
           <option value="8" selected disabled>Default Matches 8</option>
-          <option v-for="limit in limits" :value="limit.id" :key="limit.id">{{ limit.name }}</option>
+          <option v-for="limit in limits" :value="limit.id" :key="limit.id">
+            {{ limit.name }}
+          </option>
         </select>
         <select class="form-control" @change="changeMatchOrder($event)">
           <option value="True">Matches</option>
@@ -64,8 +83,13 @@
     <template #right>
       <ScrollPanel class="detailed-info">
         <div class="detail-top">
-          <Avatar shape=circle :image="selectedUser.avatar" size="xlarge" style="margin-right: 2rem;" />
-          <div style="width: 60%;">
+          <Avatar
+            shape="circle"
+            :image="selectedUser.avatar"
+            size="xlarge"
+            style="margin-right: 2rem"
+          />
+          <div style="width: 60%">
             <h3>
               {{ selectedUser.name }}
             </h3>
@@ -74,16 +98,20 @@
             </p>
           </div>
         </div>
-        <br>
-        Interests in: <Tag v-for="tag in selectedUser.tags" severity="success" :key="tag" class="p-mr-2" :value="tag" />
-        <br>
-        <hr>
-        <ScrollPanel style="height: 32rem;">
-          <div class="bio-area" ref="bio">
-            (No Bio)
-          </div>
-        </ScrollPanel>
-
+        <br />
+        Interests in:
+        <Tag
+          v-for="tag in selectedUser.tags"
+          severity="success"
+          :key="tag"
+          class="p-mr-2"
+          :value="tag"
+        />
+        <br />
+        <hr />
+        <Graphs :userId="selectedUser.userId" :showTable="false" ref="graph" />
+        <hr />
+        <div class="bio-area" ref="bio">(No Bio)</div>
       </ScrollPanel>
     </template>
   </SplitedPage>
@@ -98,21 +126,23 @@ import emoji from "markdown-it-emoji";
 import BumperPanel from "../components/BumperPanel";
 import SplitedPage from "../components/SplitedPage";
 import IconButton from "../components/IconButton";
+import Graphs from "../components/Graphs";
+
 export default {
-  components: { BumperPanel, SplitedPage, IconButton },
+  components: { BumperPanel, SplitedPage, IconButton, Graphs },
   data() {
     return {
       matches: [],
       users: [],
       selectedUser: {
         userId: 0,
-        avatar: '',
-        name: '',
-        intro: '',
-        bio: '',
-        twitter: '',
+        avatar: "",
+        name: "",
+        intro: "",
+        bio: "",
+        twitter: "",
         tags: [],
-        interestData: null
+        interestData: null,
       },
       leftMoving: false,
       rightMoving: false,
@@ -123,31 +153,33 @@ export default {
       selectedInterestCat: "All interests",
       limits: [],
       selectedLimit: "8",
-      selectedMatchType: "Matches"
+      selectedMatchType: "Matches",
     };
   },
   mounted() {
     this.markdown = new Markdown({
-      html:         true,        // Enable HTML tags in source
-      xhtmlOut:     true,        // Use '/' to close single tags (<br />).
-                                  // This is only for full CommonMark compatibility.
-      breaks:       false,        // Convert '\n' in paragraphs into <br>
-      langPrefix:   'language-',  // CSS language prefix for fenced blocks. Can be
-                                  // useful for external highlighters.
-      linkify:      true,        // Autoconvert URL-like text to links
+      html: true, // Enable HTML tags in source
+      xhtmlOut: true, // Use '/' to close single tags (<br />).
+      // This is only for full CommonMark compatibility.
+      breaks: false, // Convert '\n' in paragraphs into <br>
+      langPrefix: "language-", // CSS language prefix for fenced blocks. Can be
+      // useful for external highlighters.
+      linkify: true, // Autoconvert URL-like text to links
       // Enable some language-neutral replacement + quotes beautification
       // For the full list of replacements, see https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/replacements.js
-      typographer:  true,
+      typographer: true,
       // Double + single quotes replacement pairs, when typographer enabled,
       // and smartquotes on. Could be either a String or an Array.
       //
       // For example, you can use '«»„“' for Russian, '„“‚‘' for German,
       // and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
-      quotes: '“”‘’',
+      quotes: "“”‘’",
       // Highlighter function. Should return escaped HTML,
       // or '' if the source string is not changed and should be escaped externally.
       // If result starts with <pre... internal wrapper is skipped.
-      highlight: function (/*str, lang*/) { return ''; }
+      highlight: function (/*str, lang*/) {
+        return "";
+      },
     });
     this.markdown.use(emoji);
     this.FetchCurrentUserInterests();
@@ -155,62 +187,73 @@ export default {
     if (!this.$store.getters.matchesRetrieved) {
       this.getMatches();
     }
-    setInterval(this.onUpdate, 1000/40);
+    setInterval(this.onUpdate, 1000 / 40);
   },
   computed: {
-    noMatches: function() {
+    noMatches: function () {
       return this.matches.length == 0;
     },
   },
   methods: {
-    setLimits(){
-      for (let i = 1; i < 50; i++){
-        this.limits.push({name: String(i), id: i})
+    setLimits() {
+      for (let i = 1; i < 50; i++) {
+        this.limits.push({ name: String(i), id: i });
       }
     },
-    FetchCurrentUserInterests(){
-        const userId = this.$store.getters.userId;
-        let args = {
-            user_id: userId
-        };
-        axios.get(this.$store.getters.URL + "get_interests", {params: args}).then(
-        (response) => {
-            if (response.data.STATUS_CODE == 200){
-                let interests = response.data.Data;
-                for (let i = 0; i < interests.length; i++){
-                  this.interestCats.push({name: interests[i], id: 1+i});
-                }
+    FetchCurrentUserInterests() {
+      const userId = this.$store.getters.userId;
+      let args = {
+        user_id: userId,
+      };
+      axios
+        .get(this.$store.getters.URL + "get_interests", { params: args })
+        .then((response) => {
+          if (response.data.STATUS_CODE == 200) {
+            let interests = response.data.Data;
+            for (let i = 0; i < interests.length; i++) {
+              this.interestCats.push({ name: interests[i], id: 1 + i });
             }
-            //this.$root.displayLog(this.interestCats);
+          }
+          //this.$root.displayLog(this.interestCats);
         });
     },
     changeMatchOrder(event) {
-      this.selectedMatchType = event.target.options[event.target.options.selectedIndex].text
+      this.selectedMatchType =
+        event.target.options[event.target.options.selectedIndex].text;
       this.$root.displayLog("Changed matching type: " + this.selectedMatchType);
-      if (this.selectedMatchType == 'Matches'){
+      this.refresh();
+    },
+    changeInterestCat(event) {
+      this.selectedInterestCat =
+        event.target.options[event.target.options.selectedIndex].text;
+      this.$root.displayLog(
+        "Weighted matching based on: " + this.selectedInterestCat
+      );
+      this.getMatches();
+      // TO-DO Needs a forced flickity update or something with flickity
+    },
+    changeLimit(event) {
+      this.selectedLimit =
+        event.target.options[event.target.options.selectedIndex].text;
+      this.$root.displayLog(
+        "Limited number of matches to: " + this.selectedLimit
+      );
+      this.getMatches();
+      // TO-DO Needs a forced flickity update or something with flickity
+    },
+    getMatchesNum(event) {
+      this.getmatch =
+        event.target.options[event.target.options.selectedIndex].text;
+      this.getMatches();
+      // TO-DO Needs a forced flickity update or something with flickity
+    },
+    refresh() {
+      if (this.selectedMatchType == "Matches") {
         this.getMatches();
-      }
-      else {
+      } else {
         this.getAntiMatches();
       }
     },
-    changeInterestCat (event) {
-      this.selectedInterestCat = event.target.options[event.target.options.selectedIndex].text
-      this.$root.displayLog("Weighted matching based on: " + this.selectedInterestCat);
-      this.getMatches();
-      // TO-DO Needs a forced flickity update or something with flickity
-   },
-   changeLimit(event) {
-     this.selectedLimit = event.target.options[event.target.options.selectedIndex].text
-     this.$root.displayLog("Limited number of matches to: " + this.selectedLimit);
-     this.getMatches();
-    // TO-DO Needs a forced flickity update or something with flickity
-   },
-   getMatchesNum(event) {
-     this.getmatch = event.target.options[event.target.options.selectedIndex].text
-     this.getMatches();
-    // TO-DO Needs a forced flickity update or something with flickity
-   },
     getMatches() {
       const URL = `${this.$store.getters.URL}find_matches`;
       const userId = this.$store.getters.userId;
@@ -219,12 +262,12 @@ export default {
           params: {
             user_id: userId,
             limit: this.selectedLimit,
-            interestCat: this.selectedInterestCat
+            interestCat: this.selectedInterestCat,
           },
         })
         .then((res) => {
           this.matches = res.data.result;
-          if (this.matches == null){
+          if (this.matches == null) {
             this.matches = [];
           }
           this.getMatchInfo();
@@ -241,12 +284,12 @@ export default {
           params: {
             user_id: userId,
             limit: this.selectedLimit,
-            interestCat: this.selectedInterestCat
+            interestCat: this.selectedInterestCat,
           },
         })
         .then((res) => {
           this.matches = res.data.result;
-          if (this.matches == null){
+          if (this.matches == null) {
             this.matches = [];
           }
           this.getMatchInfo();
@@ -264,9 +307,11 @@ export default {
         .then((res) => {
           this.users = res.data.match_info;
           this.users.forEach((user) => {
-            const distance = this.matches.filter((match) => match.uid_ud_id == user.id)[0].distance
-            user['distance'] = distance
-          })
+            const distance = this.matches.filter(
+              (match) => match.uid_ud_id == user.id
+            )[0].distance;
+            user["distance"] = distance;
+          });
           this.$nextTick(() => {
             if (this.flickity) {
               this.flickity.destroy();
@@ -274,8 +319,8 @@ export default {
             }
             this.flickity = new Flickity(this.$refs.matches, {
               accessbility: true,
-              cellAlign: 'center',
-              draggable: '>1',
+              cellAlign: "center",
+              draggable: ">1",
               dragThreshold: 3,
               percentPosition: false,
               prevNextButtons: true,
@@ -285,9 +330,9 @@ export default {
               resize: true,
               setGallerySize: false,
               watchCSS: false,
-              wrapAround: false
+              wrapAround: false,
             });
-            this.flickity.on('change', this.onSelectBumper)
+            this.flickity.on("change", this.onSelectBumper);
           });
           if (this.users.length > 0) {
             this.onSelectBumper(0);
@@ -310,8 +355,8 @@ export default {
         }
       });
     },
-    removeUser(element){
-      if(this.flickity){
+    removeUser(element) {
+      if (this.flickity) {
         this.flickity.remove(element);
       }
     },
@@ -319,93 +364,102 @@ export default {
       this.$store.dispatch("logOut");
       this.$router.push("/");
     },
-    moveLeft(){
+    moveLeft() {
       this.leftMoving = true;
-      this.rightMoving = false
+      this.rightMoving = false;
     },
-    moveRight(){
+    moveRight() {
       this.rightMoving = true;
       this.leftMoving = false;
     },
-    onUpdate(){
-      if(this.leftMoving || this.rightMoving){
-          let dom = this.$refs['matches'];
-          let margin_left = Number(dom.style.marginLeft.substring(0,dom.style.marginLeft.length-2));
-          let direction = this.leftMoving ? -1 : 1;
-          dom.style.marginLeft = (margin_left + direction*8) + 'px';
-          if (Math.abs(margin_left - this.originalMarginLeft) >= 288){
-            dom.style.marginLeft = (this.originalMarginLeft + direction * 288) + 'px';
-            this.leftMoving = false;
-            this.rightMoving = false;
-            this.originalMarginLeft = margin_left;
-          }
+    onUpdate() {
+      if (this.leftMoving || this.rightMoving) {
+        let dom = this.$refs["matches"];
+        let margin_left = Number(
+          dom.style.marginLeft.substring(0, dom.style.marginLeft.length - 2)
+        );
+        let direction = this.leftMoving ? -1 : 1;
+        dom.style.marginLeft = margin_left + direction * 8 + "px";
+        if (Math.abs(margin_left - this.originalMarginLeft) >= 288) {
+          dom.style.marginLeft =
+            this.originalMarginLeft + direction * 288 + "px";
+          this.leftMoving = false;
+          this.rightMoving = false;
+          this.originalMarginLeft = margin_left;
+        }
       }
     },
-    onSelectBumper(index){
-      axios.get(this.$store.getters.URL + "user_data", {
-        params: {
-          user_id: this.users[index].id
-        }
-      }).then(
-        (response) => {
-          if (response.data.STATUS_CODE == 200){
+    onSelectBumper(index) {
+      axios
+        .get(this.$store.getters.URL + "user_data", {
+          params: {
+            user_id: this.users[index].id,
+          },
+        })
+        .then((response) => {
+          if (response.data.STATUS_CODE == 200) {
             let dat = response.data.data;
-            this.selectedUser.userId = this.users[index];
+            this.selectedUser.userId = this.users[index].id;
             this.selectedUser.avatar = dat.avatar;
-            this.selectedUser.name = dat.fName + ' ' + dat.sName;
+            this.selectedUser.name = dat.fName + " " + dat.sName;
             this.selectedUser.intro = dat.intro;
             this.selectedUser.bio = dat.bio;
             this.selectedUser.twitter = dat.twitter;
             this.$refs.bio.innerHTML = this.markdown.render(dat.bio);
-          }else{
-            this.$root.displayWarn('Request Failed: ' + response.data.STATUS_CODE, response.data.message);
+            this.$refs.graph.initGraph(this.selectedUser.userId);
+          } else {
+            this.$root.displayWarn(
+              "Request Failed: " + response.data.STATUS_CODE,
+              response.data.message
+            );
             return;
           }
-        }
-      ).catch(
-        (err) => {
-          this.$root.displayError('Request Error', err);
-        }
-      );
+        })
+        .catch((err) => {
+          this.$root.displayError("Request Error", err);
+        });
       let args = {
-          user_id: this.users[index].id
+        user_id: this.users[index].id,
       };
-      axios.get(this.$store.getters.URL + "get_interests", {params: args}).then(
-      (response) => {
-          if (response.data.STATUS_CODE == 200){
-              this.selectedUser.tags = response.data.Data;
+      axios
+        .get(this.$store.getters.URL + "get_interests", { params: args })
+        .then((response) => {
+          if (response.data.STATUS_CODE == 200) {
+            this.selectedUser.tags = response.data.Data;
           }
-      });
-      console.log('flickity index: ' + index);
-    }
-  }
+        });
+      console.log("flickity index: " + index);
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.matches-frame{
+.matches-frame {
   margin-top: 10rem;
-  padding-bottom:3rem;
-  display:flex;
-  justify-content:center;
+  padding-bottom: 3rem;
+  display: flex;
+  justify-content: center;
 }
-.matches-list{
+.matches-list {
   display: flex;
   flex-flow: row;
   flex-wrap: nowrap;
   height: 416px;
   z-index: 2;
 }
-.bump-card{
+.bump-card {
   width: 16rem;
   height: 24rem;
   margin: 1rem;
 }
-.detailed-info{
+.detailed-info {
   display: block;
-  margin: 10%;
+  margin-top: 10%;
+  margin-left: 5%;
+  height: 48rem;
 }
-.detail-top{
+.detail-top {
   display: flex;
   flex-flow: row;
   justify-content: left;
@@ -417,9 +471,9 @@ export default {
   .flickity-page-dots {
     bottom: inherit;
   }
-  .p-tag{
-        margin-right: 0.25rem;
-        margin-bottom: 0.25rem;
+  .p-tag {
+    margin-right: 0.25rem;
+    margin-bottom: 0.25rem;
   }
 }
 // .bump-card {
