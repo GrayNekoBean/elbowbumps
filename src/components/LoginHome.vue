@@ -30,6 +30,9 @@
       <button id="button" @click="$root.route_to('/bumps')">
         <i class="fa fa-bars" style="margin-right: 19%"></i> VIEW PAST BUMPS
       </button>
+      <button id="button" @click="$root.route_to('/interest-data')">
+        <i class="fa fa-line-chart" style="margin-right: 21.5%"></i> VIEW YOUR DATA
+      </button>
 
     </div>
     <!-- <div id="bottom-right">
@@ -85,7 +88,7 @@ $background-color: #80929f;
   padding: 1%;
   border: 1%;
   position: absolute;
-  margin-top: 5%;
+  margin-top: 1%;
   margin-bottom: 7.5%;
   height: 50%;
   left: 0px;
@@ -100,7 +103,7 @@ $background-color: #80929f;
   padding: 1%;
   border: 1%;
   position: absolute;
-  margin-top: 22%;
+  margin-top: 18%;
   margin-left: 7.5%;
   width: 42%;
   left: 0px;
@@ -119,7 +122,7 @@ $background-color: #80929f;
   margin-top: 1%;
   padding: 1% 2% 1% 1%;
   border: 1% 1% 1% 1%;
-  margin-bottom: 1%;
+  //margin-bottom: 1%;
   text-align: right;
   color: #ffffff;
   font-family: "Lato", sans-serif;
