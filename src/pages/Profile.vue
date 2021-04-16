@@ -108,13 +108,6 @@
                       color="green"
                       @onClick="updateProfile"
                     />
-                    <IconButton
-                      style="margin: 0.7rem"
-                      hint="save"
-                      icon="pi-pencil"
-                      color="green"
-                      @onSave="save"
-                    />
                   </div>
                 </div>
               </template>

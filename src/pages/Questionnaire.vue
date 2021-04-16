@@ -3,7 +3,7 @@
 <section>
   <SplitedPage>
     <template #right>
-      <div style="margin-top: 12rem">
+      <div style="margin-top: 6rem">
         <div class="question-hint">
           <!-- <h3 class="agree" style="margin-left: 35%; margin-right: 12%;"> Strongly disagree </h3>
           <h2 style="font-size: 16px; margin-right: 15%">1-2-3-4-5</h2>
@@ -28,16 +28,18 @@
             <Button @click = "LoadQuestion('video games')" style="background-color: #75c9deff;">Video Games</Button>
           </div> -->
           <Button class="skip-button" icon="pi pi-fast-forward" label="Skip" @click="skip" />
+          <ScrollPanel style="height: 36rem;">
           <Accordion>
             <AccordionTab v-for="(qsList, cate) in questions" :key="cate" :header="cate">
-              <SingleQuestion v-for="i in qsList.length"
-              :key="i"
-              @selected="(val) => updateScore(cate, i - 1, val)"
-              >
-                {{ qsList[i - 1] }}
-              </SingleQuestion>
+                <SingleQuestion v-for="i in qsList.length"
+                :key="i"
+                @selected="(val) => updateScore(cate, i - 1, val)"
+                >
+                  {{ qsList[i - 1] }}
+                </SingleQuestion>
             </AccordionTab>
           </Accordion>
+          </ScrollPanel>
           <Button @click = "submitScore">Submit Score</Button>
         </div>
         <br /><br />
@@ -102,15 +104,39 @@ export default {
             }
           }
         );
+      }else{
+        this.$root.displayError("Submit Failed", "Please check if there are any unfinished question(s). if you don't want to complete them all by now, you can skip this on top right corner and finish them later.");
       }
     },
     skip(){
-      this.$root.route_to('/profile');
+      this.$root.displayLog("Questionnaire Skiped", "Current questionnaire data has been saved, if you want to have more precise matching, please finish questionnaire in your profile");
+      this.calcResults();
+      let form = new FormData();
+      // console.log(this.results)
+      
+      if (this.$store.getters.userId){
+        form.append("user_id", this.$store.getters.userId);
+      }else{
+        console.error('Not logined.');
+        return;
+      }
+      for (let res in this.results){
+        form.append(res, this.results[res]);
+      }
+      axios.post(this.$store.getters.URL + "/questionnaire", form).then(
+        (response) => {
+          let jsonData = response.data;
+          if (jsonData['STATUS_CODE'] == 200){
+            this.$router.push('/profile');
+          }
+        }
+      );
     },
     updateScore(category, index, val) {
       this.scores[category][index] = val;
     },
     calcResults() {
+      let success = true;
       for (const cat in this.scores){
         if (this.scores[cat].length == 0) {
           continue;
@@ -120,15 +146,14 @@ export default {
         let catScores = this.scores[cat];
         for (let score in catScores) {
           if (catScores[score] == 0){
-            this.$root.displayError("Submit Failed", "Please check if there are any unfinished question(s). if you don't want to complete them all by now, you can skip this on top right corner and finish them later.");
-            return false;
+            success = false;
           }else{
             sum += catScores[score];
           }
         }
         this.results[cat] = sum/(5*len)
       }
-      return true;
+      return success;
     },
     LoadQuestion(){
       let text = "";

@@ -38,7 +38,7 @@
                   </template>
                 </TabPanel>
               </TabView>
-              <TabView class="top-tab" v-model:activeIndex="header_active" @tab-click="(event) => route_to(event.index)" v-else>
+              <TabView class="top-tab-login" v-model:activeIndex="header_active" @tab-click="(event) => route_to(event.index)" v-else>
                 <TabPanel>
                   <template #header>
                     <i class="pi pi-home tab-icon"></i>
@@ -59,7 +59,7 @@
                     <Avatar :image="avatar" class="p-mr-2" size="large" shape="circle" style="background-color:#2196F3; color: #ffffff; margin-right: 1rem;" />
                   </div>
                   <div class="user-info-text">
-                    <p style="display:block; margin-right: 1rem;"> Welcome, {{current_user}}! </p>
+                    <p style="display:block; margin-right: 1rem; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; "> Welcome, {{current_user}}! </p>
                     <Menu :model="user_menu_items" id="user_menu_overlay" ref="user_menu" :popup="true" />
                   </div>
                 </div>
@@ -277,6 +277,16 @@ export default {
 </script>
 
 <style lang="scss">
+body{
+  margin: 0px;
+}
+
+div.p-sidebar{
+  padding: 0rem;
+}
+</style>
+
+<style lang="scss" scoped>
 @import './scss/colour-theme';
 $primitive-color: #a9edfe;
 $secondary-color: #ffaaaa;
@@ -284,9 +294,6 @@ $background-color: #80929F;
 :root{
   --primary-color: #ffaaaa !important;
   --primary-color-text: #fffaba !important;
-}
-div.p-sidebar{
-  padding: 0rem;
 }
 // ul.p-menu-list{
 //   margin-top: 1rem !important;
@@ -296,101 +303,114 @@ div.top-tab{
   width: 100%;
   height: 100%;
 }
-body{
-  margin: 0px;
+
+div.top-tab-login{
+  align-self: right;
+  width: 50%;
+  height: 100%;
 }
-.p-tabview-nav-link {
-  display: block !important;
-  align-items: center;
-}
-.p-tabview-title {
-  text-align: center;
-}
-.p-tabview {
-    .p-tabview-panels{
-        padding: 0 !important;
-        height: 0%;
+
+
+::v-deep{
+  .p-tabview-nav-link {
+    display: block !important;
+    align-items: center;
+  }
+  .p-tabview-title {
+    text-align: center;
+  }
+  div.top-tab-login{
+    ul.p-tabview-nav li{
+      width: 50%;
     }
-    .p-tabview-nav{
-        //margin-left: 60%;
-        
-        li {
-          text-align: center;
-          margin-right: 0;
-          width: 25%;
-          background: #ffffff;
-        }
-        li a.p-tabview-nav-link {
-          border-color: #ffffff;
-          // border-width: 0 2px 2px 0;
-          // border-top-right-radius: 0;
-          // border-top-left-radius: 0;
-          // background: #ffaaaa;
-          // border-color: #fffaba;
-          color: #7da9b4;
-          background: #ffffff; //rgba(169, 237, 254, 0.3);
-        }
-        li.p-highlight a.p-tabview-nav-link{
-          border-color: #7da9b4;
-          background: #ffffff; //rgba(169, 237, 254, 0.3);
-          // border-width: 0 2px 2px 0;
-          // border-top-right-radius: 0;
-          // border-top-left-radius: 0;
-          // background: #ff8080;
-          // border-color: #fffaba;
-          // color: #fffaba;
-        }
-        li:not(.p-highlight):not(.p-disabled):hover a.p-tabview-nav-link {
-          border-color: #7da9b4;
-          background: #ffffff //rgba(169, 237, 254, 0.3);
-          // border-width: 0 2px 2px 0;
-          // border-top-right-radius: 0;
-          // border-top-left-radius: 0;
-          // background: #ff9090;
-          // border-color: #fffaba;
-          // color: #fffaba;
-        }
-    }
-}
-div.p-avatar{
-  margin-top: 5%;
-}
-.p-avatar img{
-  border-radius: 50%;
-}
-.p-card .p-card-body{
-  padding: 0 !important;
-  height: 0%;
-}
-.p-card .p-card-body .p-card-content{
-  padding: 0 !important;
-  height: 0%;
-}
-.user-info-area{
-  position: absolute;
-  display: flex;
-  flex-flow: row;
-  top: 0;
-  right: 0;
-  z-index: 6;
-  //width: 70%;
-  //margin-right: 2%;
+  }
+  .p-tabview {
+      .p-tabview-panels{
+          padding: 0 !important;
+          height: 0%;
+      }
+      .p-tabview-nav{
+          //margin-left: 60%;
+          
+          li {
+            text-align: center;
+            margin-right: 0;
+            width: 25%;
+            background: #ffffff;
+          }
+          li a.p-tabview-nav-link {
+            border-color: #ffffff;
+            // border-width: 0 2px 2px 0;
+            // border-top-right-radius: 0;
+            // border-top-left-radius: 0;
+            // background: #ffaaaa;
+            // border-color: #fffaba;
+            color: #7da9b4;
+            background: #ffffff; //rgba(169, 237, 254, 0.3);
+          }
+          li.p-highlight a.p-tabview-nav-link{
+            border-color: #7da9b4;
+            background: #ffffff; //rgba(169, 237, 254, 0.3);
+            // border-width: 0 2px 2px 0;
+            // border-top-right-radius: 0;
+            // border-top-left-radius: 0;
+            // background: #ff8080;
+            // border-color: #fffaba;
+            // color: #fffaba;
+          }
+          li:not(.p-highlight):not(.p-disabled):hover a.p-tabview-nav-link {
+            border-color: #7da9b4;
+            background: #ffffff //rgba(169, 237, 254, 0.3);
+            // border-width: 0 2px 2px 0;
+            // border-top-right-radius: 0;
+            // border-top-left-radius: 0;
+            // background: #ff9090;
+            // border-color: #fffaba;
+            // color: #fffaba;
+          }
+      }
+  }
+  div.p-avatar{
+    margin-top: 5%;
+  }
+  .p-avatar img{
+    border-radius: 50%;
+  }
+  .p-card .p-card-body{
+    padding: 0 !important;
+    height: 0%;
+  }
+  .p-card .p-card-body .p-card-content{
+    padding: 0 !important;
+    height: 0%;
+  }
+  .user-info-area{
+    position: absolute;
+    display: flex;
+    flex-flow: row;
+    width: 16rem;
+    top: 0;
+    z-index: 6;
+    //width: 70%;
+    //margin-right: 2%;
+  }
+
+  div.p-menubar{
+    background: transparent;
+    border: 0px;
+  }
 }
 .clickable-gray{
+  margin-left: 1rem;
   cursor: pointer;
   :hover {
     background: lightgray;
   }
 }
-button.user-info-text{
-  color: black;
-  background: transparent;
-  border: 0px;
+.user-info-text{
+    width: 10rem;
 }
-div.p-menubar{
-  background: transparent;
-  border: 0px;
-}
+
 .main-frame {
   width: 100%;
   height: 100%;
