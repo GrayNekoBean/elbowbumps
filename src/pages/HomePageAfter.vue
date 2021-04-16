@@ -15,7 +15,7 @@
       <!-- <h1 style = "color: #ffaaaa">BUMPS</h1> -->
     </div>
     <div id="bottom-left">
-      <button id="button" @click="$router.push('Bumps')"><i class="fa fa-bars" style="margin-right:19%;"></i>  VIEW PAST BUMPS</button>
+      <button id="button" @click="$router.push('Bumps')"><i class="fa fa-bars" style="margin-right:19%;"></i>  VIEW BUMPS</button>
       <button id="button" @click="$router.push('SocialMediaInfo')"><i class="fa fa-twitter" style="margin-right:31%;"></i>  YOUR SOCIALS</button>
       <button id="button" @click="$router.push('Matches')"><i class="fa fa-heart" style="margin-right:23%;"></i>  MATCHING PAGE</button>
       <button id="button" @click="$router.push('Questionnaire')"><i class="fa fa-question-circle" style="margin-right:24%;"></i> QUESTIONNAIRE</button>
