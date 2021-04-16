@@ -1,10 +1,26 @@
 <template>
   <div>
-    <Chart class="chart" type="radar" :data="chartData" ref="chart" v-if="!showTable"/>
-    <DataTable class="p-datatable-sm" stripedRows :value="tableVals" responsiveLayout="scroll" v-if="showTable">
+    <Chart
+      class="chart"
+      type="radar"
+      :data="chartData"
+      ref="chart"
+      v-if="!showTable"
+    />
+    <DataTable
+      class="p-datatable-sm"
+      stripedRows
+      :value="tableVals"
+      responsiveLayout="scroll"
+      v-if="showTable"
+    >
       <Column field="cat" :sortable="true" header="Category"></Column>
       <Column field="twitter" :sortable="true" header="Twitter Score"></Column>
-      <Column field="questionnaire" :sortable="true" header="Questionnaire Score"></Column>
+      <Column
+        field="questionnaire"
+        :sortable="true"
+        header="Questionnaire Score"
+      ></Column>
       <Column field="weight" :sortable="true" header="Overall Score"></Column>
     </DataTable>
   </div>
@@ -65,8 +81,7 @@ export default {
           ];
           that.$forceUpdate();
           var twitterData = res.data.Data.twitter;
-          console.log(twitterData)
-          if (twitterData.length > 0) { 
+          if (twitterData.length > 0) {
               that.chartData['datasets'].push( {
               label: "Twitter Sentiment Analysis",
               backgroundColor: "rgba(255,99,132,0.2)",
@@ -79,9 +94,11 @@ export default {
             })
           }
           that.$forceUpdate();
-          that.tableVals = res.data.Data.all;
+          that.tableVals = res.data.Data.all
+          that.tableVals.forEach((i, idx) => that.tableVals[idx] = {
+            cat: i.cat, questionnaire: Math.round(i.questionnaire), twitter: Math.round(i.twitter), weight: Math.round(i.weight)
+            });
           that.$refs.chart.refresh();
-          console.log(that.tableVals)
           that.$forceUpdate();
         });
     }
