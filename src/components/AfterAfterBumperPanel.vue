@@ -181,7 +181,7 @@ export default {
         }
     },
     openEmail(){
-
+        console.log(this.email);
         window.open("mailto:" + this.email, "_blank");
     }
   },

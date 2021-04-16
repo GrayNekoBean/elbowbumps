@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Chart class="chart" type="radar" :data="chartData" ref="chart" />
+    <Chart class="chart" type="radar" :data="chartData" ref="chart" v-if="!showTable"/>
     <DataTable class="p-datatable-sm" stripedRows :value="tableVals" responsiveLayout="scroll" v-if="showTable">
       <Column field="cat" :sortable="true" header="Category"></Column>
       <Column field="twitter" :sortable="true" header="Twitter Score"></Column>
