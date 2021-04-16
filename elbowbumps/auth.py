@@ -158,7 +158,7 @@ def getGravatarImage(email):
     gravatar_url += urllib.parse.urlencode({'d':default, 's':str(size)})
     return gravatar_url
 
-@auth.route('twitter_timeline', methods=['GET'])
+@auth.route('/twitter_timeline', methods=['GET'])
 @cross_origin()
 def getTwitterTimeline():
     if request.args.get('twitter'):
