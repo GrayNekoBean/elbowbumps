@@ -76,7 +76,7 @@ export default {
               pointHoverBackgroundColor: "#fff",
               pointHoverBorderColor: "rgba(179,181,198,1)",
               pointLabelFontColor: '#000',
-              data: weights,
+              data: weights.map((i) => Math.round(i)),
             },
           ];
           that.$forceUpdate();
@@ -90,13 +90,13 @@ export default {
               pointBorderColor: "#fff",
               pointHoverBackgroundColor: "#fff",
               pointHoverBorderColor: "rgba(255,99,132,1)",
-              data: twitterData.map((i) => i['weight']),
+              data: twitterData.map((i) => Math.round(i['weight'])),
             })
           }
           that.$forceUpdate();
           that.tableVals = res.data.Data.all
           that.tableVals.forEach((i, idx) => that.tableVals[idx] = {
-            cat: i.cat, questionnaire: Math.round(i.questionnaire), twitter: Math.round(i.twitter), weight: Math.round(i.weight)
+            cat: i.cat, questionnaire: Math.round(i.questionnaire) + '%', twitter: Math.round(i.twitter) + '%', weight: Math.round(i.weight) + '%'
             });
           that.$refs.chart.refresh();
           that.$forceUpdate();
