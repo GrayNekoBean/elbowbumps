@@ -57,10 +57,23 @@
         />
         <br />
        
-        <hr />
-        <Graphs :userId="selectedUser.userId" :showTable="false" ref="graph" />
-        <hr />
-        <div class="bio-area" ref="bio">(No Bio)</div>
+       <TabView>
+          <TabPanel>
+            <template #header>
+              <i class="pi pi-align-center"></i>
+              <span style="margin-left: 0.5rem;">Bio</span>
+            </template>
+            <div class="bio-area" ref="bio">(No Bio)</div>
+          </TabPanel>
+          <TabPanel>
+            <template #header>
+              <i class="pi pi-chart-bar"></i>
+              <span style="margin-left: 0.5rem;">Data</span>
+            </template>
+            <br />
+            <Graphs :userId="selectedUser.userId" :showTable="false" ref="graph" />
+          </TabPanel>
+        </TabView>
 
       </ScrollPanel>
     </template>
@@ -254,6 +267,7 @@ export default {
             this.selectedUser.twitter = dat.twitter;
             this.$refs.bio.innerHTML = this.markdown.render(dat.bio);
             this.$refs.graph.initGraph(this.selectedUser.userId);
+            this.$forceUpdate();
           } else {
             this.$root.displayWarn(
               "Request Failed: " + response.data.STATUS_CODE,
