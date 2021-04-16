@@ -209,7 +209,7 @@ export default {
   },
   methods: {
     setLimits() {
-      for (let i = 1; i < 50; i++) {
+      for (let i = 1; i < 17; i++) {
         this.limits.push({ name: String(i), id: i });
       }
     },
