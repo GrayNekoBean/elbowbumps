@@ -170,7 +170,7 @@ def bumped_with():
 @app.route('/get_bumps', methods=['GET'])
 @cross_origin()
 def get_bumps():
-    user_id = request.args.get('user_id')
+    user_id = int(request.args.get('user_id'))
     matches = UserMatch.query.filter((UserMatch.um_ud_id_1 == user_id) | (UserMatch.um_ud_id_2 == user_id)).filter(UserMatch.um_1_matched == True).filter(UserMatch.um_2_matched == True).all()
     match_ids = []
     for m in matches:
