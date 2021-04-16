@@ -108,11 +108,6 @@ export default createRouter({
       component: AccessDenied
     },
     {
-      name: "BumpingPage",
-      path: "/bumping_page",
-      component: BumpingPage
-    },
-    {
       name: "interest_data",
       path: "/interest-data",
       component: InterestData

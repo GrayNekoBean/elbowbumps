@@ -108,7 +108,7 @@ export default {
       // let args = {
       //     user_id: this.userID,
       //     limit: 8,
-      // };
+      // }
 
       // axios.get(this.$store.getters.URL + "find_matches", {params: args}).then(
       // (response) => {

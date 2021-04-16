@@ -15,7 +15,6 @@
         ELBOW <span style="color: #ffaaaa">BUMPS</span>
       </h1>
       <!-- <h1 style = "color: #ffaaaa">BUMPS</h1> -->
-      <p style="text-align: left;">What's my next step?</p>
     </div>
     <div id="bottom-left">
       <button id="button" @click="$root.route_to('/questionnaire')">
@@ -101,7 +100,7 @@ $background-color: #80929f;
   padding: 1%;
   border: 1%;
   position: absolute;
-  margin-top: 30%;
+  margin-top: 22%;
   margin-left: 7.5%;
   width: 42%;
   left: 0px;
