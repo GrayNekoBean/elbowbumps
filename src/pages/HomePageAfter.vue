@@ -51,6 +51,7 @@ $background-color: 	#80929F;
   height: 100%;
   width: 100%;
   background: $background-color;
+  margin-bottom: 4%;
 }
 
 #top-right {

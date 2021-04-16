@@ -151,6 +151,7 @@
                 @click="openURL()"
                 style="margin-right:3rem;"
               ></Button>
+              <p>You need to click this button twice :) [there is a bug]</p>
                 <Button
                 label="Refresh your sentiment scores for your current account"
                 autofocus
@@ -165,6 +166,7 @@
                 autofocus
                 @click="openURL()"
               ></Button>
+              <p>You need to click this button twice :) [there is a bug]</p>
             </div>
 
             <h2 v-if="userAuthoriseTwitter != false">Enter the PIN you recieved above</h2>

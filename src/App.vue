@@ -160,12 +160,7 @@ export default {
           label: "My Bumps",
           icon: "pi pi-user-plus",
           to: "/bumps"
-        },
-        {
-          label: "Bumping Page",
-          icon: "pi pi-user-plus",
-          to: "/bumping_page"
-        },
+        }
       ]
     }
   },
