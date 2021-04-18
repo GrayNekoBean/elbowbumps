@@ -319,7 +319,7 @@ div.top-tab{
 
 div.top-tab-login{
   align-self: right;
-  width: 80%;
+  width: 68%;
   height: 100%;
 }
 
@@ -401,7 +401,7 @@ div.top-tab-login{
     position: absolute;
     display: flex;
     flex-flow: row;
-    width: 16rem;
+    width: 15rem;
     top: 0;
     z-index: 6;
     //width: 70%;
@@ -464,7 +464,7 @@ div.top-tab-login{
   display: flex;
   flex-flow: row;
   justify-content: right;
-  margin-left: 50%;
+  margin-left: 48%;
 }
 .footer-menu {
   position: fixed;
