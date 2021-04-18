@@ -57,6 +57,12 @@
                     <span>About</span>
                   </template>
                 </TabPanel>
+                <TabPanel>
+                  <template #header>
+                    <i class="pi pi-info-circle tab-icon"></i>
+                    <span>How it Works</span>
+                  </template>
+                </TabPanel>
               </TabView>
               <!-- <div v-if="logined()" class="user-info-cover"></div> -->
               <div v-if="logined()" class="clickable-gray" @click="showMenu">
@@ -159,7 +165,7 @@ export default {
           to: "interest-data"
         },
         {
-          label: "My Matching",
+          label: "My Matches",
           icon: "pi pi-users",
           to: "/matches"
         },
@@ -313,7 +319,7 @@ div.top-tab{
 
 div.top-tab-login{
   align-self: right;
-  width: 50%;
+  width: 80%;
   height: 100%;
 }
 
@@ -328,7 +334,7 @@ div.top-tab-login{
   }
   div.top-tab-login{
     ul.p-tabview-nav li{
-      width: 50%;
+      width: 33.3333333%;
     }
   }
   .p-tabview {
