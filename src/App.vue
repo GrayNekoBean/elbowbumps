@@ -27,6 +27,12 @@
                 </TabPanel>
                 <TabPanel>
                   <template #header>
+                    <i class="pi pi-info-circle tab-icon"></i>
+                    <span>How it Works</span>
+                  </template>
+                </TabPanel>
+                <TabPanel>
+                  <template #header>
                     <i class="pi pi-sign-in tab-icon"></i>
                     <span>Login</span>
                   </template>
@@ -114,8 +120,9 @@ export default {
       id_routers: {
         0: "/",
         1: "/about",
-        2: "/login",
-        3: "/register"
+        2: "/how-it-works",
+        3: "/login",
+        4: "/register"
       },
       routers_id: {},
       footer_items: [
@@ -335,7 +342,7 @@ div.top-tab-login{
           li {
             text-align: center;
             margin-right: 0;
-            width: 25%;
+            width: 20%;
             background: #ffffff;
           }
           li a.p-tabview-nav-link {
@@ -451,7 +458,7 @@ div.top-tab-login{
   display: flex;
   flex-flow: row;
   justify-content: right;
-  margin-left: 68%;
+  margin-left: 50%;
 }
 .footer-menu {
   position: fixed;

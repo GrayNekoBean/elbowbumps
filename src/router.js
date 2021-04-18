@@ -14,11 +14,9 @@ import Profile from "./pages/Profile.vue";
 import Matches from "./pages/Matches.vue";
 import Bumps from "./pages/Bumps.vue";
 import AccessDenied from "./pages/AccessDenied";
-import HomePageAfter from "./pages/HomePageAfter.vue";
-import BumpingPage from "./pages/BumpingPage.vue";
 import InterestData from "./pages/InterestData.vue";
 import AntiMatches from "./pages/AntiMatches.vue";
-
+import HowItWorks from "./pages/HowItWorks.vue";
 
 
 export default createRouter({
@@ -111,6 +109,11 @@ export default createRouter({
       name: "interest_data",
       path: "/interest-data",
       component: InterestData
+    },
+    {
+      name: "how_it_works",
+      path: "/how-it-works",
+      component: HowItWorks
     }
   ],
   linkActiveClass: "active",

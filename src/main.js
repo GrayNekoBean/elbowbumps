@@ -4,6 +4,7 @@ import router from "./router.js";
 import store from "./store.js";
 import primevue from "primevue/config";
 import ToastService from 'primevue/toastservice';
+import Timeline from 'primevue/timeline';
 
 import Button from "primevue/button";
 import Checkbox from "primevue/checkbox";
@@ -34,6 +35,7 @@ import ToggleButton from 'primevue/togglebutton';
 import SplitButton from 'primevue/splitbutton';
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
+import Tree from 'primevue/tree';
 
 import "primevue/resources/themes/saga-blue/theme.css"; // theme
 import "primevue/resources/primevue.min.css"; // core css
@@ -47,6 +49,8 @@ app.use(primevue);
 app.use(store);
 app.use(ToastService);
 
+app.component("Tree", Tree);
+app.component("Timeline", Timeline);
 app.component("Button", Button);
 app.component("Checkbox", Checkbox);
 app.component("Card", Card);
