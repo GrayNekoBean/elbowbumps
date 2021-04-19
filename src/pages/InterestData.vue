@@ -1,8 +1,9 @@
 <template>
     <div class="container">
-        <h2 style="text-align: center; margin-top:5rem; padding-top: 3rem;"> Want to know more about your interests? You are in the right place!</h2>
+        <h2 style="text-align: center; margin-top:5rem;"> Want to know more about your interests? You are in the right place!</h2>
         <br />
-        Stuff you like:
+        <div class="tags-area">
+        Stuff you like :  
         <Tag
           v-for="tag in tags"
           severity="success"
@@ -10,6 +11,7 @@
           class="p-mr-2"
           :value="tag"
         />
+        </div>
         <br />
         <TabView>
           <TabPanel>
@@ -19,15 +21,15 @@
             </template>
             <Graphs :userId="$store.getters.userId" :showTable="true"></Graphs>
           </TabPanel>
-          <TabPanel>
+           <TabPanel>
             <template #header>
-                <div style="height: 50%;">
-                <i class="pi pi-chart-bar"></i>
-                <span style="margin-left: 0.5rem;">Graph View</span>
-                </div>
+              <i class="pi pi-chart-bar"></i>
+              <span style="margin-left: 0.5rem;">Graph View</span>
             </template>
             <br />
-            <Graphs :userId="$store.getters.userId" :showTable="false" ref="graph" />
+            <div class="img-container">
+              <Graphs :userId="$store.getters.userId" :showTable="false" ref="graph" />
+            </div>
           </TabPanel>
         </TabView>
     </div>
@@ -111,9 +113,11 @@ export default {
     margin-bottom: 4%;
 } */
 
+
 .container{
-    height:120%;
-    margin-bottom: 6rem;
+    height:100%;
+    margin-left: 1rem;
+    margin-right:1rem;
 }
 ::v-deep {
   .p-tag {
@@ -123,15 +127,13 @@ export default {
   }
 }
 
-
-
-.detailed-info {
-  display: block;
-  margin-top: 10%;
-  margin-left: 5%;
-  height: 48rem;
+.img-container{
+  display:block;
+  height: auto;
+  width: 60%;
+  left: 50%;
+  margin: 0 0 0 21%;
 }
-
 
 .tags-area {
   display: flex;

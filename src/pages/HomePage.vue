@@ -42,6 +42,7 @@ $background-color: 	#80929F;
 //$background-color: 	#DB744E;
 //$background-color: #ffffff;
 //$background-color: #fffaba;
+
 #frame {
   position: absolute;
   height: 100%;

@@ -136,36 +136,36 @@
             </Splitter>
           </TabPanel>
           <TabPanel header="Twitter">
-            <div v-if="twitter != ''">
-              <p>Current Twitter account: @{{ twitter }}</p>
-               <Button
-                label="Authorise a new Twitter account"
-                autofocus
-                @click="openURL()"
-                style="margin-right:3rem;"
-              ></Button>
-              <p>You need to click this button twice :) [there is a bug]</p>
+            <div v-if="!userAuthoriseTwitter" class="buttons">
+              <div v-if="twitter != ''">
+                <h2 style="text-align:center;">Current Twitter account: @{{ twitter }}</h2>
                 <Button
-                label="Refresh your sentiment scores for your current account"
-                autofocus
-                @click="refreshTwitter()"
-                style="margin-left:30%;"
-              ></Button>
+                  label="Authorise a new Twitter account"
+                  autofocus
+                  @click="openURL()"
+                  style="margin:1rem;"
+                ></Button>
+                  <Button
+                  label="Refresh your sentiment scores for your current account"
+                  autofocus
+                  @click="refreshTwitter()"
+                  style="margin:1rem;"
+                ></Button>
+              </div>
+              <div v-else>
+                <p>You haven't registered your Twitter account with us yet!</p>
+                <Button
+                  label="Authorise a new Twitter account"
+                  autofocus
+                  @click="openURL()"
+                ></Button>
+              </div>
             </div>
-            <div v-else>
-              <p>You haven't registered your Twitter account with us yet!</p>
-              <Button
-                label="Authorise a new Twitter account"
-                autofocus
-                @click="openURL()"
-              ></Button>
-              <p>You need to click this button twice :) [there is a bug]</p>
-            </div>
-
-            <h2 v-if="userAuthoriseTwitter != false">Enter the PIN you recieved above</h2>
+            <div style="margin-right:4rem;">
+            <h2  v-if="userAuthoriseTwitter != false">Enter the PIN you recieved above</h2>
 
          
-              <div v-if="userAuthoriseTwitter != false" id="textbox">
+              <div  v-if="userAuthoriseTwitter != false" id="textbox">
                 <form @submit.prevent="submitPIN">
                   <label for="twitterPIN"></label>
                   <input
@@ -195,11 +195,10 @@
                   </Dialog>
                 </form>
               </div>
-
+            </div>
           </TabPanel>
           <TabPanel header="Questionnaire">
-            <p>Fill out the questionnaire</p>
-            <div id="textbox">
+            <div id="textbox" class="buttons" style="margin-top:5rem;font-size:x-large;">
               <Button
                 label="Go to the questionnaire page"
                 autofocus
@@ -255,7 +254,8 @@ export default {
       oauthToken: "",
       oauthTokenSecret: "",
       oauthURL: "",
-      userAuthoriseTwitter: false
+      userAuthoriseTwitter: false,
+      firstTime: true,
     };
   },
   watch: {
@@ -422,9 +422,15 @@ export default {
       return this.oauthURL;
     },
     openURL() {
-      this.userAuthoriseTwitter = true;
       this.generateURL();
       window.open(this.oauthURL, "_blank");
+      if (this.firstTime){
+        this.$root.displayLog("There is a bug. Please click on the 'authorise a new account' button again.");
+      }
+      else{
+       this.userAuthoriseTwitter = true;
+      }
+      this.firstTime = !this.firstTime;
     },
     questionnaireRoute() {
       this.$router.push("/questionnaire");
@@ -471,6 +477,10 @@ $background-color: #fffaba;
   height: 15rem;
   width: 15rem;
   border-radius: 50%;
+}
+
+.buttons {
+  justify-content: center;
 }
 
 h2 {

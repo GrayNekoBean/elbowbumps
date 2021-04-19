@@ -22,7 +22,7 @@
                 <TabPanel>
                   <template #header>
                     <i class="pi pi-info-circle tab-icon"></i>
-                    <span>About</span>
+                    <span>About Us</span>
                   </template>
                 </TabPanel>
                 <TabPanel>
@@ -54,7 +54,7 @@
                 <TabPanel>
                   <template #header>
                     <i class="pi pi-info-circle tab-icon"></i>
-                    <span>About</span>
+                    <span>About Us</span>
                   </template>
                 </TabPanel>
                 <TabPanel>
@@ -191,7 +191,7 @@ export default {
     }else{
       this.current_user = this.$store.getters.fName;
       this.avatar = this.$store.getters.avatar;
-      this.user_menu_items[0].label = "You're now login as " + this.current_user;
+      this.user_menu_items[0].label = "You're now logged in as " + this.current_user;
     }
   },
   methods: {
@@ -210,7 +210,7 @@ export default {
           if (remember){
             localStorage.setItem('current_user', id);
           }
-          this.user_menu_items[0].label = "You're now login as " + this.current_user;
+          this.user_menu_items[0].label = "You're now logged in as " + this.current_user;
           this.routers_id = this.swapKeyValue(this.id_routers);
           this.$forceUpdate();
         }).catch((e) => {
@@ -243,7 +243,7 @@ export default {
     },
     updateHeader: function(){
       this.current_user = this.$store.getters.fName;
-      this.user_menu_items[0].label = `You are now login as ${this.current_user}! `;
+      this.user_menu_items[0].label = `You are now logged in as ${this.current_user}! `;
       this.$forceUpdate();
     },
     logined: function(){
@@ -319,7 +319,7 @@ div.top-tab{
 
 div.top-tab-login{
   align-self: right;
-  width: 80%;
+  width: 100%;
   height: 100%;
 }
 
@@ -334,7 +334,7 @@ div.top-tab-login{
   }
   div.top-tab-login{
     ul.p-tabview-nav li{
-      width: 33.3333333%;
+      width: 33.33%;
     }
   }
   .p-tabview {
