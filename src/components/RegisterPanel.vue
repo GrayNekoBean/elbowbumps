@@ -19,7 +19,7 @@
               :class="checkName('fName', enteredfName) ? '' : 'p-invalid'"
               required
             />
-            <small v-if="!checkName('fName', enteredfName)" id="username2-help" class="p-error">Username is not available.</small>
+            <small v-if="!checkName('fName', enteredfName)" id="username2-help" class="p-error">Username is invalid.</small>
             <br /><br />
             <label>Last Name:</label><br />
             <InputText
@@ -29,7 +29,7 @@
               :class="checkName('sName', enteredfName) ? '' : 'p-invalid'"
               required
             />
-            <small v-if="!checkName('sName', enteredsName)" id="username2-help" class="p-error">Username is not available.</small>
+            <small v-if="!checkName('sName', enteredsName)" id="username2-help" class="p-error">Username is invalid.</small>
             <br /><br />
             <label>Phone Number:</label><br />
             <InputText
@@ -39,7 +39,7 @@
               :class="checkPhone('phone', enteredphoneNum) ? '' : 'p-invalid'"
               required
             />
-            <small v-if="!checkPhone('phone', enteredphoneNum)" id="username2-help" class="p-error">Phone Number is not available.</small>
+            <small v-if="!checkPhone('phone', enteredphoneNum)" id="username2-help" class="p-error">Phone Number is invalid.</small>
             <br /><br />
             <label>Email:</label><br />
             <InputText
@@ -49,7 +49,7 @@
               :class="checkEmail('email', enteredemailAdd) ? '' : 'p-invalid'"
               required
             />
-            <small v-if="!checkEmail('email', enteredemailAdd)" id="username2-help" class="p-error">Email is not available. (Note that only UoM email is accepted here)</small>
+            <small v-if="!checkEmail('email', enteredemailAdd)" id="username2-help" class="p-error">Email is invalid. (Note that only UoM email is accepted here)</small>
             <br /><br />
             <label>Password:</label><br />
             <Password id="pw" v-model="enteredpw" required /><br /><br /><br />
