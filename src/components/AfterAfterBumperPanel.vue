@@ -6,7 +6,7 @@
         <div
           style="display: flex; flex-flow: column; justify-content: space-between; align-items: center;"
         >
-          <Avatar size="xlarge" :image="avatar" shape="circle" />
+          <Avatar size="xlarge" :image="avatar" shape="circle"/>
           <h3>{{ userName }}</h3>
         </div>
         <div class="intro">
@@ -25,7 +25,10 @@
         <!-- <Button v-if="!pending" @click="bump">Bump</Button>
                 <Button style="background:#bb2e2e;" v-else @click="unbump">Unbump</Button> -->
         <SplitButton
+          icon="pi pi-twitter"
+          :label="twitter == '' ? 'Twitter Unavailable' : 'View Twitter'"
           :model="buttonItem"
+          @click="openTwitterPage"
         />
         <!-- <Button v-if="!pending" @click="bump">Bump</Button>
                 <Button style="background:#bb2e2e;" v-else @click="unbump">Unbump</Button>
@@ -44,11 +47,6 @@ export default {
   data() {
     return {
       buttonItem: [
-        {
-            label: "View their Twitter",
-            icon: "pi pi-twitter",
-            command: this.openTwitterPage,
-        },
         {
           label: "Email them",
           icon: "pi pi-envelope",
