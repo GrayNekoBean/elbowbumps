@@ -94,9 +94,7 @@
                     />
                     <div>
                       <p>
-                        You can edit your bio using markdown. Click on the tick
-                        to see what it looks like compiled. (2000 character
-                        limit)
+                        You can edit your bio using markdown. This compiles immediately while you edit it. (2000 character limit)
                       </p>
                     </div>
                   </div>
