@@ -107,7 +107,6 @@ p {
   font-size: 60px;
   font-family: 'Montserrat', sans-serif;
   text-align: left;
-  margin-bottom: 0;
 
 }
 

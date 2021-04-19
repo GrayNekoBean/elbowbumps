@@ -46,12 +46,12 @@ export default {
       buttonItem: [
         {
             label: "View their Twitter",
-            icon: "pi-twitter",
+            icon: "pi pi-twitter",
             command: this.openTwitterPage,
         },
         {
           label: "Email them",
-          icon: "pi-envelope",
+          icon: "pi pi-envelope",
           command: this.openEmail,
         },
         {
@@ -75,7 +75,8 @@ export default {
       lastName: "",
       pending: false,
       avatar: "",
-      class: ""
+      class: "", 
+      email: ""
     };
   },
   computed: {
@@ -121,6 +122,7 @@ export default {
             this.lastName = data["sName"];
             this.twitter = data["twitter"];
             this.bio = data["bio"];
+             this.email = data["email"];
             this.intro = data["intro"];
             this.userName = this.firstName + " " + this.lastName;
 
@@ -182,8 +184,14 @@ export default {
         }
     },
     openEmail(){
-        console.log(this.email);
-        window.open("mailto:" + this.email, "_blank");
+        if (this.email == ''){
+          this.$root.displayError(
+            "There was an error getting their email."
+        );
+        }
+        else {
+            window.open("mailto:" + this.email, "_blank");
+        }
     }
   },
   mounted: function() {

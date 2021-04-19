@@ -28,7 +28,7 @@
         <i class="fa fa-heart" style="margin-right: 23%"></i> MATCHING PAGE
       </button>
       <button id="button" @click="$root.route_to('/bumps')">
-        <i class="fa fa-bars" style="margin-right: 19%"></i> VIEW PAST BUMPS
+        <i class="fa fa-bars" style="margin-right: 37%"></i> VIEW BUMPS
       </button>
       <button id="button" @click="$root.route_to('/interest-data')">
         <i class="fa fa-line-chart" style="margin-right: 21.5%"></i> VIEW YOUR DATA
