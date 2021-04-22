@@ -11,7 +11,7 @@ import json
 
 app = create_app()
 cors = CORS(app)
-from elbowbumps.models import UserData, UserInterestData, UserMatch, ReportUser
+from elbowbumps.models import UserData, UserInterestData, UserMatch, ReportUser, SquaredWeights
 
 from elbowbumps.auth import auth
 
@@ -602,9 +602,43 @@ def create_test_user():
         'STATUS_CODE': '200',
         "Message": 'User added'
     })
+    
+@app.route('/dummy_data', methods=['POST'])
+def dummy_data():
+    db.session.query(UserData).delete()
+    db.session.query(UserInterestData).delete()
+    db.session.query(SquaredWeights).delete()
+    db.session.query(UserMatch).delete()
+    from random import randint
+    no_users = request.form.get('no_users')
+    no_cats = request.form.get('no_cats')
+    for i in range(int(no_users)):
+        print(i)
+        user = UserData('Faridz', 'Ibrahim', 19, "fake"+str(i)+"@manchester.ac.uk",
+                        i, str(i), 'M', f'{randint(0, 6000)}')
+        db.session.add(user)
+        db.session.commit()
+        for j in range(int(no_cats)):
+            notSuccessful = True
+            cat = 0
+            while notSuccessful:
+                cat = str(randint(0, int(no_cats)*50)) 
+                # change 50 to decrease the number of categories available to pick from for each user's interests 
+                print("this is" + str(cat))
+                user_interests = UserInterestData.query.filter_by(uid_ud_id=i, uid_interest_type=cat).first()
+                if not user_interests:
+                    notSuccessful = False
+            cat = "category"+str(cat)
+            interest = UserInterestData(i,  cat, randint(0,2), randint(0,2))
+            db.session.add(interest)
+            db.session.commit()
+            user_interests = UserInterestData.query.filter_by(uid_ud_id=i, uid_interest_type=cat).first()
+            user_interests.updateScores()
 
-# A welcome message to test our server
-
+    return jsonify({
+        'STATUS_CODE': '200',
+        "Message": 'Users added'
+    })
 
 @app.route('/')
 def index():
