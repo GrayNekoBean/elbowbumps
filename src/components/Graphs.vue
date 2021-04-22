@@ -68,7 +68,7 @@ export default {
           weights = weights.concat(Array(zeros).fill(0))
           that.chartData["datasets"] = [
             {
-              label: "Questionnaire Scores",
+              label: "Overall Scores",
               backgroundColor: "rgba(179,181,198,0.2)",
               borderColor: "rgba(179,181,198,1)",
               pointBackgroundColor: "rgba(179,181,198,1)",
