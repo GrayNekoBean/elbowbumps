@@ -68,22 +68,15 @@ def register():
     if 'fName' in reg_info and 'sName' in reg_info and 'phoneNum' in reg_info and 'emailAdd' in reg_info and 'pw' in reg_info:
         fName = reg_info.get('fName')
         sName = reg_info.get('sName')
-        phoneNum = reg_info.get('phoneNum')
+        phoneNum = '0123'
         emailAdd = reg_info.get('emailAdd')
         pw = hashlib.md5(reg_info['pw'].encode()).hexdigest()
         user_email_check = UserData.query.filter_by(ud_email=emailAdd).first()
-        user_phone_check = UserData.query.filter_by(ud_phone=phoneNum).first()
         if user_email_check:
             return jsonify({
                 "STATUS": 'EMAIL_EXISTED',
                 "STATUS_CODE": '500',
                 "Message": f"User with email {emailAdd} already registered"
-            })
-        elif user_phone_check:
-            return jsonify({
-                "STATUS": 'PHONE_EXISTED',
-                "STATUS_CODE": '500',
-                "Message": f"User with phone number {phoneNum} already registered"
             })
         elif fName == "" or sName == "" or phoneNum == "" or pw == "" or emailAdd == "":
             return jsonify({
@@ -214,14 +207,13 @@ def getUserData():
     elif request.method == 'POST':
         fName = request.form.get('fName')
         sName = request.form.get('sName')
-        phoneNum = request.form.get('phoneNum')
+        phoneNum = "023"
         emailAdd = request.form.get('emailAdd')
         id = request.form.get('id')
         intro = request.form.get('intro')
         bio = request.form.get('bio')
 
         user_email_check = UserData.query.filter_by(ud_email=emailAdd).first()
-        user_phone_check = UserData.query.filter_by(ud_phone=phoneNum).first() 
         user = UserData.query.filter_by(ud_id = id).first()
 
 
@@ -237,12 +229,6 @@ def getUserData():
                 "STATUS": 'EMAIL_EXISTED',
                 "STATUS_CODE": '500',
                 "Message": f"User with email {emailAdd} already registered"
-            })
-        elif user_phone_check and user.ud_phone != phoneNum :
-            return jsonify({
-                "STATUS": 'PHONE_EXISTED',
-                "STATUS_CODE": '500',
-                "Message": f"User with phone number {phoneNum} already registered"
             })
         elif fName == "" or sName == "" or phoneNum == ""  or emailAdd == "":
             return jsonify({
