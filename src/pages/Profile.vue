@@ -56,9 +56,6 @@
                 <EditableText textID="email" v-model:textVar="email" @onSave="updateProfile">
                   Email
                 </EditableText>
-                <EditableText textID="telephone" v-model:textVar="phoneNumber" @onSave="updateProfile">
-                  Phone Number
-                </EditableText>
               </div>
             </div>
           </TabPanel>
@@ -236,7 +233,6 @@ export default {
       lastName: "",
       intro: "",
       email: "",
-      phoneNumber: "",
       twitter: "",
       facebook: "",
       snapchat: "",
@@ -276,7 +272,6 @@ export default {
       const form = new FormData();
 
       form.append("id", this.$store.getters.userId);
-      form.append("phoneNum", this.phoneNumber);
       form.append("fName", this.firstName);
       form.append("sName", this.lastName);
       form.append("emailAdd", this.email);
@@ -336,7 +331,6 @@ export default {
             this.firstName = data["fName"];
             this.lastName = data["sName"];
             this.email = data["email"];
-            this.phoneNumber = data["phone"];
             this.twitter = data["twitter"];
             this.bio = data["bio"];
             this.intro = data["intro"];
