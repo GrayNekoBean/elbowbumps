@@ -65,25 +65,33 @@ def check_password_hash(userpw, pw):
 @auth.route('/register', methods=['POST'])
 def register():
     reg_info = request.form
-    if 'fName' in reg_info and 'sName' in reg_info and 'emailAdd' in reg_info and 'pw' in reg_info:
+    if 'fName' in reg_info and 'sName' in reg_info and 'phoneNum' in reg_info and 'emailAdd' in reg_info and 'pw' in reg_info:
         fName = reg_info.get('fName')
         sName = reg_info.get('sName')
+        phoneNum = reg_info.get('phoneNum')
         emailAdd = reg_info.get('emailAdd')
         pw = hashlib.md5(reg_info['pw'].encode()).hexdigest()
         user_email_check = UserData.query.filter_by(ud_email=emailAdd).first()
+        user_phone_check = UserData.query.filter_by(ud_phone=phoneNum).first()
         if user_email_check:
             return jsonify({
                 "STATUS": 'EMAIL_EXISTED',
                 "STATUS_CODE": '500',
                 "Message": f"User with email {emailAdd} already registered"
             })
-        elif fName == "" or sName == ""  or pw == "" or emailAdd == "":
+        elif user_phone_check:
+            return jsonify({
+                "STATUS": 'PHONE_EXISTED',
+                "STATUS_CODE": '500',
+                "Message": f"User with phone number {phoneNum} already registered"
+            })
+        elif fName == "" or sName == "" or phoneNum == "" or pw == "" or emailAdd == "":
             return jsonify({
                 'STATUS': 'INVALID_DATA',
                 "STATUS_CODE": '500',
                 "Message": f"Fill in all fields"
             })
-        elif (len(fName) > 50) or (len(sName) > 50) or (len(pw) > 100) or (len(emailAdd) > 50):
+        elif (len(fName) > 50) or (len(sName) > 50) or (len(phoneNum) > 13) or (len(pw) > 100) or (len(emailAdd) > 50):
             return jsonify({
                 'STATUS': 'INVALID_DATA',
                 "STATUS_CODE": '500',
@@ -91,7 +99,7 @@ def register():
             })
         else:
             # User data columns: forename, surname, birthyear, email, phone, password, gender, twitter
-            newUser = UserData(fName, sName, '2000', emailAdd, '01234', pw, 'M', '')
+            newUser = UserData(fName, sName, '2000', emailAdd, phoneNum, pw, 'M', '')
             db.session.add(newUser)
             db.session.commit()
             # POST Request
@@ -206,12 +214,14 @@ def getUserData():
     elif request.method == 'POST':
         fName = request.form.get('fName')
         sName = request.form.get('sName')
+        phoneNum = request.form.get('phoneNum')
         emailAdd = request.form.get('emailAdd')
         id = request.form.get('id')
         intro = request.form.get('intro')
         bio = request.form.get('bio')
 
         user_email_check = UserData.query.filter_by(ud_email=emailAdd).first()
+        user_phone_check = UserData.query.filter_by(ud_phone=phoneNum).first() 
         user = UserData.query.filter_by(ud_id = id).first()
 
 
@@ -228,13 +238,19 @@ def getUserData():
                 "STATUS_CODE": '500',
                 "Message": f"User with email {emailAdd} already registered"
             })
-        elif fName == "" or sName == ""  or emailAdd == "":
+        elif user_phone_check and user.ud_phone != phoneNum :
+            return jsonify({
+                "STATUS": 'PHONE_EXISTED',
+                "STATUS_CODE": '500',
+                "Message": f"User with phone number {phoneNum} already registered"
+            })
+        elif fName == "" or sName == "" or phoneNum == ""  or emailAdd == "":
             return jsonify({
                 'STATUS': 'INVALID_DATA',
                 "STATUS_CODE": '500',
                 "Message": f"Can't leave fields blank"
             })
-        elif (len(fName) > 50) or (len(sName) > 50)  or (len(emailAdd) > 50) or (len(bio) > 2000) or (len(intro) > 160):
+        elif (len(fName) > 50) or (len(sName) > 50) or (len(phoneNum) > 13) or (len(emailAdd) > 50) or (len(bio) > 2000) or (len(intro) > 160):
             return jsonify({
                 'STATUS': 'INVALID_DATA',
                 "STATUS_CODE": '500',
@@ -243,6 +259,7 @@ def getUserData():
         else:
             user.ud_email = emailAdd
             user.ud_forename = fName
+            user.ud_phone = phoneNum
             user.ud_surname = sName
             user.ud_bio = bio
             user.ud_intro = intro
