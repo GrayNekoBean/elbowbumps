@@ -20,6 +20,7 @@
               v-for="user in users"
               :key="user"
               :userID="user.id"
+              :selected="selectedUser.userId == user.id"
               @onRemove="removeUser"
             />
           </div>

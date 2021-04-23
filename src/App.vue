@@ -27,7 +27,7 @@
                 </TabPanel>
                 <TabPanel>
                   <template #header>
-                    <i class="pi pi-info-circle tab-icon"></i>
+                    <i class="pi pi-book tab-icon"></i>
                     <span>How it Works</span>
                   </template>
                 </TabPanel>
@@ -59,7 +59,7 @@
                 </TabPanel>
                 <TabPanel>
                   <template #header>
-                    <i class="pi pi-info-circle tab-icon"></i>
+                    <i class="pi pi-book tab-icon"></i>
                     <span>How it Works</span>
                   </template>
                 </TabPanel>

@@ -1,6 +1,7 @@
 <template>
   <Card style="width: 16rem; height: 24rem;">
     <template #content>
+      <div :class="selected ? '' : 'overlay'"></div>
       <div class="bumper-panel">
         <div
           style="display: flex; flex-flow: column; justify-content: space-between; align-items: center;"
@@ -85,7 +86,7 @@ export default {
         return this.match_percentage >= 60;
     }
   },
-  props: ["userID", "distance"],
+  props: ["userID", "distance","selected"],
   emits: ["onRemove"],
   methods: {
     PendingUsers() {
@@ -283,6 +284,18 @@ export default {
     margin-right: 0.25rem;
     margin-bottom: 0.25rem;
   }
+}
+
+.overlay {
+  position: absolute;
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #5e686e80; /* Black background with opacity */
+  z-index: 6; /* Specify a stack order in case you're using a different order for other elements */
 }
 
 .bumper-panel {

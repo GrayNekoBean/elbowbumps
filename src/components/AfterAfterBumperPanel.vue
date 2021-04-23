@@ -1,11 +1,12 @@
 <template>
   <Card style="width: 16rem; height: 24rem;">
     <template #content>
+      <div :class="selected ? '' : 'overlay'"></div>
       <div class="bumper-panel">
         <div
           style="display: flex; flex-flow: column; justify-content: space-between; align-items: center;"
         >
-          <Avatar size="xlarge" :image="avatar" shape="circle" />
+          <Avatar size="xlarge" :image="avatar" shape="circle"/>
           <h3>{{ userName }}</h3>
         </div>
         <div class="intro">
@@ -24,7 +25,10 @@
         <!-- <Button v-if="!pending" @click="bump">Bump</Button>
                 <Button style="background:#bb2e2e;" v-else @click="unbump">Unbump</Button> -->
         <SplitButton
+          icon="pi pi-twitter"
+          :label="twitter == '' ? 'Twitter Unavailable' : 'View Twitter'"
           :model="buttonItem"
+          @click="openTwitterPage"
         />
         <!-- <Button v-if="!pending" @click="bump">Bump</Button>
                 <Button style="background:#bb2e2e;" v-else @click="unbump">Unbump</Button>
@@ -43,11 +47,6 @@ export default {
   data() {
     return {
       buttonItem: [
-        {
-            label: "View their Twitter",
-            icon: "pi pi-twitter",
-            command: this.openTwitterPage,
-        },
         {
           label: "Email them",
           icon: "pi pi-envelope",
@@ -81,7 +80,7 @@ export default {
   computed: {
 
   },
-  props: ["userID", "distance"],
+  props: ["userID", "distance","selected"],
   emits: ["onRemove"],
   methods: {
     FetchUserInterests() {
@@ -207,6 +206,18 @@ export default {
     margin-right: 0.25rem;
     margin-bottom: 0.25rem;
   }
+}
+
+.overlay {
+  position: absolute;
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #5e686e80; /* Black background with opacity */
+  z-index: 6; /* Specify a stack order in case you're using a different order for other elements */
 }
 
 .bumper-panel {

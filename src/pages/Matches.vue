@@ -27,6 +27,7 @@
             :key="user"
             :userID="user.id"
             :distance="user.distance"
+            :selected="selectedUser.userId == user.id"
             @onRemove="removeUser"
           />
         </div>
@@ -467,12 +468,14 @@ export default {
   width: 16rem;
   height: 24rem;
   margin: 1rem;
+  background: white;
 }
 .detailed-info {
   display: block;
   margin-top: 10%;
   margin-left: 5%;
   height: 48rem;
+
 }
 .detail-top {
   display: flex;

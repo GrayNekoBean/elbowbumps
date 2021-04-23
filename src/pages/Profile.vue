@@ -3,7 +3,7 @@
     <div class="profile-page">
       <div class="top-part">
         <div class="profile-title">
-          <img :src="avatar" class="avatar" />
+          <img :src="avatar" class="avatar" title="change avatar" @click="openGravatar" />
           <!-- <FileUpload mode="basic" name="image" :customUpload="true" @uploader="uploadAvatar" /> -->
           <div class="user-name">
             <h2>{{ firstName }} {{ lastName }}</h2>
@@ -266,6 +266,9 @@ export default {
     toggleIt() {
       this.$store.dispatch('toggleFirstRegister')
     },
+    openGravatar(){
+      window.open('https://en.gravatar.com/')
+    },
     updateProfile: function () {
       let localURL = `${this.$store.getters.URL}user_data`;
 
@@ -469,6 +472,12 @@ $background-color: #fffaba;
   height: 15rem;
   width: 15rem;
   border-radius: 50%;
+  z-index: 6;
+  cursor: pointer;
+  filter: brightness(1);
+  :hover{
+    filter: brightness(0.6);
+  }
 }
 
 .buttons {
