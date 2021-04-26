@@ -30,8 +30,11 @@
               required
             />
             <small v-if="!checkName('sName', enteredsName)" id="username2-help" class="p-error">Username is invalid.</small>
+<<<<<<< HEAD
+=======
             <br /><br />
             <br /><br />
+>>>>>>> parent of 9fd4a36 (Revert "Devops demo")
             <label>Email:</label><br />
             <InputText
               type="email"
