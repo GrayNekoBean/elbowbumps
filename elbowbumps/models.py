@@ -11,7 +11,7 @@ class UserData(db.Model):
     ud_surname = db.Column(db.String(50))
     ud_birthyear = db.Column(db.Integer)
     ud_email = db.Column(db.String(50), unique=True)
-    ud_phone = db.Column(db.String(13), unique=True)
+    ud_phone = db.Column(db.String(13))
     ud_password = db.Column(db.String(100))
     ud_gender = db.Column(db.Enum('M', 'F', 'NB', name='gender'))
     ud_twitter = db.Column(db.String(50), unique=False)
