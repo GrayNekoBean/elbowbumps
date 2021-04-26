@@ -30,17 +30,6 @@
               required
             />
             <small v-if="!checkName('sName', enteredsName)" id="username2-help" class="p-error">Username is invalid.</small>
-            <br /><br />
-            <label>Phone Number:</label><br />
-            <InputText
-              type="tel"
-              id="phoneNum"
-              v-model="enteredphoneNum"
-              :class="checkPhone('phone', enteredphoneNum) ? '' : 'p-invalid'"
-              required
-            />
-            <small v-if="!checkPhone('phone', enteredphoneNum)" id="username2-help" class="p-error">Phone Number is not available.</small>
-            <br /><br />
             <label>Email:</label><br />
             <InputText
               type="email"
@@ -84,7 +73,6 @@ export default {
     return {
       enteredfName: "",
       enteredsName: "",
-      enteredphoneNum: "",
       enteredemailAdd: "",
       enteredpw: "",
       agree_terms: false,
@@ -107,7 +95,6 @@ export default {
         const formData = new FormData()
         formData.append("fName", this.enteredfName)
         formData.append("sName", this.enteredsName)
-        formData.append("phoneNum", this.enteredphoneNum)
         formData.append("emailAdd", this.enteredemailAdd)
         formData.append("pw", hashedPw)
         axios
@@ -123,7 +110,6 @@ export default {
               this.$store.dispatch('toggleFirstRegister')
               this.enteredfName = "";
               this.enteredsName = "";
-              this.enteredphoneNum = "";
               this.enteredemailAdd = "";
               this.enteredpw = "";
               this.$root.route_to('/questionnaire');
@@ -135,15 +121,6 @@ export default {
     },
     checkName(id, name) {
       if (validation.checkName(name)){
-        this.inputValids[id] = true;
-        return true;
-      }else{
-        this.inputValids[id] = false;
-        return false;
-      }
-    },
-    checkPhone(id, phone) {
-      if (validation.checkPhoneNumber(phone)){
         this.inputValids[id] = true;
         return true;
       }else{
