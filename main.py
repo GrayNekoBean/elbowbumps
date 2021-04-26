@@ -602,14 +602,14 @@ def create_test_user():
         'STATUS_CODE': '200',
         "Message": 'User added'
     })
-
+    
 @app.route('/dummy_data', methods=['POST'])
 def dummy_data():
     db.session.query(UserData).delete()
     db.session.query(UserInterestData).delete()
     db.session.query(SquaredWeights).delete()
     db.session.query(UserMatch).delete()
-    from random import randint, uniform
+    from random import randint
     no_users = request.form.get('no_users')
     no_cats = request.form.get('no_cats')
     for i in range(int(no_users)):
@@ -629,7 +629,7 @@ def dummy_data():
                 if not user_interests:
                     notSuccessful = False
             cat = "category"+str(cat)
-            interest = UserInterestData(i,  cat, uniform(0,2), uniform(0,2))
+            interest = UserInterestData(i,  cat, randint(0,2), randint(0,2))
             db.session.add(interest)
             db.session.commit()
             user_interests = UserInterestData.query.filter_by(uid_ud_id=i, uid_interest_type=cat).first()
