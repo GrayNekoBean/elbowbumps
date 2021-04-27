@@ -1,4 +1,3 @@
-
 from flask import Flask, request, jsonify
 from flask.wrappers import Response
 from elbowbumps.twitter_scraper import getTweets
